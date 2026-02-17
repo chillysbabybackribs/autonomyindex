@@ -44,7 +44,6 @@ function urlEntry(loc, lastmod, changefreq, priority) {
 function main() {
   const baseRoutes = [
     { loc: '/', changefreq: 'daily', priority: '1.0' },
-    { loc: '/agents-2026', changefreq: 'weekly', priority: '0.9' },
     { loc: '/methodology', changefreq: 'monthly', priority: '0.8' },
     { loc: '/ami-systems', changefreq: 'weekly', priority: '0.8' },
     { loc: '/ami-download', changefreq: 'monthly', priority: '0.7' },

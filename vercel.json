@@ -7,6 +7,9 @@
       "includeFiles": "{data/**,lib/**}"
     }
   },
+  "redirects": [
+    { "source": "/agents-2026", "destination": "/", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/api/ami/submit", "destination": "/api/ami?action=submit" },
     { "source": "/api/ami/profiles", "destination": "/api/ami?action=profiles" },
