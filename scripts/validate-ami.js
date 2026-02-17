@@ -29,21 +29,28 @@ function loadSourceCatalog() {
 
 // ── Spec hash verification ──────────────────────────────────────────────────
 
+/**
+ * Verify spec hash contract.
+ * Returns { errors: string[], warnings: string[] }
+ */
 function verifySpecHash() {
   const metaPath = path.join(ROOT, 'data', 'ami', 'meta.json');
   const specPath = path.join(ROOT, 'docs', 'ami-v1-spec.md');
-  if (!fs.existsSync(metaPath) || !fs.existsSync(specPath)) return [];
+  if (!fs.existsSync(metaPath) || !fs.existsSync(specPath)) return { errors: [], warnings: [] };
 
   const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
-  if (!meta.spec_hash) return []; // no hash to verify yet
+  if (!meta.spec_hash) return { errors: [], warnings: [] };
 
   const specContent = fs.readFileSync(specPath, 'utf8');
   const computed = crypto.createHash('sha256').update(specContent, 'utf8').digest('hex');
 
   if (computed !== meta.spec_hash) {
-    return [`Spec hash mismatch: meta.json says "${meta.spec_hash}" but docs/ami-v1-spec.md hashes to "${computed}". Update spec_hash in meta.json or revert spec changes.`];
+    return {
+      errors: [`Spec hash mismatch: meta.json expects "${meta.spec_hash}" but docs/ami-v1-spec.md hashes to "${computed}". Update spec_hash in meta.json or revert spec changes.`],
+      warnings: [],
+    };
   }
-  return [];
+  return { errors: [], warnings: [] };
 }
 
 // ── Integrity hash verification ─────────────────────────────────────────────
@@ -73,9 +80,12 @@ function main() {
   const allErrors = [];
 
   // Spec hash verification
-  const specErrors = verifySpecHash();
-  if (specErrors.length > 0) {
-    allErrors.push({ file: 'data/ami/meta.json', errors: specErrors });
+  const specResult = verifySpecHash();
+  if (specResult.errors.length > 0) {
+    allErrors.push({ file: 'data/ami/meta.json', errors: specResult.errors });
+  }
+  for (const w of specResult.warnings) {
+    console.log(`  WARNING: ${w}`);
   }
 
   const systemDirs = fs.readdirSync(assessmentsBaseDir).filter((entry) => {

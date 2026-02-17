@@ -5,10 +5,19 @@
 // POST /api/systems/:id/ami  — Create new assessment (internal use)
 // ─────────────────────────────────────────────────────────────────────────────
 
+const fs = require('node:fs');
 const path = require('node:path');
 const store = require(path.join(process.cwd(), 'lib', 'ami', 'store.js'));
 const schema = require(path.join(process.cwd(), 'lib', 'ami', 'schema.js'));
 const { handleCors, validateSystemId, requireAuth } = require(path.join(process.cwd(), 'lib', 'ami', 'api-util.js'));
+
+function loadSourceCatalog() {
+  const catalogPath = path.join(process.cwd(), 'data', 'source-catalog.json');
+  if (!fs.existsSync(catalogPath)) return null;
+  const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+  const sources = Array.isArray(catalog?.sources) ? catalog.sources : [];
+  return new Map(sources.map((s) => [s.source_id, s]));
+}
 
 function parseBody(req) {
   return new Promise((resolve, reject) => {
@@ -112,13 +121,12 @@ module.exports = async function handler(req, res) {
         body.overall_confidence = schema.computeOverallConfidence(body.dimensions);
       }
 
-      // Set review state to draft for new assessments
-      if (!body.review) {
-        body.review = { state: 'draft', reviewed_by: null, reviewed_at: null };
-      }
+      // Force review state to draft for all new assessments (spec Section E)
+      body.review = { state: 'draft', reviewed_by: null, reviewed_at: null };
 
-      // Validate
-      const validation = schema.validateAssessment(body);
+      // Validate (with source catalog for gate 6)
+      const sourceCatalog = loadSourceCatalog();
+      const validation = schema.validateAssessment(body, { sourceCatalog });
       if (!validation.valid) {
         res.status(422).json({
           error: 'validation_failed',
