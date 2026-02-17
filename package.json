@@ -1,0 +1,12 @@
+{
+  "name": "ai-tools-report",
+  "version": "1.0.0",
+  "description": "Best AI Tools 2026 - Free Research Report",
+  "scripts": {
+    "dev": "python -m http.server 3000",
+    "build": "echo 'Static site - no build needed'",
+    "start": "python -m http.server 8000"
+  },
+  "keywords": ["ai tools", "artificial intelligence", "2026"],
+  "author": "AI Tools Report"
+}
