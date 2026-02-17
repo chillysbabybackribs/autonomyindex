@@ -152,6 +152,38 @@
             line-height: 1.7;
         }
 
+        .hero-cta {
+            text-align: center;
+            margin: 0 auto 2rem;
+            max-width: 900px;
+        }
+        .ami-prompt-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: var(--font-display);
+            border: 1px solid var(--cyan);
+            background: rgba(6,182,212,0.08);
+            color: var(--cyan);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .ami-prompt-btn:hover {
+            background: rgba(6,182,212,0.16);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(6,182,212,0.15);
+        }
+        .ami-prompt-icon { font-size: 18px; }
+        .ami-prompt-hint {
+            font-size: 12px;
+            color: var(--text-3);
+            margin-top: 0.5rem;
+        }
+
         .hero-meta {
             display: flex;
             justify-content: center;
@@ -721,7 +753,6 @@
             border: 1px solid var(--border);
         }
         .dl-btn-secondary:hover { border-color: var(--border-hover); color: #fff; }
-        button.dl-btn { border: none; cursor: pointer; }
 
         /* ==================== SECTION RAIL ==================== */
         .section-rail {
@@ -1373,6 +1404,7 @@
         <a href="/methodology" class="nav-link">Methodology</a>
         <a href="/ami-systems" class="nav-link">AMI</a>
         <a href="/ami-submit" class="nav-link">Submit</a>
+        <a href="#fullReport" class="nav-link" id="headerReadReport" style="color:var(--cyan);font-weight:600;font-size:12px;">Read Full 722-Line Report</a>
         <a href="/AGENTS_2026_PREMIUM_REPORT.html" class="dl-btn dl-btn-primary" download="AI_Tools_2026_Premium_Report.html" style="padding:6px 14px;font-size:12px;">↓ Premium Report</a>
     </nav>
 </header>
@@ -1401,6 +1433,15 @@
     <h1>The Autonomy Index</h1>
     <p>Tracking and scoring the global AI agent ecosystem across autonomy, security, ecosystem strength, and execution control.</p>
 </section>
+
+<!-- ==================== AMI PROMPT CTA ==================== -->
+<div class="hero-cta">
+    <button class="ami-prompt-btn" onclick="copyAmiPrompt(this)" id="copy-ami-prompt-btn">
+        <span class="ami-prompt-icon">📋</span>
+        Copy AMI Self-Assessment Prompt
+    </button>
+    <div class="ami-prompt-hint">Paste into any LLM to generate a scored assessment draft</div>
+</div>
 
 <!-- ==================== INDEX MOVEMENT ==================== -->
 <div class="index-movement" id="indexMovement">
@@ -1433,7 +1474,6 @@
     <a href="/AGENTS_2026_PREMIUM_REPORT.html" class="dl-btn dl-btn-primary" download="AI_Tools_2026_Premium_Report.html">Premium Report (.html)</a>
     <a href="/AGENTS_2026_SOURCES.md" class="dl-btn dl-btn-secondary" download>Sources & Citations</a>
     <a href="/AGENTS_2026_CHART_DATA.csv" class="dl-btn dl-btn-secondary" download>Raw Data (.csv)</a>
-    <button class="dl-btn dl-btn-secondary" onclick="copyAmiPrompt(this)" id="copy-ami-prompt-btn">Copy AMI Prompt</button>
     <a href="/download/ami-v1-kit.zip" class="dl-btn dl-btn-secondary" download>Assessment Kit (.zip)</a>
 </div>
 
@@ -2695,6 +2735,18 @@ document.querySelectorAll('.playbook-tab').forEach(tab => {
 });
 
 // ==================== FULL REPORT TOGGLE ====================
+function expandReport() {
+    const section = document.getElementById('fullReport');
+    const btn = document.getElementById('toggleReport');
+    if (!section.classList.contains('expanded')) {
+        section.classList.add('expanded');
+        btn.textContent = '📄 Collapse Full Report ↑';
+        if (!document.getElementById('reportContent').innerHTML) {
+            loadReport();
+        }
+    }
+}
+
 document.getElementById('toggleReport').addEventListener('click', function() {
     const section = document.getElementById('fullReport');
     const expanded = section.classList.toggle('expanded');
@@ -2702,6 +2754,12 @@ document.getElementById('toggleReport').addEventListener('click', function() {
     if (expanded && !document.getElementById('reportContent').innerHTML) {
         loadReport();
     }
+});
+
+document.getElementById('headerReadReport').addEventListener('click', function(e) {
+    e.preventDefault();
+    expandReport();
+    document.getElementById('fullReport').scrollIntoView({ behavior: 'smooth' });
 });
 
 // ==================== LOAD MARKDOWN REPORT ====================
