@@ -76,6 +76,22 @@
           "source_ids": [
             "SRC_009"
           ]
+        },
+        {
+          "id": "EV_20260217_008",
+          "url": "https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation",
+          "title": "Anthropic — MCP donation and foundation",
+          "publisher": "Anthropic",
+          "published_date": "2025-12-09",
+          "excerpt": "MCP protocol donated to open foundation, enabling cross-tool interoperability for agents",
+          "claim_supported": "OpenClaw MCP protocol integration confirmed by protocol originator Anthropic",
+          "evidence_type": "official_docs",
+          "confidence_contribution": "verified",
+          "relevance_weight": 0.7,
+          "captured_at": "2026-02-17T10:00:00Z",
+          "source_ids": [
+            "SRC_005"
+          ]
         }
       ]
     },
@@ -213,8 +229,8 @@
     "reviewed_at": null
   },
   "integrity": {
-    "assessment_hash": "d90977803d9643bdd0e04e70aa2aadd98ee0e6f60b30640e033c4bc39538570f",
+    "assessment_hash": "add33bcf1e45a44319da72a92d7ebe9168b615e4b9097c408eb8c1843f61ea9d",
     "hash_algorithm": "sha256",
-    "hashed_at": "2026-02-17T09:12:39.475Z"
+    "hashed_at": "2026-02-17T09:15:26.417Z"
   }
 }
