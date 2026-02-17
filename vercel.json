@@ -7,6 +7,22 @@
       "includeFiles": "{data/**,lib/**}"
     }
   },
+  "rewrites": [
+    { "source": "/api/ami/submit", "destination": "/api/ami?action=submit" },
+    { "source": "/api/ami/profiles", "destination": "/api/ami?action=profiles" },
+    { "source": "/api/ami/rubric", "destination": "/api/ami?action=rubric" },
+    { "source": "/api/ami/schema", "destination": "/api/ami?action=schema" },
+    { "source": "/api/ami/validate", "destination": "/api/ami?action=validate" },
+    { "source": "/api/ami/:assessmentId", "destination": "/api/ami?action=assessment&assessmentId=:assessmentId" },
+
+    { "source": "/api/ami/submissions/:id/review", "destination": "/api/submissions?action=review&id=:id" },
+    { "source": "/api/ami/submissions/:id", "destination": "/api/submissions?action=get&id=:id" },
+    { "source": "/api/ami/submissions", "destination": "/api/submissions?action=list" },
+
+    { "source": "/api/systems/:id/ami/diff", "destination": "/api/systems?id=:id&action=diff" },
+    { "source": "/api/systems/:id/ami/validate", "destination": "/api/systems?id=:id&action=validate" },
+    { "source": "/api/systems/:id/ami", "destination": "/api/systems?id=:id&action=ami" }
+  ],
   "headers": [
     {
       "source": "/AGENTS_2026_PREMIUM_REPORT",

@@ -114,14 +114,45 @@ assert(
 
 // ── API endpoint files ──────────────────────────────────────────────────────
 
-console.log('5. API endpoint files:');
-assert(fileExists('api/ami.js'), 'api/ami.js exists');
-assert(fileExists('api/ami/[assessmentId].js'), 'api/ami/[assessmentId].js exists');
-assert(fileExists('api/ami/profiles.js'), 'api/ami/profiles.js exists');
-assert(fileExists('api/ami/validate.js'), 'api/ami/validate.js exists');
-assert(fileExists('api/systems/[id]/ami.js'), 'api/systems/[id]/ami.js exists');
-assert(fileExists('api/systems/[id]/ami/diff.js'), 'api/systems/[id]/ami/diff.js exists');
-assert(fileExists('api/systems/[id]/ami/validate.js'), 'api/systems/[id]/ami/validate.js exists');
+console.log('5. API endpoint files (consolidated):');
+assert(fileExists('api/ami.js'), 'api/ami.js exists (consolidated AMI handler)');
+assert(fileExists('api/systems.js'), 'api/systems.js exists (consolidated systems handler)');
+assert(fileExists('api/submissions.js'), 'api/submissions.js exists (consolidated submissions handler)');
+assert(fileExists('api/daily-signals.js'), 'api/daily-signals.js exists');
+assert(fileExists('api/weekly-briefs.js'), 'api/weekly-briefs.js exists');
+
+// Verify consolidated handlers contain all route logic
+assert(
+  fileContains('api/ami.js', 'handleIndex', 'handleAssessment', 'handleProfiles', 'handleRubric', 'handleSchema', 'handleValidate', 'handleSubmit'),
+  'api/ami.js contains all 7 sub-handlers'
+);
+assert(
+  fileContains('api/systems.js', 'handleAmi', 'handleDiff', 'handleValidate'),
+  'api/systems.js contains all 3 sub-handlers'
+);
+assert(
+  fileContains('api/submissions.js', 'handleList', 'handleGet', 'handleReview'),
+  'api/submissions.js contains all 3 sub-handlers'
+);
+
+// Verify Vercel rewrites are configured
+assert(
+  fileContains('vercel.json', 'rewrites', 'action=profiles', 'action=rubric', 'action=schema'),
+  'vercel.json has rewrites for AMI sub-routes'
+);
+assert(
+  fileContains('vercel.json', 'action=diff', 'action=validate', 'action=ami'),
+  'vercel.json has rewrites for systems sub-routes'
+);
+assert(
+  fileContains('vercel.json', 'action=review', 'action=get', 'action=list'),
+  'vercel.json has rewrites for submission sub-routes'
+);
+
+// Verify old files are removed (function count must stay ≤ 12)
+assert(!fileExists('api/ami/[assessmentId].js'), 'old api/ami/[assessmentId].js removed');
+assert(!fileExists('api/ami/profiles.js'), 'old api/ami/profiles.js removed');
+assert(!fileExists('api/systems/[id]/ami.js'), 'old api/systems/[id]/ami.js removed');
 
 // ── API response simulation (load store directly) ───────────────────────────
 
@@ -304,9 +335,11 @@ assert(
   'download page has required elements'
 );
 
-// API endpoint files for rubric and schema
-assert(fileExists('api/ami/rubric.js'), 'api/ami/rubric.js exists');
-assert(fileExists('api/ami/schema.js'), 'api/ami/schema.js exists');
+// Rubric and schema served from consolidated api/ami.js
+assert(
+  fileContains('api/ami.js', 'handleRubric', 'handleSchema'),
+  'api/ami.js handles rubric and schema routes'
+);
 
 // ── Submission System ───────────────────────────────────────────────────────
 
@@ -314,10 +347,8 @@ console.log('9. Submission system:');
 
 // Module existence
 assert(fileExists('lib/ami/submissions.js'), 'submissions.js exists');
-assert(fileExists('api/ami/submit.js'), 'api/ami/submit.js exists');
-assert(fileExists('api/ami/submissions.js'), 'api/ami/submissions.js (list) exists');
-assert(fileExists('api/ami/submissions/[id].js'), 'api/ami/submissions/[id].js exists');
-assert(fileExists('api/ami/submissions/[id]/review.js'), 'api/ami/submissions/[id]/review.js exists');
+assert(fileExists('api/ami.js'), 'consolidated api/ami.js handles submit route');
+assert(fileExists('api/submissions.js'), 'consolidated api/submissions.js handles submission routes');
 
 // Load module
 const submissions = require(path.join(ROOT, 'lib', 'ami', 'submissions.js'));
@@ -458,18 +489,14 @@ assert(
   'Assessment page renders submission history'
 );
 
-// API files contain proper CORS/auth patterns
+// Consolidated API files contain proper patterns
 assert(
-  fileContains('api/ami/submit.js', 'handleCors', 'validateSubmission', 'createSubmission'),
-  'submit.js uses expected functions'
+  fileContains('api/ami.js', 'validateSubmission', 'createSubmission'),
+  'api/ami.js handles submit with validation'
 );
 assert(
-  fileContains('api/ami/submissions.js', 'requireAuth', 'listSubmissions'),
-  'submissions.js (list) uses auth and list'
-);
-assert(
-  fileContains('api/ami/submissions/[id]/review.js', 'requireAuth', 'reviewSubmission'),
-  'review.js uses auth and review'
+  fileContains('api/submissions.js', 'requireAuth', 'handleList', 'handleReview'),
+  'api/submissions.js uses auth and handles list/review'
 );
 
 // ── Sitemap ─────────────────────────────────────────────────────────────────
