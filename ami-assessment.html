@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMI Assessment — AI Tools Landscape Report 2026</title>
+    <meta name="description" content="Detailed AMI assessment with evidence, rubric references, and source traceability.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #06b6d4;
+            --cyan-dim: rgba(6,182,212,0.08);
+            --green: #34d59a;
+            --green-dim: rgba(52,213,154,0.08);
+            --amber: #f59e0b;
+            --amber-dim: rgba(245,158,11,0.08);
+            --red: #ef4444;
+            --red-dim: rgba(239,68,68,0.08);
+            --purple: #a78bfa;
+            --purple-dim: rgba(167,139,250,0.08);
+            --surface-1: #0a0a0a;
+            --surface-2: #111111;
+            --surface-3: #1a1a1a;
+            --surface-4: #262626;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --text-1: #f5f5f5;
+            --text-2: #a1a1a1;
+            --text-3: #666;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { color-scheme: dark; scroll-behavior: smooth; }
+        body { font-family: var(--font-body); background: #000; color: var(--text-2); line-height: 1.7; font-size: 15px; }
+
+        .header {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(0,0,0,0.92); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; height: 56px;
+        }
+        .logo { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: #fff; text-decoration: none; }
+        .nav-menu { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-link { color: var(--text-3); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
+        .nav-link:hover { color: var(--text-2); }
+
+        .container { max-width: 920px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+
+        .breadcrumb { font-size: 12px; color: var(--text-3); margin-bottom: 2rem; }
+        .breadcrumb a { color: var(--text-3); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--cyan); }
+
+        h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+        h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 600; color: #fff; margin: 3rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+        h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--text-1); margin: 2rem 0 0.75rem; }
+        p { margin-bottom: 1rem; }
+        a { color: var(--cyan); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code { font-family: var(--font-mono); background: var(--surface-3); padding: 2px 6px; border-radius: 4px; font-size: 0.85em; color: var(--cyan); }
+
+        .score-hero {
+            display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;
+            background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px;
+            padding: 2rem; margin-bottom: 2rem;
+        }
+        .score-big {
+            font-family: var(--font-display); font-size: 4rem; font-weight: 700; line-height: 1;
+        }
+        .score-meta { flex: 1; min-width: 200px; }
+        .score-meta-row { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+        .meta-item { font-size: 0.8rem; }
+        .meta-label { color: var(--text-3); text-transform: uppercase; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em; }
+        .meta-value { color: var(--text-1); font-weight: 500; }
+
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; }
+        .tag-published { background: rgba(52,213,154,0.12); color: var(--green); }
+        .tag-draft { background: rgba(245,158,11,0.12); color: var(--amber); }
+        .tag-reviewed { background: rgba(6,182,212,0.12); color: var(--cyan); }
+        .tag-verified { background: rgba(52,213,154,0.12); color: var(--green); }
+        .tag-inferred { background: rgba(245,158,11,0.12); color: var(--amber); }
+        .tag-unverified { background: rgba(167,139,250,0.12); color: var(--purple); }
+
+        .grade-badge {
+            font-family: var(--font-display); font-size: 1.5rem; font-weight: 700;
+            width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;
+            border-radius: 10px; border: 2px solid;
+        }
+        .grade-A { color: var(--green); border-color: var(--green); background: var(--green-dim); }
+        .grade-B { color: var(--cyan); border-color: var(--cyan); background: var(--cyan-dim); }
+        .grade-C { color: var(--amber); border-color: var(--amber); background: var(--amber-dim); }
+        .grade-D { color: #fb923c; border-color: #fb923c; background: rgba(251,146,60,0.08); }
+        .grade-F { color: var(--red); border-color: var(--red); background: var(--red-dim); }
+
+        .dim-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1rem 0; }
+        .dim-table th { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 2px solid var(--border-hover); color: var(--text-3); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .dim-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); color: var(--text-2); vertical-align: top; }
+        .dim-table tr:hover td { background: rgba(255,255,255,0.02); }
+        .dim-score { font-family: var(--font-mono); font-weight: 600; font-size: 1rem; color: var(--text-1); }
+        .rubric-ref { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-3); display: inline-block; padding: 1px 5px; background: var(--surface-3); border-radius: 3px; margin: 1px; }
+
+        .evidence-card {
+            background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+            padding: 1.25rem; margin-bottom: 1rem;
+        }
+        .evidence-title { font-weight: 600; color: var(--text-1); font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .evidence-claim { font-size: 0.85rem; color: var(--text-2); margin-bottom: 0.5rem; font-style: italic; }
+        .evidence-meta { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.75rem; color: var(--text-3); }
+
+        .source-chip {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 8px; border-radius: 4px; font-size: 0.75rem;
+            background: var(--surface-3); border: 1px solid var(--border); color: var(--text-2);
+            text-decoration: none; transition: border-color 0.2s;
+        }
+        .source-chip:hover { border-color: var(--cyan); color: var(--cyan); text-decoration: none; }
+        .source-chip .tier { font-weight: 600; color: var(--cyan); }
+        .source-chip .reliability { color: var(--text-3); font-size: 0.65rem; }
+
+        .warning-banner {
+            padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem;
+            font-size: 0.8rem; display: flex; align-items: center; gap: 0.5rem;
+            background: var(--amber-dim); border: 1px solid rgba(245,158,11,0.2); color: var(--amber);
+        }
+
+        .review-section {
+            background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+            padding: 1.25rem; margin: 1rem 0;
+        }
+        .reviewer { display: flex; gap: 0.75rem; align-items: center; margin-top: 0.5rem; }
+        .reviewer-name { font-weight: 500; color: var(--text-1); font-size: 0.85rem; }
+        .reviewer-hash { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-3); }
+
+        .integrity-section { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-3); margin-top: 1rem; word-break: break-all; }
+
+        .loading { text-align: center; padding: 4rem 2rem; color: var(--text-3); }
+        .error-msg { text-align: center; padding: 4rem 2rem; color: var(--red); }
+
+        @media (max-width: 640px) {
+            .score-hero { flex-direction: column; align-items: flex-start; }
+            .score-big { font-size: 3rem; }
+            .dim-table { font-size: 0.78rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">Autonomy Index</a>
+        <nav class="nav-menu">
+            <a href="/" class="nav-link">Main Report</a>
+            <a href="/agents-2026" class="nav-link">Agents 2026</a>
+            <a href="/methodology#ami" class="nav-link">AMI Methodology</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="breadcrumb">
+            <a href="/">Home</a> / <a href="/methodology">Methodology</a> / <span id="breadcrumb-id">Assessment</span>
+        </div>
+
+        <div id="content">
+            <div class="loading">Loading assessment...</div>
+        </div>
+    </main>
+
+    <script>
+    (function() {
+        'use strict';
+
+        const params = new URLSearchParams(window.location.search);
+        const assessmentId = params.get('id');
+
+        if (!assessmentId) {
+            document.getElementById('content').innerHTML = '<div class="error-msg">No assessment ID provided. Use <code>?id=AMI_ASSESS_...</code></div>';
+            return;
+        }
+
+        document.getElementById('breadcrumb-id').textContent = assessmentId;
+
+        fetch('/api/ami/' + encodeURIComponent(assessmentId))
+            .then(function(r) {
+                if (!r.ok) throw new Error('Assessment not found');
+                return r.json();
+            })
+            .then(render)
+            .catch(function(err) {
+                document.getElementById('content').innerHTML = '<div class="error-msg">' + err.message + '</div>';
+            });
+
+        function esc(s) {
+            if (!s) return '';
+            var d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+
+        function gradeClass(g) {
+            return 'grade-' + (g || 'C');
+        }
+
+        function confTag(c) {
+            var cls = c === 'verified' ? 'tag-verified' : c === 'inferred' ? 'tag-inferred' : 'tag-unverified';
+            return '<span class="tag ' + cls + '">' + esc(c) + '</span>';
+        }
+
+        function reviewTag(state) {
+            var cls = state === 'published' ? 'tag-published' : state === 'reviewed' ? 'tag-reviewed' : 'tag-draft';
+            return '<span class="tag ' + cls + '">' + esc(state) + '</span>';
+        }
+
+        function fmtDate(iso) {
+            if (!iso) return '—';
+            return iso.slice(0, 10);
+        }
+
+        function render(data) {
+            var catalog = data._source_catalog || {};
+            var signals = data._signals || {};
+            var html = '';
+
+            document.title = esc(data.system_id) + ' AMI Assessment — AI Tools 2026';
+
+            // Warnings
+            if (signals.warnings && signals.warnings.length > 0) {
+                for (var w = 0; w < signals.warnings.length; w++) {
+                    html += '<div class="warning-banner">&#9888; ' + esc(signals.warnings[w]) + '</div>';
+                }
+            }
+
+            // Score hero
+            var scoreColor = data.overall_score == null ? 'var(--text-3)' :
+                data.overall_score >= 80 ? 'var(--green)' :
+                data.overall_score >= 60 ? 'var(--cyan)' :
+                data.overall_score >= 40 ? 'var(--amber)' :
+                data.overall_score >= 20 ? '#fb923c' : 'var(--red)';
+
+            html += '<div class="score-hero">';
+            if (data.grade) {
+                html += '<div class="grade-badge ' + gradeClass(data.grade) + '">' + esc(data.grade) + '</div>';
+            }
+            html += '<div class="score-big" style="color:' + scoreColor + '">' + (data.overall_score != null ? data.overall_score : '—') + '</div>';
+            html += '<div class="score-meta">';
+            html += '<h1>' + esc(data.system_id) + '</h1>';
+            html += '<div class="score-meta-row">';
+            html += '<div class="meta-item"><div class="meta-label">Status</div><div class="meta-value">' + esc(data.status) + '</div></div>';
+            html += '<div class="meta-item"><div class="meta-label">Confidence</div><div class="meta-value">' + confTag(data.overall_confidence) + '</div></div>';
+            html += '<div class="meta-item"><div class="meta-label">Assessed</div><div class="meta-value">' + fmtDate(data.assessed_at) + '</div></div>';
+            html += '<div class="meta-item"><div class="meta-label">Version</div><div class="meta-value">v' + esc(String(data.methodology_version)) + '</div></div>';
+            html += '<div class="meta-item"><div class="meta-label">Review</div><div class="meta-value">' + reviewTag(data.review ? data.review.state : 'unknown') + '</div></div>';
+            if (signals.freshness_days_median != null) {
+                html += '<div class="meta-item"><div class="meta-label">Freshness</div><div class="meta-value">' + signals.freshness_days_median + 'd median</div></div>';
+            }
+            html += '</div></div></div>';
+
+            // Dimensions table
+            html += '<h2>Dimensions</h2>';
+            html += '<table class="dim-table"><thead><tr><th>Dimension</th><th>Score</th><th>Weight</th><th>Confidence</th><th>Rubric</th></tr></thead><tbody>';
+            var dims = data.dimensions || [];
+            for (var i = 0; i < dims.length; i++) {
+                var d = dims[i];
+                html += '<tr>';
+                html += '<td><strong style="color:var(--text-1)">' + esc(d.dimension_name) + '</strong><br><span style="font-size:0.75rem;color:var(--text-3)">' + esc(d.rationale || d.not_scored_reason || '') + '</span></td>';
+                html += '<td class="dim-score">' + (d.scored ? d.score + '/5' : '—') + '</td>';
+                html += '<td style="font-family:var(--font-mono);font-size:0.8rem">' + (d.weight * 100).toFixed(0) + '%</td>';
+                html += '<td>' + (d.scored ? confTag(d.confidence) : '—') + '</td>';
+                html += '<td>';
+                if (d.rubric_refs && d.rubric_refs.length > 0) {
+                    for (var r = 0; r < d.rubric_refs.length; r++) {
+                        html += '<span class="rubric-ref">' + esc(d.rubric_refs[r]) + '</span> ';
+                    }
+                } else {
+                    html += '—';
+                }
+                html += '</td></tr>';
+            }
+            html += '</tbody></table>';
+
+            // Evidence by dimension
+            html += '<h2>Evidence Trail</h2>';
+            for (var di = 0; di < dims.length; di++) {
+                var dim = dims[di];
+                if (!dim.evidence || dim.evidence.length === 0) continue;
+                html += '<h3 id="dim-' + esc(dim.dimension_id) + '">' + esc(dim.dimension_name) + '</h3>';
+                for (var ei = 0; ei < dim.evidence.length; ei++) {
+                    var ev = dim.evidence[ei];
+                    html += '<div class="evidence-card" id="evidence-' + esc(ev.id) + '">';
+                    html += '<div class="evidence-title"><a href="' + esc(ev.url) + '" target="_blank" rel="noopener">' + esc(ev.title) + '</a></div>';
+                    html += '<div class="evidence-claim">' + esc(ev.claim_supported) + '</div>';
+                    html += '<div class="evidence-meta">';
+                    html += '<span>' + esc(ev.publisher) + '</span>';
+                    html += '<span>' + fmtDate(ev.published_date) + '</span>';
+                    html += '<span class="tag tag-' + esc(ev.confidence_contribution) + '">' + esc(ev.confidence_contribution) + '</span>';
+                    html += '<span>' + esc(ev.evidence_type) + '</span>';
+                    html += '</div>';
+
+                    // Source chips
+                    var sids = ev.source_ids || (ev.source_id ? [ev.source_id] : []);
+                    if (sids.length > 0) {
+                        html += '<div style="margin-top:0.5rem">';
+                        for (var si = 0; si < sids.length; si++) {
+                            var sid = sids[si];
+                            var src = catalog[sid];
+                            if (src) {
+                                if (src.access === 'public' && src.url) {
+                                    html += '<a class="source-chip" id="source-' + esc(sid) + '" href="' + esc(src.url) + '" target="_blank" rel="noopener">';
+                                    html += '<span class="tier">' + esc(src.tier) + '</span> ';
+                                    html += esc(src.title);
+                                    html += ' <span class="reliability">' + esc(src.reliability) + '</span>';
+                                    html += '</a> ';
+                                } else {
+                                    html += '<span class="source-chip" id="source-' + esc(sid) + '">';
+                                    html += '<span class="tier">' + esc(src.tier) + '</span> ';
+                                    html += esc(src.title);
+                                    html += ' <span class="reliability">' + esc(src.access === 'private' ? 'private source' : src.reliability) + '</span>';
+                                    html += '</span> ';
+                                }
+                            } else {
+                                html += '<span class="source-chip" id="source-' + esc(sid) + '">' + esc(sid) + '</span> ';
+                            }
+                        }
+                        html += '</div>';
+                    }
+                    html += '</div>';
+                }
+            }
+
+            // Review section
+            if (data.review) {
+                html += '<h2>Review</h2>';
+                html += '<div class="review-section">';
+                html += '<div>State: ' + reviewTag(data.review.state) + '</div>';
+                if (data.review.reviewers && data.review.reviewers.length > 0) {
+                    for (var ri = 0; ri < data.review.reviewers.length; ri++) {
+                        var rev = data.review.reviewers[ri];
+                        html += '<div class="reviewer">';
+                        html += '<span class="reviewer-name">' + esc(rev.name) + ' <code>@' + esc(rev.handle) + '</code></span>';
+                        html += '<span style="font-size:0.75rem;color:var(--text-3)">' + fmtDate(rev.signed_at) + '</span>';
+                        html += '</div>';
+                        if (rev.signature_hash) {
+                            html += '<div class="reviewer-hash">sig: ' + esc(rev.signature_hash) + '</div>';
+                        }
+                    }
+                } else {
+                    html += '<div style="color:var(--text-3);font-size:0.85rem">No reviewer signatures</div>';
+                }
+                html += '</div>';
+            }
+
+            // Integrity
+            if (data.integrity) {
+                html += '<div class="integrity-section">';
+                html += 'Integrity: <code>' + esc(data.integrity.hash_algorithm) + ':' + esc(data.integrity.assessment_hash) + '</code>';
+                html += ' (computed ' + fmtDate(data.integrity.hashed_at) + ')';
+                html += '</div>';
+            }
+
+            // Footer links
+            html += '<div style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--text-3)">';
+            html += '<a href="/methodology#ami">AMI Methodology</a>';
+            if (data.previous_assessment_id) {
+                html += ' · <a href="/ami-assessment?id=' + esc(data.previous_assessment_id) + '">Previous assessment</a>';
+            }
+            html += '</div>';
+
+            document.getElementById('content').innerHTML = html;
+        }
+    })();
+    </script>
+
+    <footer style="text-align:center;padding:3rem 2rem;border-top:1px solid var(--border);color:var(--text-3);font-size:0.8rem">
+        <p><a href="/" style="color:var(--text-2);text-decoration:none">Autonomy Index</a> · <a href="/agents-2026" style="color:var(--text-2);text-decoration:none">Agents 2026</a> · <a href="/methodology" style="color:var(--text-2);text-decoration:none">Methodology</a></p>
+    </footer>
+</body>
+</html>

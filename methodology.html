@@ -108,9 +108,9 @@
         .conf-desc { font-size: 0.8rem; color: var(--text-3); line-height: 1.6; }
 
         .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; }
-        .tag-confirmed { background: rgba(52,213,154,0.12); color: var(--green); }
+        .tag-verified { background: rgba(52,213,154,0.12); color: var(--green); }
         .tag-inferred { background: rgba(245,158,11,0.12); color: var(--amber); }
-        .tag-speculative { background: rgba(167,139,250,0.12); color: var(--purple); }
+        .tag-unverified { background: rgba(167,139,250,0.12); color: var(--purple); }
 
         .risk-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin: 1rem 0; }
         .risk-box { text-align: center; padding: 0.75rem; border-radius: 8px; }
@@ -157,79 +157,152 @@
 <div class="container">
     <div class="breadcrumb"><a href="/">Home</a> → <a href="/agents-2026">Agents 2026</a> → Methodology</div>
 
-    <div class="version-badge">INDEX MODEL v0.1 — FEBRUARY 2026</div>
+    <div class="version-badge">AMI v1.0 — FEBRUARY 2026</div>
     <h1>Scoring Methodology</h1>
     <p class="subtitle">
-        This document defines the three proprietary indices used in the AI Tools Landscape Report: 
-        <strong>Agent Maturity Index (AMI)</strong>, <strong>Autonomy Risk Index (ARI)</strong>, and 
-        <strong>Ecosystem Power Index (EPI)</strong>. All dimensions, weights, and grading criteria are published here 
-        for transparency and reproducibility.
+        This document defines the three proprietary indices used in the AI Tools Landscape Report:
+        <strong>Agent Maturity Index (AMI)</strong>, <strong>Autonomy Risk Index (ARI)</strong>, and
+        <strong>Ecosystem Power Index (EPI)</strong>. All dimensions, weights, and grading criteria are published here
+        for transparency and reproducibility. Each assessment links to its evidence and source catalog
+        so any claim can be independently verified.
     </p>
 
     <!-- ==================== PRINCIPLES ==================== -->
     <h2>Guiding Principles</h2>
     <ol>
-        <li><strong>Transparency over authority.</strong> Every score is decomposable into its dimension scores. Every dimension score links to evidence.</li>
-        <li><strong>Confidence labeling is mandatory.</strong> No score is presented without a <span class="tag tag-confirmed">CONFIRMED</span>, <span class="tag tag-inferred">INFERRED</span>, or <span class="tag tag-speculative">SPECULATIVE</span> tag.</li>
-        <li><strong>Scores can change.</strong> Indices are versioned. When new evidence arrives, scores update. The changelog records every change.</li>
-        <li><strong>No pay-for-score.</strong> Sponsorship does not affect index scores. Frameworks are scored identically regardless of commercial relationship.</li>
-        <li><strong>Methodology evolves.</strong> Dimensions and weights may change between versions. All changes are documented with rationale.</li>
+        <li><strong>Transparency over authority.</strong> Every score is decomposable into its dimension scores. Every dimension score links to evidence with cited sources.</li>
+        <li><strong>Confidence labeling is mandatory.</strong> No score is presented without a <span class="tag tag-verified">verified</span>, <span class="tag tag-inferred">inferred</span>, or <span class="tag tag-unverified">unverified</span> tag.</li>
+        <li><strong>Scores can change.</strong> Indices are versioned. When new evidence arrives, scores update. Assessment diffs track every change.</li>
+        <li><strong>No pay-for-score.</strong> Sponsorship does not affect index scores. Systems are scored identically regardless of commercial relationship.</li>
+        <li><strong>Methodology evolves.</strong> Dimensions and weights may change between versions. All changes are documented with rationale. The spec hash locks methodology integrity.</li>
     </ol>
 
     <!-- ==================== CONFIDENCE LEVELS ==================== -->
-    <h2>Confidence Labels</h2>
-    <p>Every data point and score carries one of three confidence labels:</p>
+    <h2 id="confidence">Confidence Labels</h2>
+    <p>Every dimension score and the overall assessment carry one of three confidence labels:</p>
 
     <div class="confidence-grid">
         <div class="conf-card" style="border-left: 3px solid var(--green);">
-            <div class="conf-label" style="color: var(--green);">✓ CONFIRMED</div>
+            <div class="conf-label" style="color: var(--green);">verified</div>
             <div class="conf-desc">
-                Based on primary sources: official documentation, published reports, security audits, 
-                GitHub repository data, or direct source code inspection. Verifiable by third parties.
+                Based on primary sources: official documentation, published audits, source code,
+                commit logs, or metrics dashboards. Verifiable by third parties.
             </div>
         </div>
         <div class="conf-card" style="border-left: 3px solid var(--amber);">
-            <div class="conf-label" style="color: var(--amber);">◐ INFERRED</div>
+            <div class="conf-label" style="color: var(--amber);">inferred</div>
             <div class="conf-desc">
-                Reasonable conclusion drawn from confirmed data + domain expertise. Example: inferring enterprise 
-                penetration from known partnerships, pricing tiers, and job postings. Directionally reliable but not directly verified.
+                Reasonable conclusion drawn from verified data + domain expertise. Example: inferring enterprise
+                maturity from partnerships and pricing tiers. Directionally reliable but not directly verified.
             </div>
         </div>
         <div class="conf-card" style="border-left: 3px solid var(--purple);">
-            <div class="conf-label" style="color: var(--purple);">◌ SPECULATIVE</div>
+            <div class="conf-label" style="color: var(--purple);">unverified</div>
             <div class="conf-desc">
-                Forward-looking projection or estimate based on trends. Example: projected enterprise adoption 
-                rates for Q3 2026+. Used sparingly and always labeled. May be wrong.
+                Based on self-reported claims, marketing materials, or limited public information.
+                Used when better sources are unavailable. Always labeled.
             </div>
         </div>
     </div>
 
+    <p><strong>Overall confidence</strong> is derived from dimension confidences: <code>high</code> if all scored dimensions are verified, <code>low</code> if any are unverified, <code>medium</code> otherwise.</p>
+
     <!-- ==================== AMI ==================== -->
-    <h2>Index 1: Agent Maturity Index (AMI)</h2>
-    
+    <h2 id="ami">Index 1: Agent Maturity Index (AMI)</h2>
+
     <div class="index-card">
         <div class="index-header">
             <div class="index-name">AMI — Agent Maturity Index</div>
-            <div class="index-range">Scale: 0–100</div>
+            <div class="index-range">Scale: 0-5 per dimension, 0-100 overall</div>
         </div>
-        <p>Measures how <strong>production-ready</strong> an agent framework or system is. A high AMI score means the system 
-        can be deployed in production with reasonable confidence in reliability, security, and operational control.</p>
+        <p>Measures how <strong>production-ready</strong> an AI agent system is across six dimensions.
+        Each dimension is scored 0-5 against a published rubric, weighted, and aggregated to a 0-100 scale.
+        A high AMI score means the system can be deployed in production with reasonable confidence in reliability,
+        safety, and operational control.</p>
 
-        <h4>Dimensions & Weights</h4>
+        <h4>What AMI Is Not</h4>
+        <ul>
+            <li>Not a benchmark of raw LLM capability (that's the model, not the agent system)</li>
+            <li>Not a measure of popularity or adoption (that's EPI)</li>
+            <li>Not a security vulnerability scan (that's a subset of the Safety dimension)</li>
+        </ul>
+    </div>
+
+    <!-- ── Eligibility ── -->
+    <h3 id="eligibility">Eligibility</h3>
+    <p>A system must meet <strong>all</strong> inclusion criteria and trigger <strong>no</strong> exclusion flags to receive a scored AMI assessment.</p>
+
+    <div class="index-card">
+        <h4>Inclusion Criteria</h4>
+        <ol>
+            <li><strong>Agent system:</strong> Must be an AI agent framework, platform, or orchestration tool (not a raw LLM API)</li>
+            <li><strong>Public artifact:</strong> Must have publicly available code, documentation, or product</li>
+            <li><strong>Active development:</strong> Must show activity within the last 6 months</li>
+            <li><strong>Identifiable maintainer:</strong> Must have a known organization or individual maintainer</li>
+            <li><strong>Verified sources:</strong> Must have >= 3 distinct verifiable sources</li>
+        </ol>
+
+        <h4>Exclusion Flags</h4>
+        <ul>
+            <li><code>base_llm_only</code> — Raw model API without agent orchestration</li>
+            <li><code>prompt_library_only</code> — Prompt template collection, not a system</li>
+            <li><code>research_prototype_only</code> — Academic prototype without production path</li>
+            <li><code>wrapper_only</code> — Thin wrapper around another scored system</li>
+        </ul>
+    </div>
+
+    <!-- ── Status Codes ── -->
+    <h3 id="statuses">Assessment Status Codes</h3>
+    <table class="dim-table">
+        <thead><tr><th>Status</th><th>Meaning</th></tr></thead>
+        <tbody>
+            <tr><td><strong>scored</strong></td><td>Full assessment complete with overall score and grade</td></tr>
+            <tr><td><strong>under_review</strong></td><td>Assessment in progress; dimensions being evaluated</td></tr>
+            <tr><td><strong>insufficient_evidence</strong></td><td>System is eligible but lacks enough verifiable sources for scoring</td></tr>
+            <tr><td><strong>inactive</strong></td><td>System shows no development activity in the last 6 months</td></tr>
+            <tr><td><strong>excluded</strong></td><td>System triggers an exclusion flag and cannot be scored</td></tr>
+        </tbody>
+    </table>
+
+    <!-- ── Dimensions ── -->
+    <h3 id="dimensions">Dimensions &amp; Weights</h3>
+    <p>AMI evaluates six dimensions. Each is scored 0-5 against a rubric (see below). The two highest-weighted dimensions reflect the most critical production concerns.</p>
+
+    <div class="index-card">
         <table class="dim-table">
             <thead>
                 <tr><th>Dimension</th><th>Weight</th><th>What It Measures</th></tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><strong>Reliability</strong></td>
+                    <td><strong>Execution Reliability</strong></td>
                     <td>
                         <div class="weight-bar">
                             <div class="weight-track"><div class="weight-fill" style="width:100%"></div></div>
                             <span class="weight-label">20%</span>
                         </div>
                     </td>
-                    <td>Uptime, error handling, recovery from failures, consistent output quality</td>
+                    <td>Multi-step task completion, error handling, retry logic, graceful degradation</td>
+                </tr>
+                <tr>
+                    <td><strong>Safety &amp; Guardrails</strong></td>
+                    <td>
+                        <div class="weight-bar">
+                            <div class="weight-track"><div class="weight-fill" style="width:100%"></div></div>
+                            <span class="weight-label">20%</span>
+                        </div>
+                    </td>
+                    <td>Permission models, sandboxing, security audits, secure defaults, compliance</td>
+                </tr>
+                <tr>
+                    <td><strong>Tooling &amp; Integration Breadth</strong></td>
+                    <td>
+                        <div class="weight-bar">
+                            <div class="weight-track"><div class="weight-fill" style="width:75%"></div></div>
+                            <span class="weight-label">15%</span>
+                        </div>
+                    </td>
+                    <td>Protocol support (MCP, etc.), third-party ecosystem, IDE integration, tool creation SDK</td>
                 </tr>
                 <tr>
                     <td><strong>Observability</strong></td>
@@ -239,37 +312,7 @@
                             <span class="weight-label">15%</span>
                         </div>
                     </td>
-                    <td>Logging, tracing, debugging tools, execution visibility</td>
-                </tr>
-                <tr>
-                    <td><strong>Tooling Ecosystem</strong></td>
-                    <td>
-                        <div class="weight-bar">
-                            <div class="weight-track"><div class="weight-fill" style="width:75%"></div></div>
-                            <span class="weight-label">15%</span>
-                        </div>
-                    </td>
-                    <td>Available integrations, plugins, MCP servers, third-party tools</td>
-                </tr>
-                <tr>
-                    <td><strong>Security Posture</strong></td>
-                    <td>
-                        <div class="weight-bar">
-                            <div class="weight-track"><div class="weight-fill" style="width:100%"></div></div>
-                            <span class="weight-label">20%</span>
-                        </div>
-                    </td>
-                    <td>Vulnerability count, CVEs, audit results, secure defaults</td>
-                </tr>
-                <tr>
-                    <td><strong>Execution Control</strong></td>
-                    <td>
-                        <div class="weight-bar">
-                            <div class="weight-track"><div class="weight-fill" style="width:75%"></div></div>
-                            <span class="weight-label">15%</span>
-                        </div>
-                    </td>
-                    <td>Permission models, sandboxing, human-in-the-loop, approval gates</td>
+                    <td>Structured logging, execution traces, dashboards, SIEM integration, cost monitoring</td>
                 </tr>
                 <tr>
                     <td><strong>Deployment Maturity</strong></td>
@@ -279,45 +322,153 @@
                             <span class="weight-label">15%</span>
                         </div>
                     </td>
-                    <td>CI/CD support, containerization, scaling options, enterprise readiness</td>
+                    <td>Container support, cloud deployment, Kubernetes, SLA guarantees, disaster recovery</td>
+                </tr>
+                <tr>
+                    <td><strong>Real-World Validation</strong></td>
+                    <td>
+                        <div class="weight-bar">
+                            <div class="weight-track"><div class="weight-fill" style="width:75%"></div></div>
+                            <span class="weight-label">15%</span>
+                        </div>
+                    </td>
+                    <td>Named deployments, case studies, independent benchmarks, regulatory acceptance</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ── Rubric Scoring ── -->
+    <h3 id="rubric">Rubric Scoring (0-5)</h3>
+    <p>Each dimension is scored on a 0-5 integer scale. Each score level has published rubric bullets (e.g., <code>ER3a</code>, <code>SG4b</code>) that assessors must reference. The full rubric table is available in the <a href="/ami-assessment">assessment detail view</a> for each system.</p>
+
+    <table class="dim-table">
+        <thead><tr><th>Score</th><th>Level</th><th>Meaning</th></tr></thead>
+        <tbody>
+            <tr><td style="font-family:var(--font-mono);font-weight:600;color:var(--red)">0</td><td>None</td><td>No evidence of capability</td></tr>
+            <tr><td style="font-family:var(--font-mono);font-weight:600;color:#fb923c">1</td><td>Minimal</td><td>Basic capability with significant gaps</td></tr>
+            <tr><td style="font-family:var(--font-mono);font-weight:600;color:var(--amber)">2</td><td>Developing</td><td>Functional but incomplete</td></tr>
+            <tr><td style="font-family:var(--font-mono);font-weight:600;color:var(--amber)">3</td><td>Competent</td><td>Meets expectations for production use</td></tr>
+            <tr><td style="font-family:var(--font-mono);font-weight:600;color:var(--cyan)">4</td><td>Strong</td><td>Exceeds expectations with comprehensive coverage</td></tr>
+            <tr><td style="font-family:var(--font-mono);font-weight:600;color:var(--green)">5</td><td>Exemplary</td><td>Industry-leading; requires hard evidence (primary source, commit, log, or metric)</td></tr>
+        </tbody>
+    </table>
+
+    <p><strong>Evidence requirements scale with score.</strong> A score of 4+ requires >= 2 distinct sources. A score of 5 requires at least one primary or hard-evidence source (commit, log, metric). Every scored dimension must cite rubric bullet IDs.</p>
+
+    <!-- ── Aggregation ── -->
+    <h3 id="aggregation">Scoring Formula &amp; Aggregation</h3>
+    <div class="formula-box">
+AMI = round( SUM(score_i &times; weight_i) / 5 &times; 100 )
+
+Where:
+  score_i  = 0-5 integer (per dimension, from rubric)
+  weight_i = dimension weight (all weights sum to 1.0)
+  5        = maximum possible per-dimension score
+
+Example (OpenClaw, all 6 dimensions scored):
+  raw = (3&times;0.20) + (4&times;0.15) + (1&times;0.20) + (3&times;0.15) + (3&times;0.15) + (3&times;0.15)
+      = 0.60 + 0.60 + 0.20 + 0.45 + 0.45 + 0.45
+      = 2.75
+  AMI = round(2.75 / 5 &times; 100) = 55 → Grade C
+    </div>
+
+    <h4>Renormalization (Missing Dimensions)</h4>
+    <p>When a dimension cannot be scored (e.g., <code>not_scored_reason: "Private infrastructure, no public evidence"</code>),
+    its weight is redistributed proportionally among scored dimensions. A system with >= 3 unscored dimensions cannot receive a
+    <code>scored</code> status.</p>
+
+    <div class="formula-box">
+renorm_weight_i = original_weight_i / SUM(scored_weights)
+
+Example: If observability (15%) is not scored, remaining weights (85%) renormalize:
+  execution_reliability: 0.20/0.85 = 0.235
+  safety_guardrails:     0.20/0.85 = 0.235
+  tooling_integration:   0.15/0.85 = 0.176
+  deployment_maturity:   0.15/0.85 = 0.176
+  real_world_validation: 0.15/0.85 = 0.176
+    </div>
+
+    <!-- ── Grades ── -->
+    <h3 id="grades">Letter Grades</h3>
+    <div class="grade-grid" style="grid-template-columns: repeat(5, 1fr);">
+        <div class="grade-box" style="background: var(--green-dim); border-color: rgba(52,213,154,0.2);">
+            <div class="grade-letter" style="color: var(--green);">A</div>
+            <div class="grade-range">80-100</div>
+        </div>
+        <div class="grade-box" style="background: var(--cyan-dim); border-color: rgba(6,182,212,0.2);">
+            <div class="grade-letter" style="color: var(--cyan);">B</div>
+            <div class="grade-range">60-79</div>
+        </div>
+        <div class="grade-box" style="background: var(--amber-dim); border-color: rgba(245,158,11,0.2);">
+            <div class="grade-letter" style="color: var(--amber);">C</div>
+            <div class="grade-range">40-59</div>
+        </div>
+        <div class="grade-box" style="background: rgba(251,146,60,0.08); border-color: rgba(251,146,60,0.2);">
+            <div class="grade-letter" style="color: #fb923c;">D</div>
+            <div class="grade-range">20-39</div>
+        </div>
+        <div class="grade-box" style="background: var(--red-dim); border-color: rgba(239,68,68,0.2);">
+            <div class="grade-letter" style="color: var(--red);">F</div>
+            <div class="grade-range">0-19</div>
+        </div>
+    </div>
+
+    <!-- ── Evidence & Sources ── -->
+    <h3 id="evidence">Evidence &amp; Source Tiering</h3>
+    <p>Every dimension score must be backed by evidence items. Each evidence item cites one or more sources from the source catalog.</p>
+
+    <div class="index-card">
+        <h4>Source Tiers</h4>
+        <table class="dim-table">
+            <thead><tr><th>Tier</th><th>Reliability</th><th>Examples</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><span class="tag" style="background:var(--green-dim);color:var(--green)">T1</span></td>
+                    <td>Primary / Hard evidence</td>
+                    <td>Source code, commit logs, metrics dashboards, audit reports</td>
+                </tr>
+                <tr>
+                    <td><span class="tag" style="background:var(--cyan-dim);color:var(--cyan)">T2</span></td>
+                    <td>Secondary / Independent</td>
+                    <td>Independent analysis, news reports, community benchmarks</td>
+                </tr>
+                <tr>
+                    <td><span class="tag" style="background:var(--amber-dim);color:var(--amber)">T3</span></td>
+                    <td>Self-reported</td>
+                    <td>Official marketing, vendor documentation, press releases</td>
                 </tr>
             </tbody>
         </table>
 
-        <h4>Scoring Formula</h4>
-        <div class="formula-box">
-AMI = Σ (dimension_score × dimension_weight)
-
-Where:
-  dimension_score = 0–100 (assessed per framework per dimension)
-  dimension_weight = percentage weight (all weights sum to 100%)
-
-Example (OpenClaw):
-  AMI = (55×0.20) + (60×0.15) + (75×0.15) + (18×0.20) + (45×0.15) + (60×0.15)
-      = 11.0 + 9.0 + 11.25 + 3.6 + 6.75 + 9.0
-      = 50.6 → rounded to 52 (with qualitative adjustment for evidence strength)
-        </div>
-
-        <h4>Letter Grades</h4>
-        <div class="grade-grid">
-            <div class="grade-box" style="background: var(--green-dim); border-color: rgba(52,213,154,0.2);">
-                <div class="grade-letter" style="color: var(--green);">A</div>
-                <div class="grade-range">80–100</div>
-            </div>
-            <div class="grade-box" style="background: var(--cyan-dim); border-color: rgba(6,182,212,0.2);">
-                <div class="grade-letter" style="color: var(--cyan);">B</div>
-                <div class="grade-range">60–79</div>
-            </div>
-            <div class="grade-box" style="background: var(--amber-dim); border-color: rgba(245,158,11,0.2);">
-                <div class="grade-letter" style="color: var(--amber);">C</div>
-                <div class="grade-range">40–59</div>
-            </div>
-            <div class="grade-box" style="background: var(--red-dim); border-color: rgba(239,68,68,0.2);">
-                <div class="grade-letter" style="color: var(--red);">D</div>
-                <div class="grade-range">0–39</div>
-            </div>
-        </div>
+        <h4>Anti-Gaming Gates</h4>
+        <p>The validation system enforces eight gates to prevent score inflation:</p>
+        <ol>
+            <li>No dimension score without evidence</li>
+            <li>Every evidence item must cite source IDs</li>
+            <li>Scored dimensions require a confidence level</li>
+            <li>Aggregation math must match stored values exactly</li>
+            <li>Score >= 4 requires >= 2 distinct sources</li>
+            <li>Score 5 requires at least one primary or hard-evidence source</li>
+            <li>Scored assessments require >= 3 distinct sources total</li>
+            <li>Scored dimensions must cite rubric bullet IDs</li>
+        </ol>
+        <p>Automated warnings flag: dimensions scoring 4+ backed only by self-reported sources, and evidence older than 180 days.</p>
     </div>
+
+    <!-- ── Versioning ── -->
+    <h3 id="versioning">Versioning &amp; Integrity</h3>
+    <p>Each assessment carries a <strong>spec hash</strong> linking it to this methodology version, plus a SHA-256 <strong>integrity hash</strong> of the assessment content. Published assessments require at least one reviewer signature. Assessment diffs show exactly what changed between versions.</p>
+    <p>The full AMI specification is available at <a href="/docs/ami-v1-spec.md">docs/ami-v1-spec.md</a>.</p>
+
+    <!-- ── Challenge ── -->
+    <h3 id="challenge">How to Challenge or Submit Updates</h3>
+    <ol>
+        <li>Open a GitHub issue on the <a href="https://github.com/chillysbabybackribs/Clawdia">report repository</a> with the tag <code>score-dispute</code></li>
+        <li>Cite specific dimension(s) and provide evidence with source URLs</li>
+        <li>We review within 7 days and publish a response with rationale</li>
+        <li>If accepted, a new assessment version is created with a diff showing changes</li>
+    </ol>
 
     <!-- ==================== ARI ==================== -->
     <h2>Index 2: Autonomy Risk Index (ARI)</h2>
@@ -532,13 +683,23 @@ Example (OpenClaw):
 
     <!-- ==================== VERSION HISTORY ==================== -->
     <h2>Version History</h2>
-    
+
     <div class="changelog">
+        <div class="changelog-entry">
+            <span class="changelog-date">v1.0</span>
+            <span class="changelog-text">
+                <strong>February 17, 2026 — AMI v1.0</strong><br>
+                Complete AMI overhaul: 0-5 rubric scoring (replacing 0-100), 6 renamed dimensions,
+                evidence-backed assessments with source catalog, 8-gate anti-inflation QA,
+                integrity hashing, reviewer signatures, publish gating. Confidence labels
+                updated to verified/inferred/unverified. F grade added (0-19).
+            </span>
+        </div>
         <div class="changelog-entry">
             <span class="changelog-date">v0.1</span>
             <span class="changelog-text">
                 <strong>February 16, 2026 — Initial Release</strong><br>
-                3 indices (AMI, ARI, EPI) covering 9 frameworks. 38 cited sources. 
+                3 indices (AMI, ARI, EPI) covering 9 frameworks. 38 cited sources.
                 Dimension weights established. Confidence labeling system introduced.
                 Grading and risk label thresholds defined.
             </span>
@@ -546,8 +707,9 @@ Example (OpenClaw):
     </div>
 
     <p style="margin-top: 2rem; font-size: 0.85rem; color: var(--text-3);">
-        <strong>Data sources:</strong> <a href="/AGENTS_2026_SOURCES.md" download>View all 38 sources</a> · 
-        <strong>Raw data:</strong> <a href="/frameworks.json">frameworks.json</a> · 
+        <strong>AMI assessments:</strong> <a href="/ami-assessment">View assessments</a> ·
+        <strong>Data sources:</strong> <a href="/AGENTS_2026_SOURCES.md" download>View all sources</a> ·
+        <strong>Raw data:</strong> <a href="/frameworks.json">frameworks.json</a> ·
         <strong>Report:</strong> <a href="/agents-2026">Agents 2026 Edition</a>
     </p>
 </div>

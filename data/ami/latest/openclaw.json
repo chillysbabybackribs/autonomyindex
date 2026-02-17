@@ -50,6 +50,10 @@
             "SRC_009"
           ]
         }
+      ],
+      "rubric_refs": [
+        "ER3a",
+        "ER3b"
       ]
     },
     {
@@ -93,6 +97,10 @@
             "SRC_005"
           ]
         }
+      ],
+      "rubric_refs": [
+        "TI4a",
+        "TI4b"
       ]
     },
     {
@@ -136,6 +144,10 @@
             "SRC_004"
           ]
         }
+      ],
+      "rubric_refs": [
+        "SG1a",
+        "SG1b"
       ]
     },
     {
@@ -163,6 +175,10 @@
             "SRC_009"
           ]
         }
+      ],
+      "rubric_refs": [
+        "OB3a",
+        "OB3b"
       ]
     },
     {
@@ -190,6 +206,10 @@
             "SRC_009"
           ]
         }
+      ],
+      "rubric_refs": [
+        "DM3a",
+        "DM3b"
       ]
     },
     {
@@ -217,6 +237,10 @@
             "SRC_001"
           ]
         }
+      ],
+      "rubric_refs": [
+        "RV3a",
+        "RV3b"
       ]
     }
   ],
@@ -225,12 +249,18 @@
   "notes": "Initial v1.0 methodology assessment. Security dimension heavily weighted down by Kaspersky audit findings and SecurityScorecard exposure data.",
   "review": {
     "state": "published",
-    "reviewed_by": null,
-    "reviewed_at": null
+    "reviewers": [
+      {
+        "name": "Editorial Board",
+        "handle": "editorial-board",
+        "signed_at": "2026-02-17T11:00:00Z",
+        "signature_hash": "639ed2963d26d460f0b7102855a0128b6b5adbf23408b9033193162ad638f784"
+      }
+    ]
   },
   "integrity": {
-    "assessment_hash": "add33bcf1e45a44319da72a92d7ebe9168b615e4b9097c408eb8c1843f61ea9d",
+    "assessment_hash": "a7e24924eb6a61c240e321fa670677dd00af2123173eedf09d1b9c08d3b62abc",
     "hash_algorithm": "sha256",
-    "hashed_at": "2026-02-17T09:15:26.417Z"
+    "hashed_at": "2026-02-17T10:07:48.869Z"
   }
 }

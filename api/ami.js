@@ -4,10 +4,19 @@
 // GET /api/ami — Latest AMI assessment per system + filters
 // ─────────────────────────────────────────────────────────────────────────────
 
+const fs = require('node:fs');
 const path = require('node:path');
 const store = require(path.join(process.cwd(), 'lib', 'ami', 'store.js'));
 const schema = require(path.join(process.cwd(), 'lib', 'ami', 'schema.js'));
 const { handleCors, requireAuth, validateQueryEnum, validateQueryInt } = require(path.join(process.cwd(), 'lib', 'ami', 'api-util.js'));
+
+function loadSourceCatalog() {
+  const catalogPath = path.join(process.cwd(), 'data', 'source-catalog.json');
+  if (!fs.existsSync(catalogPath)) return null;
+  const catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+  const sources = Array.isArray(catalog?.sources) ? catalog.sources : [];
+  return new Map(sources.map((s) => [s.source_id, s]));
+}
 
 module.exports = async function handler(req, res) {
   if (handleCors(req, res)) return;
@@ -87,25 +96,31 @@ module.exports = async function handler(req, res) {
     });
 
     // Build summary entries (no full evidence blobs)
-    const summary = results.map((a) => ({
-      system_id: a.system_id,
-      assessment_id: a.assessment_id,
-      overall_score: a.overall_score,
-      grade: a.grade,
-      overall_confidence: a.overall_confidence,
-      status: a.status,
-      category: a.category,
-      assessed_at: a.assessed_at,
-      methodology_version: a.methodology_version,
-      dimensions: (a.dimensions || []).map((d) => ({
-        dimension_id: d.dimension_id,
-        dimension_name: d.dimension_name,
-        score: d.score,
-        confidence: d.confidence,
-        weight: d.weight,
-        scored: d.scored,
-      })),
-    }));
+    const sourceCatalog = loadSourceCatalog();
+    const summary = results.map((a) => {
+      const signals = schema.computeAssessmentSignals(a, sourceCatalog);
+      return {
+        system_id: a.system_id,
+        assessment_id: a.assessment_id,
+        overall_score: a.overall_score,
+        grade: a.grade,
+        overall_confidence: a.overall_confidence,
+        status: a.status,
+        category: a.category,
+        assessed_at: a.assessed_at,
+        methodology_version: a.methodology_version,
+        freshness_days_median: signals.freshness_days_median,
+        warnings_count: signals.warnings_count,
+        dimensions: (a.dimensions || []).map((d) => ({
+          dimension_id: d.dimension_id,
+          dimension_name: d.dimension_name,
+          score: d.score,
+          confidence: d.confidence,
+          weight: d.weight,
+          scored: d.scored,
+        })),
+      };
+    });
 
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.status(200).json({

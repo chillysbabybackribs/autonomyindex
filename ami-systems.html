@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMI Assessments — Autonomy Index</title>
+    <meta name="description" content="Agent Maturity Index assessments for AI agent systems. Scored, evidence-backed evaluations of production readiness.">
+    <link rel="canonical" href="https://www.autonomyindex.io/ami-systems">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #06b6d4;
+            --cyan-dim: rgba(6,182,212,0.08);
+            --green: #34d59a;
+            --green-dim: rgba(52,213,154,0.08);
+            --amber: #f59e0b;
+            --amber-dim: rgba(245,158,11,0.08);
+            --red: #ef4444;
+            --red-dim: rgba(239,68,68,0.08);
+            --purple: #a78bfa;
+            --purple-dim: rgba(167,139,250,0.08);
+            --surface-1: #0a0a0a;
+            --surface-2: #111111;
+            --surface-3: #1a1a1a;
+            --surface-4: #262626;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --text-1: #f5f5f5;
+            --text-2: #a1a1a1;
+            --text-3: #666;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { color-scheme: dark; scroll-behavior: smooth; }
+        body { font-family: var(--font-body); background: #000; color: var(--text-2); line-height: 1.7; font-size: 15px; }
+
+        .header {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(0,0,0,0.92); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; height: 56px;
+        }
+        .logo { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: #fff; text-decoration: none; }
+        .nav-menu { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-link { color: var(--text-3); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
+        .nav-link:hover { color: var(--text-2); }
+        .nav-link.active { color: var(--cyan); }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+
+        .breadcrumb { font-size: 12px; color: var(--text-3); margin-bottom: 2rem; }
+        .breadcrumb a { color: var(--text-3); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--cyan); }
+
+        h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+        h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 600; color: #fff; margin: 2rem 0 1rem; }
+        p { margin-bottom: 1rem; }
+        a { color: var(--cyan); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code { font-family: var(--font-mono); background: var(--surface-3); padding: 2px 6px; border-radius: 4px; font-size: 0.85em; color: var(--cyan); }
+
+        .system-card {
+            background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px;
+            padding: 1.5rem; margin-bottom: 1rem; display: flex; gap: 1.5rem; align-items: center;
+            transition: border-color 0.2s;
+        }
+        .system-card:hover { border-color: var(--border-hover); }
+
+        .grade-badge {
+            font-family: var(--font-display); font-size: 1.3rem; font-weight: 700;
+            width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+            border-radius: 10px; border: 2px solid; flex-shrink: 0;
+        }
+        .grade-A { color: var(--green); border-color: var(--green); background: var(--green-dim); }
+        .grade-B { color: var(--cyan); border-color: var(--cyan); background: var(--cyan-dim); }
+        .grade-C { color: var(--amber); border-color: var(--amber); background: var(--amber-dim); }
+        .grade-D { color: #fb923c; border-color: #fb923c; background: rgba(251,146,60,0.08); }
+        .grade-F { color: var(--red); border-color: var(--red); background: var(--red-dim); }
+
+        .score-num {
+            font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; line-height: 1;
+            min-width: 44px; text-align: center; flex-shrink: 0;
+        }
+
+        .system-info { flex: 1; min-width: 0; }
+        .system-name { font-family: var(--font-display); font-weight: 600; color: var(--text-1); font-size: 1rem; }
+        .system-meta { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.35rem; font-size: 0.78rem; color: var(--text-3); }
+
+        .system-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 500;
+            text-decoration: none; transition: all 0.2s; border: 1px solid var(--border);
+            color: var(--text-2); background: var(--surface-3);
+        }
+        .btn:hover { border-color: var(--cyan); color: var(--cyan); text-decoration: none; }
+        .btn-primary { background: var(--cyan-dim); border-color: rgba(6,182,212,0.3); color: var(--cyan); }
+
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; }
+        .tag-verified { background: rgba(52,213,154,0.12); color: var(--green); }
+        .tag-inferred { background: rgba(245,158,11,0.12); color: var(--amber); }
+        .tag-unverified { background: rgba(167,139,250,0.12); color: var(--purple); }
+        .tag-scored { background: var(--cyan-dim); color: var(--cyan); }
+        .tag-under_review { background: var(--amber-dim); color: var(--amber); }
+        .tag-insufficient_evidence { background: var(--purple-dim); color: var(--purple); }
+        .tag-inactive { background: rgba(102,102,102,0.12); color: var(--text-3); }
+        .tag-excluded { background: var(--red-dim); color: var(--red); }
+
+        .dim-bar { display: flex; gap: 2px; margin-top: 0.5rem; }
+        .dim-pip {
+            height: 6px; flex: 1; border-radius: 3px; background: var(--surface-4);
+        }
+
+        .loading { text-align: center; padding: 4rem 2rem; color: var(--text-3); }
+        .error-msg { text-align: center; padding: 4rem 2rem; color: var(--red); }
+
+        .meta-version { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-3); margin-top: 0.5rem; }
+
+        .footer { text-align: center; padding: 3rem 2rem; border-top: 1px solid var(--border); color: var(--text-3); font-size: 0.8rem; }
+        .footer a { color: var(--text-2); text-decoration: none; }
+        .footer a:hover { color: var(--cyan); }
+
+        @media (max-width: 640px) {
+            .system-card { flex-direction: column; align-items: flex-start; }
+            .system-actions { width: 100%; }
+            .btn { flex: 1; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">Autonomy Index</a>
+        <nav class="nav-menu">
+            <a href="/" class="nav-link">Main Report</a>
+            <a href="/agents-2026" class="nav-link">Agents 2026</a>
+            <a href="/methodology#ami" class="nav-link">Methodology</a>
+            <a href="/ami-systems" class="nav-link active">AMI</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="breadcrumb">
+            <a href="/">Home</a> / <a href="/methodology#ami">AMI</a> / All Systems
+        </div>
+
+        <h1>AMI Assessments</h1>
+        <p style="color:var(--text-2);margin-bottom:2rem">
+            Agent Maturity Index scores for AI agent systems. Each assessment is evidence-backed
+            with cited sources and reviewer signatures.
+            <a href="/methodology#ami">Learn how scoring works</a>.
+        </p>
+
+        <div id="content">
+            <div class="loading">Loading assessments...</div>
+        </div>
+
+        <div class="meta-version" id="meta-info"></div>
+    </main>
+
+    <footer class="footer">
+        <p><a href="/">Autonomy Index</a> · <a href="/agents-2026">Agents 2026</a> · <a href="/methodology">Methodology</a></p>
+    </footer>
+
+    <script>
+    (function() {
+        'use strict';
+
+        fetch('/api/ami')
+            .then(function(r) {
+                if (!r.ok) throw new Error('Failed to load AMI data');
+                return r.json();
+            })
+            .then(render)
+            .catch(function(err) {
+                document.getElementById('content').innerHTML = '<div class="error-msg">' + esc(err.message) + '</div>';
+            });
+
+        function esc(s) {
+            if (!s) return '';
+            var d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+
+        function scoreColor(score) {
+            if (score == null) return 'var(--text-3)';
+            if (score >= 80) return 'var(--green)';
+            if (score >= 60) return 'var(--cyan)';
+            if (score >= 40) return 'var(--amber)';
+            if (score >= 20) return '#fb923c';
+            return 'var(--red)';
+        }
+
+        function dimColor(score) {
+            if (score == null) return 'var(--surface-4)';
+            if (score >= 4) return 'var(--green)';
+            if (score >= 3) return 'var(--cyan)';
+            if (score >= 2) return 'var(--amber)';
+            if (score >= 1) return '#fb923c';
+            return 'var(--red)';
+        }
+
+        function render(data) {
+            var systems = data.systems || [];
+            var html = '';
+
+            if (systems.length === 0) {
+                html = '<div class="loading">No published assessments yet.</div>';
+                document.getElementById('content').innerHTML = html;
+                return;
+            }
+
+            // Scored systems first, then others
+            var scored = systems.filter(function(s) { return s.status === 'scored'; });
+            var other = systems.filter(function(s) { return s.status !== 'scored'; });
+
+            if (scored.length > 0) {
+                html += '<h2>Scored Systems</h2>';
+                for (var i = 0; i < scored.length; i++) {
+                    html += renderCard(scored[i]);
+                }
+            }
+
+            if (other.length > 0) {
+                html += '<h2>Other Statuses</h2>';
+                for (var j = 0; j < other.length; j++) {
+                    html += renderCard(other[j]);
+                }
+            }
+
+            document.getElementById('content').innerHTML = html;
+
+            // Meta info
+            var meta = data.meta || {};
+            document.getElementById('meta-info').textContent =
+                'AMI v' + (meta.version || '1.0') + ' · ' +
+                (meta.total_systems || 0) + ' system(s) · ' +
+                'Updated ' + (meta.last_updated ? meta.last_updated.slice(0, 10) : '—');
+        }
+
+        function renderCard(sys) {
+            var html = '<div class="system-card">';
+
+            // Grade badge
+            if (sys.grade) {
+                html += '<div class="grade-badge grade-' + esc(sys.grade) + '">' + esc(sys.grade) + '</div>';
+            }
+
+            // Score
+            if (sys.overall_score != null) {
+                html += '<div class="score-num" style="color:' + scoreColor(sys.overall_score) + '">' + sys.overall_score + '</div>';
+            } else {
+                html += '<div class="score-num" style="color:var(--text-3)">—</div>';
+            }
+
+            // Info
+            html += '<div class="system-info">';
+            html += '<div class="system-name">' + esc(sys.system_id) + '</div>';
+            html += '<div class="system-meta">';
+            html += '<span class="tag tag-' + esc(sys.status) + '">' + esc(sys.status) + '</span>';
+            if (sys.overall_confidence) {
+                var confCls = sys.overall_confidence === 'high' ? 'tag-verified' :
+                              sys.overall_confidence === 'low' ? 'tag-unverified' : 'tag-inferred';
+                html += '<span class="tag ' + confCls + '">' + esc(sys.overall_confidence) + ' confidence</span>';
+            }
+            html += '<span>' + esc(sys.assessed_at ? sys.assessed_at.slice(0, 10) : '') + '</span>';
+            if (sys.category) html += '<span>' + esc(sys.category.replace(/_/g, ' ')) + '</span>';
+            if (sys.freshness_days_median != null) html += '<span>' + sys.freshness_days_median + 'd median freshness</span>';
+            if (sys.warnings_count > 0) html += '<span style="color:var(--amber)">' + sys.warnings_count + ' warning(s)</span>';
+            html += '</div>';
+
+            // Mini dimension bars
+            if (sys.dimensions && sys.dimensions.length > 0) {
+                html += '<div class="dim-bar">';
+                for (var d = 0; d < sys.dimensions.length; d++) {
+                    var dim = sys.dimensions[d];
+                    var fill = dim.scored ? (dim.score / 5 * 100) : 0;
+                    html += '<div class="dim-pip" style="background:linear-gradient(to right,' + dimColor(dim.score) + ' ' + fill + '%,var(--surface-4) ' + fill + '%)" title="' + esc(dim.dimension_name) + ': ' + (dim.scored ? dim.score + '/5' : 'N/A') + '"></div>';
+                }
+                html += '</div>';
+            }
+            html += '</div>';
+
+            // Actions
+            html += '<div class="system-actions">';
+            html += '<a class="btn btn-primary" href="/ami-assessment?id=' + esc(sys.assessment_id) + '">View Assessment</a>';
+            html += '</div>';
+
+            html += '</div>';
+            return html;
+        }
+    })();
+    </script>
+</body>
+</html>

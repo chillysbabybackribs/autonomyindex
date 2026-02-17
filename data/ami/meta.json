@@ -17,5 +17,55 @@
     "C": [40, 59],
     "D": [20, 39],
     "F": [0, 19]
+  },
+  "rubrics": {
+    "execution_reliability": {
+      "0": [{ "id": "ER0a", "text": "No evidence of task completion capability" }],
+      "1": [{ "id": "ER1a", "text": "Basic task execution with frequent failures" }, { "id": "ER1b", "text": "No error recovery or retry logic" }],
+      "2": [{ "id": "ER2a", "text": "Completes simple tasks reliably" }, { "id": "ER2b", "text": "Basic error handling present" }],
+      "3": [{ "id": "ER3a", "text": "Handles multi-step tasks with moderate reliability" }, { "id": "ER3b", "text": "Error recovery exists but incomplete" }],
+      "4": [{ "id": "ER4a", "text": "Reliable multi-step execution with graceful degradation" }, { "id": "ER4b", "text": "Comprehensive error handling and retry logic" }],
+      "5": [{ "id": "ER5a", "text": "Production-grade reliability with SLA guarantees" }, { "id": "ER5b", "text": "Formal reliability engineering and chaos testing" }]
+    },
+    "tooling_integration": {
+      "0": [{ "id": "TI0a", "text": "No external tool integration" }],
+      "1": [{ "id": "TI1a", "text": "Single tool or API integration" }],
+      "2": [{ "id": "TI2a", "text": "Multiple tool integrations with basic protocol support" }],
+      "3": [{ "id": "TI3a", "text": "Broad tool ecosystem with standard protocol support" }, { "id": "TI3b", "text": "IDE or editor integration available" }],
+      "4": [{ "id": "TI4a", "text": "Extensive third-party ecosystem with multi-protocol support" }, { "id": "TI4b", "text": "MCP or equivalent open protocol integration" }],
+      "5": [{ "id": "TI5a", "text": "Industry-leading ecosystem with bidirectional tool orchestration" }, { "id": "TI5b", "text": "Custom tool creation SDK with marketplace" }]
+    },
+    "safety_guardrails": {
+      "0": [{ "id": "SG0a", "text": "No safety controls or permission model" }],
+      "1": [{ "id": "SG1a", "text": "Minimal permission model with permissive defaults" }, { "id": "SG1b", "text": "Known unpatched vulnerabilities" }],
+      "2": [{ "id": "SG2a", "text": "Basic permission model with some secure defaults" }],
+      "3": [{ "id": "SG3a", "text": "Role-based access control with configurable policies" }, { "id": "SG3b", "text": "Regular security patches" }],
+      "4": [{ "id": "SG4a", "text": "Comprehensive security model with audit logging" }, { "id": "SG4b", "text": "Third-party security audit completed" }],
+      "5": [{ "id": "SG5a", "text": "Zero-trust architecture with formal verification" }, { "id": "SG5b", "text": "Continuous security monitoring and compliance certification" }]
+    },
+    "observability": {
+      "0": [{ "id": "OB0a", "text": "No logging or monitoring capability" }],
+      "1": [{ "id": "OB1a", "text": "Basic console logging only" }],
+      "2": [{ "id": "OB2a", "text": "Structured logging with basic trace visibility" }],
+      "3": [{ "id": "OB3a", "text": "Built-in dashboard with execution traces" }, { "id": "OB3b", "text": "Tool call visibility and structured logs" }],
+      "4": [{ "id": "OB4a", "text": "Full distributed tracing with SIEM integration" }, { "id": "OB4b", "text": "Custom metrics and alerting" }],
+      "5": [{ "id": "OB5a", "text": "Production-grade APM with anomaly detection" }, { "id": "OB5b", "text": "Real-time cost and performance monitoring" }]
+    },
+    "deployment_maturity": {
+      "0": [{ "id": "DM0a", "text": "No deployment tooling or documentation" }],
+      "1": [{ "id": "DM1a", "text": "Manual deployment with basic documentation" }],
+      "2": [{ "id": "DM2a", "text": "Container support with basic deployment guides" }],
+      "3": [{ "id": "DM3a", "text": "Docker support with cloud deployment options" }, { "id": "DM3b", "text": "No enterprise SLA or multi-region support" }],
+      "4": [{ "id": "DM4a", "text": "Kubernetes-native with multi-region support" }, { "id": "DM4b", "text": "Infrastructure-as-code templates" }],
+      "5": [{ "id": "DM5a", "text": "Enterprise-grade with SLA guarantees" }, { "id": "DM5b", "text": "Auto-scaling, blue-green deployment, disaster recovery" }]
+    },
+    "real_world_validation": {
+      "0": [{ "id": "RV0a", "text": "No evidence of real-world usage" }],
+      "1": [{ "id": "RV1a", "text": "Early adopter usage with limited feedback" }],
+      "2": [{ "id": "RV2a", "text": "Growing community adoption with user testimonials" }],
+      "3": [{ "id": "RV3a", "text": "Significant adoption metrics or institutional backing" }, { "id": "RV3b", "text": "Limited named enterprise case studies" }],
+      "4": [{ "id": "RV4a", "text": "Named enterprise deployments with published case studies" }, { "id": "RV4b", "text": "Independent benchmarks or evaluations" }],
+      "5": [{ "id": "RV5a", "text": "Industry-standard with regulatory acceptance" }, { "id": "RV5b", "text": "Peer-reviewed evaluations and long-term production track record" }]
+    }
   }
 }

@@ -122,7 +122,7 @@ module.exports = async function handler(req, res) {
       }
 
       // Force review state to draft for all new assessments (spec Section E)
-      body.review = { state: 'draft', reviewed_by: null, reviewed_at: null };
+      body.review = { state: 'draft', reviewers: [] };
 
       // Validate (with source catalog for gate 6)
       const sourceCatalog = loadSourceCatalog();

@@ -64,7 +64,7 @@ function main() {
   template.category = category;
 
   // Set review to draft
-  template.review = { state: 'draft', reviewed_by: null, reviewed_at: null };
+  template.review = { state: 'draft', reviewers: [] };
 
   if (nextVersion > 1) {
     // Find previous assessment ID

@@ -1,45 +1,39 @@
 {
-  "_template_note": "AMI v1.0 Assessment Template. Replace all <PLACEHOLDER> values. Remove this _template_note field before submission.",
-
-  "assessment_id": "<AMI_ASSESS_YYYYMMDD_systemid_vN>",
-  "system_id": "<system_id>",
+  "assessment_id": "AMI_ASSESS_20260217_fixture-insufficient_v1",
+  "system_id": "fixture-insufficient",
   "version": 1,
-  "assessed_at": "<ISO_TIMESTAMP>",
-  "system_version": null,
+  "assessed_at": "2026-02-17T12:00:00Z",
+  "system_version": "0.3.0",
   "previous_assessment_id": null,
-
   "overall_score": null,
   "grade": null,
   "overall_confidence": "low",
-  "status": "under_review",
-  "category": "<cloud_autonomous|cloud_workflow|local_autonomous|enterprise|vertical_agent>",
-
+  "status": "insufficient_evidence",
+  "category": "cloud_workflow",
   "eligibility": {
-    "agent_system": false,
-    "public_artifact": false,
-    "active_development": false,
-    "maintainer_identifiable": false,
-    "verified_sources_count": 0,
+    "agent_system": true,
+    "public_artifact": true,
+    "active_development": true,
+    "maintainer_identifiable": true,
+    "verified_sources_count": 1,
     "exclusion_flags": {
       "base_llm_only": false,
       "prompt_library_only": false,
       "research_prototype_only": false,
       "wrapper_only": false
     },
-    "notes": "<Describe eligibility determination>"
+    "notes": "Insufficient evidence fixture — only 1 verified source available, cannot reach SCORED threshold."
   },
-
   "dimensions": [
     {
       "dimension_id": "execution_reliability",
       "dimension_name": "Execution Reliability",
       "score": null,
       "confidence": "unverified",
-      "weight": 0.20,
+      "weight": 0.2,
       "rationale": "",
       "scored": false,
-      "not_scored_reason": "Not yet assessed",
-      "rubric_refs": [],
+      "not_scored_reason": "Insufficient evidence to score",
       "evidence": []
     },
     {
@@ -50,8 +44,7 @@
       "weight": 0.15,
       "rationale": "",
       "scored": false,
-      "not_scored_reason": "Not yet assessed",
-      "rubric_refs": [],
+      "not_scored_reason": "Insufficient evidence to score",
       "evidence": []
     },
     {
@@ -59,11 +52,10 @@
       "dimension_name": "Safety & Guardrails",
       "score": null,
       "confidence": "unverified",
-      "weight": 0.20,
+      "weight": 0.2,
       "rationale": "",
       "scored": false,
-      "not_scored_reason": "Not yet assessed",
-      "rubric_refs": [],
+      "not_scored_reason": "Insufficient evidence to score",
       "evidence": []
     },
     {
@@ -74,8 +66,7 @@
       "weight": 0.15,
       "rationale": "",
       "scored": false,
-      "not_scored_reason": "Not yet assessed",
-      "rubric_refs": [],
+      "not_scored_reason": "Insufficient evidence to score",
       "evidence": []
     },
     {
@@ -86,8 +77,7 @@
       "weight": 0.15,
       "rationale": "",
       "scored": false,
-      "not_scored_reason": "Not yet assessed",
-      "rubric_refs": [],
+      "not_scored_reason": "Insufficient evidence to score",
       "evidence": []
     },
     {
@@ -98,19 +88,21 @@
       "weight": 0.15,
       "rationale": "",
       "scored": false,
-      "not_scored_reason": "Not yet assessed",
-      "rubric_refs": [],
+      "not_scored_reason": "Insufficient evidence to score",
       "evidence": []
     }
   ],
-
   "methodology_version": "1.0",
-  "assessed_by": "<assessor_name_or_automated-pipeline>",
-  "notes": "",
-
+  "assessed_by": "editorial-board",
+  "notes": "Fixture: insufficient_evidence status — not enough verified sources to proceed to scoring.",
   "review": {
-    "state": "draft",
-    "reviewers": []
+    "state": "reviewed",
+    "reviewed_by": null,
+    "reviewed_at": null
   },
-  "integrity": null
+  "integrity": {
+    "assessment_hash": "5aba06f0424a91c1a9c556db769298a9df531c4adea7a22298d62956870bbfd6",
+    "hash_algorithm": "sha256",
+    "hashed_at": "2026-02-17T10:07:48.878Z"
+  }
 }

@@ -66,6 +66,38 @@ function verifyIntegrity(assessment, relPath) {
   return [];
 }
 
+// ── Rubric loading ──────────────────────────────────────────────────────────
+
+function loadRubrics() {
+  const metaPath = path.join(ROOT, 'data', 'ami', 'meta.json');
+  if (!fs.existsSync(metaPath)) return null;
+  const meta = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
+  return meta.rubrics || null;
+}
+
+// ── Reviewer signature verification ─────────────────────────────────────────
+
+function verifyReviewerSignatures(assessment, relPath) {
+  const errors = [];
+  if (!assessment.review || assessment.review.state !== 'published') return errors;
+  if (!Array.isArray(assessment.review.reviewers)) return errors;
+
+  for (let i = 0; i < assessment.review.reviewers.length; i++) {
+    const r = assessment.review.reviewers[i];
+    if (!r.handle || !r.signed_at || !r.signature_hash) continue;
+    const expected = store.computeSignatureHash(
+      r.handle, r.signed_at, assessment.system_id, assessment.assessment_id
+    );
+    if (r.signature_hash !== expected) {
+      errors.push(
+        `reviewer[${i}] signature_hash mismatch in ${relPath}: ` +
+        `stored "${r.signature_hash.slice(0, 16)}..." vs computed "${expected.slice(0, 16)}..."`
+      );
+    }
+  }
+  return errors;
+}
+
 // ── Main ─────────────────────────────────────────────────────────────────────
 
 function main() {
@@ -77,6 +109,7 @@ function main() {
   }
 
   const sourceCatalog = loadSourceCatalog();
+  const rubrics = loadRubrics();
   const allErrors = [];
 
   // Spec hash verification
@@ -116,8 +149,8 @@ function main() {
 
       const fileErrors = [];
 
-      // 1. Schema validation (with source catalog for gate 6)
-      const result = schema.validateAssessment(assessment, { sourceCatalog });
+      // 1. Schema validation (with source catalog for gate 6 + rubrics for gate 8)
+      const result = schema.validateAssessment(assessment, { sourceCatalog, rubrics });
       if (!result.valid) {
         fileErrors.push(...result.errors);
       }
@@ -159,7 +192,10 @@ function main() {
       // 3. Integrity hash verification
       fileErrors.push(...verifyIntegrity(assessment, relPath));
 
-      // 4. Verify system_id matches directory
+      // 4. Reviewer signature verification
+      fileErrors.push(...verifyReviewerSignatures(assessment, relPath));
+
+      // 5. Verify system_id matches directory
       if (assessment.system_id !== sysDir) {
         fileErrors.push(
           `system_id "${assessment.system_id}" does not match directory "${sysDir}"`

@@ -11,6 +11,8 @@ function run(scriptPath) {
 }
 
 function main() {
+  run('scripts/validate-ami.js');
+  run('scripts/ami-smoke-test.js');
   run('scripts/build-weekly-brief-pages.js');
   run('scripts/generate-sitemap.js');
   run('scripts/inject-ga.js');

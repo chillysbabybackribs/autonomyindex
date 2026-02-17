@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "python -m http.server 3000",
     "build": "node scripts/prepare-site.js",
-    "start": "python -m http.server 8000"
+    "start": "python -m http.server 8000",
+    "validate:ami": "node scripts/validate-ami.js && node scripts/ami-negative-tests.js",
+    "ami:smoke": "node scripts/ami-smoke-test.js",
+    "ami:negative": "node scripts/ami-negative-tests.js",
+    "ami:new": "node scripts/new-ami-assessment.js"
   },
   "keywords": ["ai tools", "artificial intelligence", "2026"],
   "author": "AI Tools Report"
