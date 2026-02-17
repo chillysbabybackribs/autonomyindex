@@ -116,6 +116,15 @@
             height: 6px; flex: 1; border-radius: 3px; background: var(--surface-4);
         }
 
+        .compliance-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;
+            letter-spacing: 0.05em; text-transform: uppercase;
+        }
+        .compliance-pass { background: rgba(52,213,154,0.12); color: var(--green); border: 1px solid rgba(52,213,154,0.25); }
+        .compliance-fail { background: rgba(239,68,68,0.08); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+        .compliance-na { background: rgba(102,102,102,0.08); color: var(--text-3); border: 1px solid rgba(102,102,102,0.15); }
+
         .loading { text-align: center; padding: 4rem 2rem; color: var(--text-3); }
         .error-msg { text-align: center; padding: 4rem 2rem; color: var(--red); }
 
@@ -241,6 +250,31 @@
                 'AMI v' + (meta.version || '1.0') + ' · ' +
                 (meta.total_systems || 0) + ' system(s) · ' +
                 'Updated ' + (meta.last_updated ? meta.last_updated.slice(0, 10) : '—');
+
+            // Fetch compliance badges for scored systems
+            for (var k = 0; k < systems.length; k++) {
+                fetchComplianceBadge(systems[k].assessment_id);
+            }
+        }
+
+        function fetchComplianceBadge(assessmentId) {
+            var el = document.getElementById('compliance-' + assessmentId);
+            if (!el) return;
+            fetch('/api/ami/validate?assessmentId=' + encodeURIComponent(assessmentId))
+                .then(function(r) { return r.ok ? r.json() : null; })
+                .then(function(result) {
+                    if (!result || !el) return;
+                    if (result.pass) {
+                        el.className = 'compliance-badge compliance-pass';
+                        el.textContent = 'PASS';
+                        el.title = result.profile_label + ': all checks passed';
+                    } else {
+                        el.className = 'compliance-badge compliance-fail';
+                        el.textContent = 'FAIL';
+                        el.title = result.profile_label + ': ' + result.reasons.length + ' issue(s)';
+                    }
+                })
+                .catch(function() {});
         }
 
         function renderCard(sys) {
@@ -260,7 +294,10 @@
 
             // Info
             html += '<div class="system-info">';
-            html += '<div class="system-name">' + esc(sys.system_id) + '</div>';
+            html += '<div class="system-name">' + esc(sys.system_id);
+            // Compliance badge placeholder (filled async)
+            html += ' <span id="compliance-' + esc(sys.assessment_id) + '" class="compliance-badge compliance-na" title="Checking compliance...">...</span>';
+            html += '</div>';
             html += '<div class="system-meta">';
             html += '<span class="tag tag-' + esc(sys.status) + '">' + esc(sys.status) + '</span>';
             if (sys.overall_confidence) {

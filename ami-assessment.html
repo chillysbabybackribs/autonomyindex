@@ -137,8 +137,54 @@
 
         .integrity-section { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-3); margin-top: 1rem; word-break: break-all; }
 
+        .submission-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 1rem 0; }
+        .submission-table th { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 2px solid var(--border-hover); color: var(--text-3); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .submission-table td { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); color: var(--text-2); vertical-align: top; }
+        .submission-table tr:hover td { background: rgba(255,255,255,0.02); }
+        .sub-status { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 10px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; }
+        .sub-received { background: rgba(6,182,212,0.12); color: var(--cyan); }
+        .sub-under_review { background: rgba(245,158,11,0.12); color: var(--amber); }
+        .sub-accepted { background: rgba(52,213,154,0.12); color: var(--green); }
+        .sub-rejected { background: rgba(239,68,68,0.08); color: var(--red); }
+        .sub-type { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-3); }
+        .sub-reasoning { font-size: 0.78rem; color: var(--text-3); font-style: italic; margin-top: 0.25rem; }
+
         .loading { text-align: center; padding: 4rem 2rem; color: var(--text-3); }
         .error-msg { text-align: center; padding: 4rem 2rem; color: var(--red); }
+
+        .compliance-section {
+            background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px;
+            padding: 1.25rem 1.5rem; margin-top: 1.5rem;
+        }
+        .compliance-header {
+            display: flex; align-items: center; gap: 0.75rem; cursor: pointer; user-select: none;
+        }
+        .compliance-badge-lg {
+            display: inline-flex; align-items: center; padding: 4px 12px;
+            border-radius: 6px; font-size: 12px; font-weight: 700;
+            letter-spacing: 0.05em; text-transform: uppercase;
+        }
+        .compliance-pass-lg { background: rgba(52,213,154,0.12); color: var(--green); border: 1px solid rgba(52,213,154,0.25); }
+        .compliance-fail-lg { background: rgba(239,68,68,0.08); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+        .compliance-label { font-family: var(--font-display); font-size: 0.9rem; color: var(--text-1); font-weight: 600; }
+        .compliance-profile { font-size: 0.78rem; color: var(--text-3); }
+        .compliance-toggle { margin-left: auto; font-size: 0.75rem; color: var(--text-3); }
+        .compliance-reasons {
+            margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border);
+            display: none;
+        }
+        .compliance-reasons.open { display: block; }
+        .compliance-reason {
+            display: flex; gap: 0.5rem; align-items: flex-start; padding: 0.35rem 0;
+            font-size: 0.8rem; color: var(--text-2);
+        }
+        .reason-severity {
+            display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px;
+            font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; flex-shrink: 0;
+        }
+        .reason-error { background: var(--red-dim); color: var(--red); }
+        .reason-warning { background: var(--amber-dim); color: var(--amber); }
+        .reason-code { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-3); }
 
         @media (max-width: 640px) {
             .score-hero { flex-direction: column; align-items: flex-start; }
@@ -256,6 +302,9 @@
             }
             html += '</div></div></div>';
 
+            // Compliance section (placeholder, filled async)
+            html += '<div id="compliance-section"></div>';
+
             // Dimensions table
             html += '<h2>Dimensions</h2>';
             html += '<table class="dim-table"><thead><tr><th>Dimension</th><th>Score</th><th>Weight</th><th>Confidence</th><th>Rubric</th></tr></thead><tbody>';
@@ -358,6 +407,40 @@
                 html += '</div>';
             }
 
+            // Submission history
+            var subs = data._submissions || [];
+            if (subs.length > 0) {
+                html += '<h2>Submission History</h2>';
+                html += '<table class="submission-table"><thead><tr><th>ID</th><th>Type</th><th>Status</th><th>Submitted</th><th>Reviewer</th><th>Result</th></tr></thead><tbody>';
+                for (var si = 0; si < subs.length; si++) {
+                    var sub = subs[si];
+                    html += '<tr>';
+                    html += '<td><code style="font-size:0.7rem">' + esc(sub.submission_id) + '</code></td>';
+                    html += '<td><span class="sub-type">' + esc(sub.type) + '</span></td>';
+                    html += '<td><span class="sub-status sub-' + esc(sub.status) + '">' + esc(sub.status) + '</span></td>';
+                    html += '<td>' + fmtDate(sub.submitted_at) + '</td>';
+                    html += '<td>';
+                    if (sub.review && sub.review.reviewer_name) {
+                        html += esc(sub.review.reviewer_name);
+                        if (sub.review.reasoning) {
+                            html += '<div class="sub-reasoning">' + esc(sub.review.reasoning) + '</div>';
+                        }
+                    } else {
+                        html += '<span style="color:var(--text-3)">—</span>';
+                    }
+                    html += '</td>';
+                    html += '<td>';
+                    if (sub.resulting_assessment_id) {
+                        html += '<a href="/ami-assessment?id=' + esc(sub.resulting_assessment_id) + '">v' + esc(sub.resulting_assessment_id.split('_v').pop()) + '</a>';
+                    } else {
+                        html += '<span style="color:var(--text-3)">—</span>';
+                    }
+                    html += '</td>';
+                    html += '</tr>';
+                }
+                html += '</tbody></table>';
+            }
+
             // Footer links
             html += '<div style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--text-3)">';
             html += '<a href="/methodology#ami">AMI Methodology</a>';
@@ -367,6 +450,47 @@
             html += '</div>';
 
             document.getElementById('content').innerHTML = html;
+
+            // Fetch compliance validation
+            fetchCompliance(data.assessment_id);
+        }
+
+        function fetchCompliance(assessmentId) {
+            fetch('/api/ami/validate?assessmentId=' + encodeURIComponent(assessmentId))
+                .then(function(r) { return r.ok ? r.json() : null; })
+                .then(function(result) {
+                    var el = document.getElementById('compliance-section');
+                    if (!result || !el) return;
+                    var html = '<div class="compliance-section">';
+                    html += '<div class="compliance-header" onclick="this.parentNode.querySelector(\'.compliance-reasons\').classList.toggle(\'open\');var t=this.querySelector(\'.compliance-toggle\');t.textContent=t.textContent===\'Show details\'?\'Hide details\':\'Show details\'">';
+                    if (result.pass) {
+                        html += '<span class="compliance-badge-lg compliance-pass-lg">PASS</span>';
+                    } else {
+                        html += '<span class="compliance-badge-lg compliance-fail-lg">FAIL</span>';
+                    }
+                    html += '<span class="compliance-label">' + esc(result.profile_label) + '</span>';
+                    html += '<span class="compliance-profile">' + esc(result.profile_id) + '</span>';
+                    if (result.reasons && result.reasons.length > 0) {
+                        html += '<span class="compliance-toggle">Show details</span>';
+                    }
+                    html += '</div>';
+                    if (result.reasons && result.reasons.length > 0) {
+                        html += '<div class="compliance-reasons">';
+                        for (var i = 0; i < result.reasons.length; i++) {
+                            var r = result.reasons[i];
+                            var sevClass = r.severity === 'error' ? 'reason-error' : 'reason-warning';
+                            html += '<div class="compliance-reason">';
+                            html += '<span class="reason-severity ' + sevClass + '">' + esc(r.severity) + '</span>';
+                            html += '<span>' + esc(r.message) + '</span>';
+                            html += '<span class="reason-code">' + esc(r.code) + '</span>';
+                            html += '</div>';
+                        }
+                        html += '</div>';
+                    }
+                    html += '</div>';
+                    el.innerHTML = html;
+                })
+                .catch(function() {});
         }
     })();
     </script>

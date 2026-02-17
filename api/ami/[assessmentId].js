@@ -9,6 +9,7 @@ const path = require('node:path');
 const store = require(path.join(process.cwd(), 'lib', 'ami', 'store.js'));
 const schema = require(path.join(process.cwd(), 'lib', 'ami', 'schema.js'));
 const { handleCors } = require(path.join(process.cwd(), 'lib', 'ami', 'api-util.js'));
+const submissions = require(path.join(process.cwd(), 'lib', 'ami', 'submissions.js'));
 
 function loadSourceCatalog() {
   const catalogPath = path.join(process.cwd(), 'data', 'source-catalog.json');
@@ -75,11 +76,27 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    // Load public submission history for this assessment
+    const submissionHistory = submissions.listSubmissionsForAssessment(assessmentId).map((s) => ({
+      submission_id: s.submission_id,
+      type: s.type,
+      status: s.status,
+      submitted_at: s.submitted_at,
+      resulting_assessment_id: s.resulting_assessment_id || null,
+      review: s.review ? {
+        status: s.review.status,
+        reviewer_name: s.review.reviewer_name,
+        reasoning: s.review.reasoning,
+        reviewed_at: s.review.reviewed_at,
+      } : null,
+    }));
+
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.status(200).json({
       ...assessment,
       _signals: signals,
       _source_catalog: sourceCatalogObj,
+      _submissions: submissionHistory,
     });
   } catch (error) {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');

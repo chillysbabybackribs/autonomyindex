@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMI v1.0 Assessment Kit — Autonomy Index</title>
+    <meta name="description" content="Download the AMI v1.0 Assessment Kit. Includes rubric, schema, LLM self-assessment prompt, and submission guidelines.">
+    <link rel="canonical" href="https://www.autonomyindex.io/ami-download">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #06b6d4;
+            --cyan-dim: rgba(6,182,212,0.08);
+            --green: #34d59a;
+            --green-dim: rgba(52,213,154,0.08);
+            --amber: #f59e0b;
+            --amber-dim: rgba(245,158,11,0.08);
+            --red: #ef4444;
+            --red-dim: rgba(239,68,68,0.08);
+            --purple: #a78bfa;
+            --surface-1: #0a0a0a;
+            --surface-2: #111111;
+            --surface-3: #1a1a1a;
+            --surface-4: #262626;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --text-1: #f5f5f5;
+            --text-2: #a1a1a1;
+            --text-3: #666;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { color-scheme: dark; scroll-behavior: smooth; }
+        body { font-family: var(--font-body); background: #000; color: var(--text-2); line-height: 1.7; font-size: 15px; }
+
+        .header {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(0,0,0,0.92); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; height: 56px;
+        }
+        .logo { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: #fff; text-decoration: none; }
+        .nav-menu { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-link { color: var(--text-3); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
+        .nav-link:hover { color: var(--text-2); }
+        .nav-link.active { color: var(--cyan); }
+
+        .container { max-width: 780px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+
+        .breadcrumb { font-size: 12px; color: var(--text-3); margin-bottom: 2rem; }
+        .breadcrumb a { color: var(--text-3); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--cyan); }
+
+        h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+        h2 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; color: #fff; margin: 2.5rem 0 0.75rem; }
+        h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--text-1); margin: 1.5rem 0 0.5rem; }
+        p { margin-bottom: 1rem; }
+        a { color: var(--cyan); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code { font-family: var(--font-mono); background: var(--surface-3); padding: 2px 6px; border-radius: 4px; font-size: 0.85em; color: var(--cyan); }
+
+        .hero-section {
+            background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px;
+            padding: 2rem; margin-bottom: 2rem; text-align: center;
+        }
+        .hero-section p { color: var(--text-2); margin-bottom: 1.5rem; }
+
+        .download-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 28px; border-radius: 8px; font-size: 15px; font-weight: 600;
+            text-decoration: none; transition: all 0.2s; border: none; cursor: pointer;
+            background: var(--cyan); color: #000; font-family: var(--font-display);
+        }
+        .download-btn:hover { opacity: 0.9; text-decoration: none; }
+
+        .copy-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 500;
+            text-decoration: none; transition: all 0.2s; cursor: pointer;
+            background: var(--surface-3); color: var(--text-2); border: 1px solid var(--border);
+            font-family: var(--font-body); margin-top: 0.75rem;
+        }
+        .copy-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+        .copy-btn.copied { border-color: var(--green); color: var(--green); }
+
+        .kit-contents {
+            background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+            overflow: hidden; margin: 1rem 0;
+        }
+        .kit-file {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.6rem 1rem; border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+        .kit-file:last-child { border-bottom: none; }
+        .kit-file-name { font-family: var(--font-mono); color: var(--cyan); font-size: 0.8rem; }
+        .kit-file-desc { color: var(--text-3); font-size: 0.78rem; }
+
+        .comparison-table {
+            width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem;
+        }
+        .comparison-table th {
+            text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border);
+            color: var(--text-1); font-weight: 600; font-family: var(--font-display);
+        }
+        .comparison-table td {
+            padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--text-2);
+        }
+
+        .profile-card {
+            background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+            padding: 1rem 1.25rem; margin-bottom: 0.75rem;
+        }
+        .profile-name { font-family: var(--font-display); font-weight: 600; color: var(--text-1); font-size: 0.95rem; }
+        .profile-id { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-3); }
+        .profile-desc { font-size: 0.85rem; color: var(--text-2); margin-top: 0.35rem; }
+
+        .api-section { margin: 1rem 0; }
+        .api-endpoint {
+            font-family: var(--font-mono); font-size: 0.8rem; color: var(--cyan);
+            background: var(--surface-3); padding: 0.5rem 0.75rem; border-radius: 6px;
+            display: inline-block; margin: 0.25rem 0;
+        }
+
+        .footer { text-align: center; padding: 3rem 2rem; border-top: 1px solid var(--border); color: var(--text-3); font-size: 0.8rem; }
+        .footer a { color: var(--text-2); text-decoration: none; }
+        .footer a:hover { color: var(--cyan); }
+
+        @media (max-width: 640px) {
+            .hero-section { padding: 1.5rem; }
+            .kit-file { flex-direction: column; align-items: flex-start; gap: 0.15rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">Autonomy Index</a>
+        <nav class="nav-menu">
+            <a href="/" class="nav-link">Main Report</a>
+            <a href="/agents-2026" class="nav-link">Agents 2026</a>
+            <a href="/methodology#ami" class="nav-link">Methodology</a>
+            <a href="/ami-systems" class="nav-link">AMI</a>
+            <a href="/ami-download" class="nav-link active">Kit</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="breadcrumb">
+            <a href="/">Home</a> / <a href="/methodology#ami">AMI</a> / Assessment Kit
+        </div>
+
+        <div class="hero-section">
+            <h1>AMI v1.0 Assessment Kit</h1>
+            <p>
+                Everything you need to evaluate an AI agent system using the Agent Maturity Index.
+                Includes the full rubric, JSON schema, assessment template, and an LLM-ready self-assessment prompt.
+            </p>
+            <a href="/download/ami-v1-kit.zip" class="download-btn">Download Kit (.zip)</a>
+            <br>
+            <button class="copy-btn" id="copy-prompt-btn" onclick="copyPrompt()">Copy LLM Self-Assessment Prompt</button>
+        </div>
+
+        <h2>Kit Contents</h2>
+        <div class="kit-contents">
+            <div class="kit-file">
+                <span class="kit-file-name">README.md</span>
+                <span class="kit-file-desc">Overview and usage guide</span>
+            </div>
+            <div class="kit-file">
+                <span class="kit-file-name">ami-v1-rubric.md</span>
+                <span class="kit-file-desc">Full scoring rubric with per-dimension criteria</span>
+            </div>
+            <div class="kit-file">
+                <span class="kit-file-name">ami-v1-schema.json</span>
+                <span class="kit-file-desc">JSON Schema for assessment validation</span>
+            </div>
+            <div class="kit-file">
+                <span class="kit-file-name">ami-v1-profiles.json</span>
+                <span class="kit-file-desc">Compliance profile definitions</span>
+            </div>
+            <div class="kit-file">
+                <span class="kit-file-name">ami-assessment-template.json</span>
+                <span class="kit-file-desc">Blank assessment template</span>
+            </div>
+            <div class="kit-file">
+                <span class="kit-file-name">ami-self-assessment-llm-prompt.txt</span>
+                <span class="kit-file-desc">LLM prompt for automated self-assessment</span>
+            </div>
+            <div class="kit-file">
+                <span class="kit-file-name">submission-guidelines.md</span>
+                <span class="kit-file-desc">How to submit for official review</span>
+            </div>
+        </div>
+
+        <h2>Self-Assessment vs Verified Review</h2>
+        <table class="comparison-table">
+            <thead>
+                <tr><th></th><th>Self-Reported</th><th>Published (Official)</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Run by</td><td>You or your team</td><td>Autonomy Index editorial board</td></tr>
+                <tr><td>Review state</td><td><code>draft</code></td><td><code>published</code></td></tr>
+                <tr><td>Reviewer signatures</td><td>None</td><td>SHA-256 signed</td></tr>
+                <tr><td>Listed on index</td><td>No</td><td>Yes</td></tr>
+                <tr><td>Profile compliance</td><td>Self-checked</td><td>Must pass prod-general-v1</td></tr>
+            </tbody>
+        </table>
+
+        <h2>Request an Official Review</h2>
+        <p>
+            To get your system listed on the <a href="/ami-systems">AMI index</a>:
+        </p>
+        <ol style="margin-left:1.5rem;margin-bottom:1rem;color:var(--text-2)">
+            <li>Complete a self-assessment using the kit above</li>
+            <li>Ensure all evidence is real, cited, and publicly verifiable</li>
+            <li>Validate that your assessment passes <code>community-basic-v1</code> at minimum</li>
+            <li>Submit the assessment JSON for editorial review</li>
+        </ol>
+        <p>
+            The editorial board verifies evidence, adjusts scores if needed, and publishes
+            the assessment with reviewer signatures and integrity hash.
+        </p>
+
+        <h2>Compliance Profiles</h2>
+        <div id="profiles-container"></div>
+
+        <h2>Machine-Readable API</h2>
+        <p>Access AMI data programmatically:</p>
+        <div class="api-section">
+            <div><span class="api-endpoint">GET /api/ami/rubric</span> Full rubric with dimensions, weights, and scoring criteria</div>
+            <div style="margin-top:0.5rem"><span class="api-endpoint">GET /api/ami/schema</span> JSON Schema for assessment validation</div>
+            <div style="margin-top:0.5rem"><span class="api-endpoint">GET /api/ami/profiles</span> Compliance profile definitions</div>
+            <div style="margin-top:0.5rem"><span class="api-endpoint">GET /api/ami/validate?assessmentId=...&amp;profile=...</span> PASS/FAIL evaluation</div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p><a href="/">Autonomy Index</a> · <a href="/agents-2026">Agents 2026</a> · <a href="/methodology">Methodology</a> · <a href="/ami-systems">AMI Assessments</a></p>
+    </footer>
+
+    <script>
+    (function() {
+        'use strict';
+
+        // Load profiles
+        fetch('/api/ami/profiles')
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(data) {
+                if (!data || !data.profiles) return;
+                var container = document.getElementById('profiles-container');
+                var html = '';
+                for (var i = 0; i < data.profiles.length; i++) {
+                    var p = data.profiles[i];
+                    html += '<div class="profile-card">';
+                    html += '<div class="profile-name">' + esc(p.label);
+                    if (p.default) html += ' <span style="font-size:0.7rem;color:var(--cyan);font-weight:400">(default)</span>';
+                    html += '</div>';
+                    html += '<div class="profile-id">' + esc(p.id) + '</div>';
+                    html += '<div class="profile-desc">' + esc(p.description) + '</div>';
+                    html += '</div>';
+                }
+                container.innerHTML = html;
+            })
+            .catch(function() {});
+
+        function esc(s) {
+            if (!s) return '';
+            var d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+    })();
+
+    function copyPrompt() {
+        fetch('/download/ami-self-assessment-prompt.txt')
+            .then(function(r) { return r.text(); })
+            .then(function(text) {
+                return navigator.clipboard.writeText(text);
+            })
+            .then(function() {
+                var btn = document.getElementById('copy-prompt-btn');
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(function() {
+                    btn.textContent = 'Copy LLM Self-Assessment Prompt';
+                    btn.classList.remove('copied');
+                }, 2000);
+            })
+            .catch(function() {
+                // Fallback: open prompt in new tab
+                window.open('/download/ami-self-assessment-prompt.txt', '_blank');
+            });
+    }
+    </script>
+</body>
+</html>

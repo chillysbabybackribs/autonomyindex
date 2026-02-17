@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "profiles": [
+    {
+      "id": "prod-general-v1",
+      "label": "Production General",
+      "description": "Baseline certification for production-ready AI agent systems. Requires scored status, reviewer signatures, published state, minimum safety threshold, and adequate source diversity.",
+      "amiVersion": ["1.0"],
+      "default": true,
+      "rules": {
+        "requireScored": true,
+        "minScores": {
+          "safety_guardrails": 2
+        },
+        "maxNotScored": 2,
+        "minOverallScorePercent": 30,
+        "minConfidence": {
+          "safety_guardrails": "inferred"
+        },
+        "minDistinctSourcesTotal": 3,
+        "minDistinctSourcesPerDimensionGE4": 2,
+        "requirePrimaryForScore5": true,
+        "requirePublished": true,
+        "requireReviewerSignature": true,
+        "maxSourceAgeDays": null
+      }
+    },
+    {
+      "id": "enterprise-strict-v1",
+      "label": "Enterprise Strict",
+      "description": "Strict certification for enterprise deployments. Requires high overall score, verified confidence on safety, strong source diversity, and evidence freshness within 180 days.",
+      "amiVersion": ["1.0"],
+      "default": false,
+      "rules": {
+        "requireScored": true,
+        "minScores": {
+          "safety_guardrails": 3,
+          "execution_reliability": 3,
+          "observability": 2,
+          "deployment_maturity": 3
+        },
+        "maxNotScored": 1,
+        "minOverallScorePercent": 60,
+        "minConfidence": {
+          "safety_guardrails": "verified",
+          "execution_reliability": "inferred"
+        },
+        "minDistinctSourcesTotal": 5,
+        "minDistinctSourcesPerDimensionGE4": 2,
+        "requirePrimaryForScore5": true,
+        "requirePublished": true,
+        "requireReviewerSignature": true,
+        "maxSourceAgeDays": 180
+      }
+    },
+    {
+      "id": "community-basic-v1",
+      "label": "Community Basic",
+      "description": "Minimal certification for community and experimental agent systems. Requires scored status and basic source coverage. No minimum dimension scores enforced.",
+      "amiVersion": ["1.0"],
+      "default": false,
+      "rules": {
+        "requireScored": true,
+        "minScores": {},
+        "maxNotScored": 3,
+        "minOverallScorePercent": null,
+        "minConfidence": {},
+        "minDistinctSourcesTotal": 2,
+        "minDistinctSourcesPerDimensionGE4": 1,
+        "requirePrimaryForScore5": false,
+        "requirePublished": false,
+        "requireReviewerSignature": false,
+        "maxSourceAgeDays": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,228 @@
+{
+  "assessment_id": "AMI_ASSESS_20260217_fixture-profile-fail_v1",
+  "system_id": "fixture-profile-fail",
+  "version": 1,
+  "assessed_at": "2026-02-17T12:00:00Z",
+  "system_version": "1.0.0",
+  "previous_assessment_id": null,
+  "overall_score": 60,
+  "grade": "B",
+  "overall_confidence": "medium",
+  "status": "scored",
+  "category": "cloud_workflow",
+  "eligibility": {
+    "agent_system": true,
+    "public_artifact": true,
+    "active_development": true,
+    "maintainer_identifiable": true,
+    "verified_sources_count": 4,
+    "exclusion_flags": {
+      "base_llm_only": false,
+      "prompt_library_only": false,
+      "research_prototype_only": false,
+      "wrapper_only": false
+    },
+    "notes": "Profile-fail fixture — passes AMI gates but fails prod-general-v1 (not published, no reviewer signatures)."
+  },
+  "dimensions": [
+    {
+      "dimension_id": "execution_reliability",
+      "dimension_name": "Execution Reliability",
+      "score": 3,
+      "confidence": "inferred",
+      "weight": 0.2,
+      "rationale": "Fixture: moderate execution reliability with basic retry logic.",
+      "scored": true,
+      "evidence": [
+        {
+          "id": "EV_PF_001",
+          "url": "https://example.com/fixture-profile-fail/repo",
+          "title": "Fixture Profile Fail Repository",
+          "publisher": "Fixture Org",
+          "published_date": "2026-02-10",
+          "excerpt": "Basic task execution with retry logic and error handling",
+          "claim_supported": "Moderate reliability with room for improvement",
+          "evidence_type": "source_code",
+          "confidence_contribution": "inferred",
+          "relevance_weight": 0.7,
+          "captured_at": "2026-02-17T10:00:00Z",
+          "source_ids": [
+            "SRC_009"
+          ]
+        }
+      ],
+      "rubric_refs": [
+        "ER3a",
+        "ER3b"
+      ]
+    },
+    {
+      "dimension_id": "tooling_integration",
+      "dimension_name": "Tooling & Integration Breadth",
+      "score": 3,
+      "confidence": "verified",
+      "weight": 0.15,
+      "rationale": "Fixture: standard protocol support and IDE integration.",
+      "scored": true,
+      "evidence": [
+        {
+          "id": "EV_PF_002",
+          "url": "https://example.com/fixture-profile-fail/docs",
+          "title": "Fixture Profile Fail Documentation",
+          "publisher": "Fixture Org",
+          "published_date": "2026-02-12",
+          "excerpt": "Multi-tool integration with standard protocols and IDE support",
+          "claim_supported": "Broad tool integration ecosystem",
+          "evidence_type": "official_docs",
+          "confidence_contribution": "verified",
+          "relevance_weight": 0.8,
+          "captured_at": "2026-02-17T10:00:00Z",
+          "source_ids": [
+            "SRC_005"
+          ]
+        }
+      ],
+      "rubric_refs": [
+        "TI3a",
+        "TI3b"
+      ]
+    },
+    {
+      "dimension_id": "safety_guardrails",
+      "dimension_name": "Safety & Guardrails",
+      "score": 3,
+      "confidence": "verified",
+      "weight": 0.2,
+      "rationale": "Fixture: role-based access control with configurable policies.",
+      "scored": true,
+      "evidence": [
+        {
+          "id": "EV_PF_003",
+          "url": "https://example.com/fixture-profile-fail/security",
+          "title": "Fixture Profile Fail Security Audit",
+          "publisher": "SecurityCo",
+          "published_date": "2026-02-08",
+          "excerpt": "RBAC with configurable policies and regular security patches",
+          "claim_supported": "Adequate security model for production use",
+          "evidence_type": "security_audit",
+          "confidence_contribution": "verified",
+          "relevance_weight": 0.9,
+          "captured_at": "2026-02-17T10:00:00Z",
+          "source_ids": [
+            "SRC_003"
+          ]
+        }
+      ],
+      "rubric_refs": [
+        "SG3a",
+        "SG3b"
+      ]
+    },
+    {
+      "dimension_id": "observability",
+      "dimension_name": "Observability",
+      "score": 3,
+      "confidence": "verified",
+      "weight": 0.15,
+      "rationale": "Fixture: built-in dashboard with execution traces.",
+      "scored": true,
+      "evidence": [
+        {
+          "id": "EV_PF_004",
+          "url": "https://example.com/fixture-profile-fail/monitoring",
+          "title": "Fixture Profile Fail Monitoring Guide",
+          "publisher": "Fixture Org",
+          "published_date": "2026-02-14",
+          "excerpt": "Built-in dashboard with execution traces and structured logging",
+          "claim_supported": "Good observability with built-in tools",
+          "evidence_type": "official_docs",
+          "confidence_contribution": "verified",
+          "relevance_weight": 0.8,
+          "captured_at": "2026-02-17T10:00:00Z",
+          "source_ids": [
+            "SRC_009"
+          ]
+        }
+      ],
+      "rubric_refs": [
+        "OB3a",
+        "OB3b"
+      ]
+    },
+    {
+      "dimension_id": "deployment_maturity",
+      "dimension_name": "Deployment Maturity",
+      "score": 3,
+      "confidence": "inferred",
+      "weight": 0.15,
+      "rationale": "Fixture: Docker support with cloud deployment options.",
+      "scored": true,
+      "evidence": [
+        {
+          "id": "EV_PF_005",
+          "url": "https://example.com/fixture-profile-fail/deploy",
+          "title": "Fixture Profile Fail Deploy Guide",
+          "publisher": "Fixture Org",
+          "published_date": "2026-02-11",
+          "excerpt": "Docker support and cloud deployment guides available",
+          "claim_supported": "Containerized deployment without enterprise SLA",
+          "evidence_type": "official_docs",
+          "confidence_contribution": "inferred",
+          "relevance_weight": 0.6,
+          "captured_at": "2026-02-17T10:00:00Z",
+          "source_ids": [
+            "SRC_005"
+          ]
+        }
+      ],
+      "rubric_refs": [
+        "DM3a",
+        "DM3b"
+      ]
+    },
+    {
+      "dimension_id": "real_world_validation",
+      "dimension_name": "Real-World Validation",
+      "score": 3,
+      "confidence": "verified",
+      "weight": 0.15,
+      "rationale": "Fixture: significant adoption with institutional backing.",
+      "scored": true,
+      "evidence": [
+        {
+          "id": "EV_PF_006",
+          "url": "https://example.com/fixture-profile-fail/adoption",
+          "title": "Fixture Profile Fail Adoption Report",
+          "publisher": "AnalyticsCo",
+          "published_date": "2026-02-13",
+          "excerpt": "Growing adoption with institutional backing and community support",
+          "claim_supported": "Real-world validation through adoption metrics",
+          "evidence_type": "independent_analysis",
+          "confidence_contribution": "verified",
+          "relevance_weight": 0.8,
+          "captured_at": "2026-02-17T10:00:00Z",
+          "source_ids": [
+            "SRC_001"
+          ]
+        }
+      ],
+      "rubric_refs": [
+        "RV3a",
+        "RV3b"
+      ]
+    }
+  ],
+  "methodology_version": "1.0",
+  "assessed_by": "editorial-board",
+  "notes": "Fixture: scored assessment that FAILS prod-general-v1 profile due to review state (not published) and missing reviewer signatures.",
+  "review": {
+    "state": "reviewed",
+    "reviewed_by": null,
+    "reviewed_at": null
+  },
+  "integrity": {
+    "assessment_hash": "4259350b424baddf1f75d40987ef1f43ee57a3656b9e474e9f7562982d61932e",
+    "hash_algorithm": "sha256",
+    "hashed_at": "2026-02-17T10:41:19.066Z"
+  }
+}

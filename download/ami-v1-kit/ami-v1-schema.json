@@ -1,0 +1,369 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AMI v1.0 Assessment",
+  "description": "Agent Maturity Index assessment schema. Auto-generated from live validation logic.",
+  "type": "object",
+  "required": [
+    "assessment_id",
+    "system_id",
+    "version",
+    "assessed_at",
+    "status",
+    "category",
+    "eligibility",
+    "dimensions",
+    "methodology_version",
+    "assessed_by"
+  ],
+  "properties": {
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^AMI_ASSESS_\\d{8}_[a-z0-9_-]+_v\\d+$"
+    },
+    "system_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "assessed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "system_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "previous_assessment_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "overall_score": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "grade": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        null,
+        "A",
+        "B",
+        "C",
+        "D",
+        "F"
+      ]
+    },
+    "overall_confidence": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scored",
+        "insufficient_evidence",
+        "inactive",
+        "excluded",
+        "under_review"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "cloud_autonomous",
+        "cloud_workflow",
+        "local_autonomous",
+        "enterprise",
+        "vertical_agent"
+      ]
+    },
+    "eligibility": {
+      "type": "object",
+      "required": [
+        "agent_system",
+        "public_artifact",
+        "active_development",
+        "maintainer_identifiable",
+        "verified_sources_count",
+        "exclusion_flags"
+      ],
+      "properties": {
+        "agent_system": {
+          "type": "boolean"
+        },
+        "public_artifact": {
+          "type": "boolean"
+        },
+        "active_development": {
+          "type": "boolean"
+        },
+        "maintainer_identifiable": {
+          "type": "boolean"
+        },
+        "verified_sources_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "exclusion_flags": {
+          "type": "object",
+          "properties": {
+            "base_llm_only": {
+              "type": "boolean"
+            },
+            "prompt_library_only": {
+              "type": "boolean"
+            },
+            "research_prototype_only": {
+              "type": "boolean"
+            },
+            "wrapper_only": {
+              "type": "boolean"
+            }
+          }
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "dimensions": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": [
+          "dimension_id",
+          "dimension_name",
+          "score",
+          "confidence",
+          "weight",
+          "scored"
+        ],
+        "properties": {
+          "dimension_id": {
+            "type": "string",
+            "enum": [
+              "execution_reliability",
+              "tooling_integration",
+              "safety_guardrails",
+              "observability",
+              "deployment_maturity",
+              "real_world_validation"
+            ]
+          },
+          "dimension_name": {
+            "type": "string"
+          },
+          "score": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 5
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "inferred",
+              "unverified"
+            ]
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "scored": {
+            "type": "boolean"
+          },
+          "not_scored_reason": {
+            "type": "string"
+          },
+          "rubric_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "url",
+                "title",
+                "publisher",
+                "published_date",
+                "excerpt",
+                "claim_supported",
+                "evidence_type",
+                "confidence_contribution",
+                "relevance_weight",
+                "captured_at",
+                "source_ids"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "publisher": {
+                  "type": "string"
+                },
+                "published_date": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "excerpt": {
+                  "type": "string",
+                  "description": "Max 25 words"
+                },
+                "claim_supported": {
+                  "type": "string"
+                },
+                "evidence_type": {
+                  "type": "string",
+                  "enum": [
+                    "official_docs",
+                    "source_code",
+                    "security_audit",
+                    "incident_report",
+                    "changelog",
+                    "independent_analysis",
+                    "case_study",
+                    "compliance",
+                    "community_metrics",
+                    "news_report"
+                  ]
+                },
+                "confidence_contribution": {
+                  "type": "string",
+                  "enum": [
+                    "verified",
+                    "inferred",
+                    "unverified"
+                  ]
+                },
+                "relevance_weight": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "captured_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "source_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "methodology_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "assessed_by": {
+      "type": "string",
+      "minLength": 1
+    },
+    "notes": {
+      "type": "string"
+    },
+    "review": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "reviewed",
+            "published"
+          ]
+        },
+        "reviewers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "handle",
+              "signed_at",
+              "signature_hash"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "handle": {
+                "type": "string"
+              },
+              "signed_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "signature_hash": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "integrity": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "assessment_hash": {
+          "type": "string"
+        },
+        "hash_algorithm": {
+          "type": "string",
+          "const": "sha256"
+        },
+        "hashed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

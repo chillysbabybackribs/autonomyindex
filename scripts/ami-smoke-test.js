@@ -117,14 +117,18 @@ assert(
 console.log('5. API endpoint files:');
 assert(fileExists('api/ami.js'), 'api/ami.js exists');
 assert(fileExists('api/ami/[assessmentId].js'), 'api/ami/[assessmentId].js exists');
+assert(fileExists('api/ami/profiles.js'), 'api/ami/profiles.js exists');
+assert(fileExists('api/ami/validate.js'), 'api/ami/validate.js exists');
 assert(fileExists('api/systems/[id]/ami.js'), 'api/systems/[id]/ami.js exists');
 assert(fileExists('api/systems/[id]/ami/diff.js'), 'api/systems/[id]/ami/diff.js exists');
+assert(fileExists('api/systems/[id]/ami/validate.js'), 'api/systems/[id]/ami/validate.js exists');
 
 // ── API response simulation (load store directly) ───────────────────────────
 
 console.log('6. API data integrity:');
 const store = require(path.join(ROOT, 'lib', 'ami', 'store.js'));
 const schema = require(path.join(ROOT, 'lib', 'ami', 'schema.js'));
+const meta = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'ami', 'meta.json'), 'utf8'));
 
 const systemIds = store.listSystemIds();
 assert(systemIds.length > 0, 'At least one system has assessments');
@@ -177,13 +181,308 @@ for (const fid of fixtures) {
   }
 }
 
+// ── Compliance Profiles ─────────────────────────────────────────────────────
+
+console.log('7. Compliance profiles:');
+const profiles = require(path.join(ROOT, 'lib', 'ami', 'profiles.js'));
+
+// Profile loading
+const allProfiles = profiles.loadProfiles();
+assert(allProfiles.length >= 3, `At least 3 profiles defined (got ${allProfiles.length})`);
+
+const defaultProfile = profiles.getDefaultProfile();
+assert(defaultProfile !== null, 'Default profile exists');
+assert(defaultProfile.id === 'prod-general-v1', 'Default profile is prod-general-v1');
+
+const enterprise = profiles.getProfileById('enterprise-strict-v1');
+assert(enterprise !== null, 'Enterprise strict profile exists');
+
+const community = profiles.getProfileById('community-basic-v1');
+assert(community !== null, 'Community basic profile exists');
+
+// Profile data file
+assert(fileExists('data/ami/profiles.json'), 'profiles.json exists');
+
+// OpenClaw profile evaluation (deterministic)
+const catalog = profiles.loadSourceCatalog();
+if (openclaw) {
+  const oclawResult = profiles.evaluateAssessmentAgainstProfile(openclaw, catalog, defaultProfile);
+  assert(typeof oclawResult.pass === 'boolean', 'OpenClaw profile result has pass boolean');
+  assert(Array.isArray(oclawResult.reasons), 'OpenClaw profile result has reasons array');
+  assert(oclawResult.computed != null, 'OpenClaw profile result has computed object');
+
+  // OpenClaw fails prod-general-v1 due to safety score < 2
+  assert(
+    oclawResult.pass === false,
+    'OpenClaw FAILS prod-general-v1 (safety score below minimum)'
+  );
+  assert(
+    oclawResult.reasons.some((r) => r.code === 'PROFILE_MIN_SCORE_FAIL'),
+    'OpenClaw failure includes PROFILE_MIN_SCORE_FAIL'
+  );
+
+  // OpenClaw passes community-basic-v1
+  const oclawCommunity = profiles.evaluateAssessmentAgainstProfile(openclaw, catalog, community);
+  assert(oclawCommunity.pass === true, 'OpenClaw PASSES community-basic-v1');
+
+  // Determinism: running twice gives same result
+  const oclawResult2 = profiles.evaluateAssessmentAgainstProfile(openclaw, catalog, defaultProfile);
+  assert(
+    oclawResult.pass === oclawResult2.pass && oclawResult.reasons.length === oclawResult2.reasons.length,
+    'Profile evaluation is deterministic'
+  );
+}
+
+// fixture-profile-fail: scored but fails prod-general-v1
+const profileFail = store.getLatestAssessment('fixture-profile-fail');
+assert(profileFail !== null, 'fixture-profile-fail assessment exists');
+if (profileFail) {
+  assert(profileFail.status === 'scored', 'fixture-profile-fail is scored');
+  const pfResult = profiles.evaluateAssessmentAgainstProfile(profileFail, catalog, defaultProfile);
+  assert(pfResult.pass === false, 'fixture-profile-fail FAILS prod-general-v1');
+  assert(
+    pfResult.reasons.some((r) => r.code === 'PROFILE_REVIEW_STATE_FAIL'),
+    'fixture-profile-fail failure includes PROFILE_REVIEW_STATE_FAIL'
+  );
+  assert(
+    pfResult.reasons.some((r) => r.code === 'PROFILE_SIGNATURE_MISSING'),
+    'fixture-profile-fail failure includes PROFILE_SIGNATURE_MISSING'
+  );
+
+  // fixture-profile-fail passes community-basic-v1
+  const pfCommunity = profiles.evaluateAssessmentAgainstProfile(profileFail, catalog, community);
+  assert(pfCommunity.pass === true, 'fixture-profile-fail PASSES community-basic-v1');
+}
+
+// Non-scored fixtures always fail prod-general-v1
+for (const fid of fixtures) {
+  const latest = store.getLatestAssessment(fid);
+  if (latest) {
+    const result = profiles.evaluateAssessmentAgainstProfile(latest, catalog, defaultProfile);
+    assert(result.pass === false, `${fid} FAILS prod-general-v1 (not scored)`);
+  }
+}
+
+// ── Distribution Kit ────────────────────────────────────────────────────────
+
+console.log('8. Distribution kit:');
+assert(fileExists('download/ami-v1-kit.zip'), 'ami-v1-kit.zip exists');
+assert(fileExists('download/ami-v1-kit/README.md'), 'kit README.md exists');
+assert(fileExists('download/ami-v1-kit/ami-v1-rubric.md'), 'kit rubric.md exists');
+assert(fileExists('download/ami-v1-kit/ami-v1-schema.json'), 'kit schema.json exists');
+assert(fileExists('download/ami-v1-kit/ami-v1-profiles.json'), 'kit profiles.json exists');
+assert(fileExists('download/ami-v1-kit/ami-assessment-template.json'), 'kit template.json exists');
+assert(fileExists('download/ami-v1-kit/ami-self-assessment-llm-prompt.txt'), 'kit LLM prompt exists');
+assert(fileExists('download/ami-v1-kit/submission-guidelines.md'), 'kit submission guidelines exists');
+assert(fileExists('download/ami-self-assessment-prompt.txt'), 'standalone LLM prompt exists');
+
+// Verify kit content is generated from live data
+const kitRubric = fs.readFileSync(path.join(ROOT, 'download', 'ami-v1-kit', 'ami-v1-rubric.md'), 'utf8');
+assert(kitRubric.includes('Execution Reliability'), 'rubric has ER dimension');
+assert(kitRubric.includes('Safety & Guardrails'), 'rubric has SG dimension');
+assert(kitRubric.includes('20%'), 'rubric has correct ER weight');
+assert(kitRubric.includes('GATE 1'), 'rubric has anti-gaming gates');
+assert(kitRubric.includes(meta.spec_hash), 'rubric includes spec hash');
+
+const kitSchema = JSON.parse(fs.readFileSync(path.join(ROOT, 'download', 'ami-v1-kit', 'ami-v1-schema.json'), 'utf8'));
+assert(kitSchema.properties.dimensions.items.properties.dimension_id.enum.length === 6, 'schema has 6 dimension IDs');
+assert(kitSchema.properties.status.enum.length === schema.SYSTEM_STATUSES.length, 'schema status enum matches live');
+
+// LLM prompt required clauses
+const llmPrompt = fs.readFileSync(path.join(ROOT, 'download', 'ami-v1-kit', 'ami-self-assessment-llm-prompt.txt'), 'utf8');
+assert(llmPrompt.includes('MUST NOT invent'), 'LLM prompt forbids fabrication');
+assert(llmPrompt.includes('source URLs or source IDs'), 'LLM prompt requires sources');
+assert(llmPrompt.includes('confidence level per dimension'), 'LLM prompt requires confidence');
+assert(llmPrompt.includes('"draft"'), 'LLM prompt sets draft state');
+assert(llmPrompt.includes('ENTERPRISE-STRICT'), 'LLM prompt has enterprise mode');
+assert(llmPrompt.includes('rubric_refs'), 'LLM prompt mentions rubric_refs');
+
+// Download page
+assert(fileExists('ami-download.html'), 'ami-download.html exists');
+assert(
+  fileContains('ami-download.html', 'ami-v1-kit.zip', 'Copy LLM', '/api/ami/rubric'),
+  'download page has required elements'
+);
+
+// API endpoint files for rubric and schema
+assert(fileExists('api/ami/rubric.js'), 'api/ami/rubric.js exists');
+assert(fileExists('api/ami/schema.js'), 'api/ami/schema.js exists');
+
+// ── Submission System ───────────────────────────────────────────────────────
+
+console.log('9. Submission system:');
+
+// Module existence
+assert(fileExists('lib/ami/submissions.js'), 'submissions.js exists');
+assert(fileExists('api/ami/submit.js'), 'api/ami/submit.js exists');
+assert(fileExists('api/ami/submissions.js'), 'api/ami/submissions.js (list) exists');
+assert(fileExists('api/ami/submissions/[id].js'), 'api/ami/submissions/[id].js exists');
+assert(fileExists('api/ami/submissions/[id]/review.js'), 'api/ami/submissions/[id]/review.js exists');
+
+// Load module
+const submissions = require(path.join(ROOT, 'lib', 'ami', 'submissions.js'));
+
+// Constants
+assert(
+  submissions.SUBMISSION_TYPES.length === 3,
+  'Three submission types defined'
+);
+assert(
+  submissions.SUBMISSION_TYPES.includes('assessment_request') &&
+  submissions.SUBMISSION_TYPES.includes('correction') &&
+  submissions.SUBMISSION_TYPES.includes('challenge'),
+  'Expected submission types present'
+);
+assert(
+  submissions.SUBMISSION_STATUSES.length === 4,
+  'Four submission statuses defined'
+);
+
+// Validation — reject malformed
+const badResult1 = submissions.validateSubmission({});
+assert(badResult1.valid === false, 'Empty submission fails validation');
+assert(badResult1.errors.length >= 4, 'Empty submission has multiple errors');
+
+const badResult2 = submissions.validateSubmission({
+  type: 'invalid_type',
+  system_id: 'test',
+  claims: [],
+  evidence: [],
+  contact: {},
+});
+assert(badResult2.valid === false, 'Invalid type fails validation');
+assert(badResult2.errors.some((e) => e.includes('type')), 'Error mentions type');
+
+const badResult3 = submissions.validateSubmission({
+  type: 'correction',
+  system_id: 'test',
+  claims: [{ summary: 'Test' }],
+  evidence: [{ url: 'https://example.com', description: 'Test' }],
+  contact: { name: 'Test', email: 'test@test.com' },
+  // missing assessment_id for correction
+});
+assert(badResult3.valid === false, 'Correction without assessment_id fails');
+
+// Validation — accept valid
+const goodResult = submissions.validateSubmission({
+  type: 'assessment_request',
+  system_id: 'test-system',
+  claims: [{ summary: 'New system needs assessment' }],
+  evidence: [{ url: 'https://example.com', description: 'Project homepage' }],
+  contact: { name: 'Test User', email: 'test@example.com' },
+});
+assert(goodResult.valid === true, 'Valid assessment_request passes');
+
+const goodCorrection = submissions.validateSubmission({
+  type: 'correction',
+  system_id: 'openclaw',
+  assessment_id: 'AMI_ASSESS_20260217_openclaw_v1',
+  claims: [{ summary: 'Score should be higher', dimension_id: 'safety_guardrails' }],
+  evidence: [{ url: 'https://example.com/audit', description: 'Security audit' }],
+  contact: { name: 'Test', email: 'test@test.com' },
+});
+assert(goodCorrection.valid === true, 'Valid correction passes');
+
+// Transition logic
+assert(submissions.isValidTransition('received', 'under_review') === true, 'received → under_review valid');
+assert(submissions.isValidTransition('received', 'rejected') === true, 'received → rejected valid');
+assert(submissions.isValidTransition('received', 'accepted') === false, 'received → accepted invalid');
+assert(submissions.isValidTransition('under_review', 'accepted') === true, 'under_review → accepted valid');
+assert(submissions.isValidTransition('under_review', 'rejected') === true, 'under_review → rejected valid');
+assert(submissions.isValidTransition('accepted', 'rejected') === false, 'accepted → rejected invalid (terminal)');
+assert(submissions.isValidTransition('rejected', 'accepted') === false, 'rejected → accepted invalid (terminal)');
+
+// CRUD test (create, get, list, review, cleanup)
+const testSub = submissions.createSubmission({
+  type: 'challenge',
+  system_id: 'openclaw',
+  assessment_id: 'AMI_ASSESS_20260217_openclaw_v1',
+  claims: [{ summary: 'Safety score underrated', dimension_id: 'safety_guardrails' }],
+  evidence: [{ url: 'https://example.com/evidence', description: 'New audit report' }],
+  contact: { name: 'Smoke Test', email: 'smoke@test.com' },
+});
+assert(testSub.submission_id.startsWith('SUB_'), 'Created submission has SUB_ prefix');
+assert(testSub.status === 'received', 'New submission status is received');
+assert(testSub.type === 'challenge', 'Submission type preserved');
+
+// Get
+const fetched = submissions.getSubmission(testSub.submission_id);
+assert(fetched !== null, 'Can retrieve submission by ID');
+assert(fetched.system_id === 'openclaw', 'Retrieved submission has correct system_id');
+
+// List
+const listed = submissions.listSubmissions({ system_id: 'openclaw' });
+assert(listed.some((s) => s.submission_id === testSub.submission_id), 'Submission appears in filtered list');
+
+// List for assessment
+const forAssessment = submissions.listSubmissionsForAssessment('AMI_ASSESS_20260217_openclaw_v1');
+assert(forAssessment.some((s) => s.submission_id === testSub.submission_id), 'Submission appears in assessment list');
+
+// Review — move to under_review
+const review1 = submissions.reviewSubmission(testSub.submission_id, {
+  status: 'under_review',
+  reviewer_name: 'Smoke Reviewer',
+  reviewer_handle: 'smoke-reviewer',
+  reasoning: 'Reviewing evidence quality',
+});
+assert(review1.success === true, 'Review to under_review succeeds');
+assert(review1.submission.status === 'under_review', 'Status updated to under_review');
+assert(review1.submission.review.signature_hash != null, 'Review has signature hash');
+
+// Review — reject
+const review2 = submissions.reviewSubmission(testSub.submission_id, {
+  status: 'rejected',
+  reviewer_name: 'Smoke Reviewer',
+  reviewer_handle: 'smoke-reviewer',
+  reasoning: 'Insufficient evidence',
+});
+assert(review2.success === true, 'Review to rejected succeeds');
+assert(review2.submission.status === 'rejected', 'Status updated to rejected');
+
+// Invalid transition from terminal state
+const review3 = submissions.reviewSubmission(testSub.submission_id, {
+  status: 'accepted',
+  reviewer_name: 'Smoke Reviewer',
+  reviewer_handle: 'smoke-reviewer',
+});
+assert(review3.success === false, 'Cannot transition from rejected');
+assert(review3.error === 'invalid_transition', 'Error is invalid_transition');
+
+// Cleanup test submission
+const subFile = path.join(submissions.submissionsDir(), testSub.submission_id + '.json');
+if (fs.existsSync(subFile)) fs.unlinkSync(subFile);
+
+// Assessment page shows _submissions
+assert(
+  fileContains('ami-assessment.html', '_submissions', 'Submission History'),
+  'Assessment page renders submission history'
+);
+
+// API files contain proper CORS/auth patterns
+assert(
+  fileContains('api/ami/submit.js', 'handleCors', 'validateSubmission', 'createSubmission'),
+  'submit.js uses expected functions'
+);
+assert(
+  fileContains('api/ami/submissions.js', 'requireAuth', 'listSubmissions'),
+  'submissions.js (list) uses auth and list'
+);
+assert(
+  fileContains('api/ami/submissions/[id]/review.js', 'requireAuth', 'reviewSubmission'),
+  'review.js uses auth and review'
+);
+
 // ── Sitemap ─────────────────────────────────────────────────────────────────
 
-console.log('7. Sitemap:');
+console.log('10. Sitemap:');
 assert(fileExists('scripts/generate-sitemap.js'), 'Sitemap generator exists');
 assert(
   fileContains('scripts/generate-sitemap.js', '/ami-systems'),
   'Sitemap includes /ami-systems route'
+);
+assert(
+  fileContains('scripts/generate-sitemap.js', '/ami-download'),
+  'Sitemap includes /ami-download route'
 );
 
 // ── Summary ─────────────────────────────────────────────────────────────────

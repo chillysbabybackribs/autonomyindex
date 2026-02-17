@@ -1,0 +1,110 @@
+{
+  "_template_note": "AMI v1.0 Assessment Template. Replace all <PLACEHOLDER> values. Remove this _template_note field before submission.",
+  "assessment_id": "<AMI_ASSESS_YYYYMMDD_systemid_vN>",
+  "system_id": "<system_id>",
+  "version": 1,
+  "assessed_at": "<ISO_TIMESTAMP>",
+  "system_version": null,
+  "previous_assessment_id": null,
+  "overall_score": null,
+  "grade": null,
+  "overall_confidence": "low",
+  "status": "under_review",
+  "category": "<cloud_autonomous|cloud_workflow|local_autonomous|enterprise|vertical_agent>",
+  "eligibility": {
+    "agent_system": false,
+    "public_artifact": false,
+    "active_development": false,
+    "maintainer_identifiable": false,
+    "verified_sources_count": 0,
+    "exclusion_flags": {
+      "base_llm_only": false,
+      "prompt_library_only": false,
+      "research_prototype_only": false,
+      "wrapper_only": false
+    },
+    "notes": "<Describe eligibility determination>"
+  },
+  "dimensions": [
+    {
+      "dimension_id": "execution_reliability",
+      "dimension_name": "Execution Reliability",
+      "score": null,
+      "confidence": "unverified",
+      "weight": 0.2,
+      "rationale": "",
+      "scored": false,
+      "not_scored_reason": "Not yet assessed",
+      "rubric_refs": [],
+      "evidence": []
+    },
+    {
+      "dimension_id": "tooling_integration",
+      "dimension_name": "Tooling & Integration Breadth",
+      "score": null,
+      "confidence": "unverified",
+      "weight": 0.15,
+      "rationale": "",
+      "scored": false,
+      "not_scored_reason": "Not yet assessed",
+      "rubric_refs": [],
+      "evidence": []
+    },
+    {
+      "dimension_id": "safety_guardrails",
+      "dimension_name": "Safety & Guardrails",
+      "score": null,
+      "confidence": "unverified",
+      "weight": 0.2,
+      "rationale": "",
+      "scored": false,
+      "not_scored_reason": "Not yet assessed",
+      "rubric_refs": [],
+      "evidence": []
+    },
+    {
+      "dimension_id": "observability",
+      "dimension_name": "Observability",
+      "score": null,
+      "confidence": "unverified",
+      "weight": 0.15,
+      "rationale": "",
+      "scored": false,
+      "not_scored_reason": "Not yet assessed",
+      "rubric_refs": [],
+      "evidence": []
+    },
+    {
+      "dimension_id": "deployment_maturity",
+      "dimension_name": "Deployment Maturity",
+      "score": null,
+      "confidence": "unverified",
+      "weight": 0.15,
+      "rationale": "",
+      "scored": false,
+      "not_scored_reason": "Not yet assessed",
+      "rubric_refs": [],
+      "evidence": []
+    },
+    {
+      "dimension_id": "real_world_validation",
+      "dimension_name": "Real-World Validation",
+      "score": null,
+      "confidence": "unverified",
+      "weight": 0.15,
+      "rationale": "",
+      "scored": false,
+      "not_scored_reason": "Not yet assessed",
+      "rubric_refs": [],
+      "evidence": []
+    }
+  ],
+  "methodology_version": "1.0",
+  "assessed_by": "<assessor_name_or_automated-pipeline>",
+  "notes": "",
+  "review": {
+    "state": "draft",
+    "reviewers": []
+  },
+  "integrity": null
+}

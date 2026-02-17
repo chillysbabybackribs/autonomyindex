@@ -47,6 +47,7 @@ function main() {
     { loc: '/agents-2026', changefreq: 'weekly', priority: '0.9' },
     { loc: '/methodology', changefreq: 'monthly', priority: '0.8' },
     { loc: '/ami-systems', changefreq: 'weekly', priority: '0.8' },
+    { loc: '/ami-download', changefreq: 'monthly', priority: '0.7' },
     { loc: '/daily-signals', changefreq: 'daily', priority: '0.9' },
     { loc: '/weekly-briefs', changefreq: 'weekly', priority: '0.8' }
   ].filter((route) => existsRoute(route.loc));
