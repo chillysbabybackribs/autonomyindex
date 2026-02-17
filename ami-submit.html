@@ -52,7 +52,7 @@
         .dl-btn-primary { background: var(--cyan); color: #000; }
         .dl-btn-primary:hover { background: #22d3ee; transform: translateY(-1px); }
 
-        .container { max-width: 680px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+        .container { max-width: 720px; margin: 0 auto; padding: 3rem 2rem 4rem; }
 
         .breadcrumb { font-size: 12px; color: var(--text-3); margin-bottom: 2rem; }
         .breadcrumb a { color: var(--text-3); text-decoration: none; }
@@ -64,6 +64,21 @@
         a { color: var(--cyan); text-decoration: none; }
         a:hover { text-decoration: underline; }
 
+        /* ── Tabs ───────────────────────────────────────────── */
+        .tab-bar {
+            display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem;
+        }
+        .tab-btn {
+            background: none; border: none; border-bottom: 2px solid transparent;
+            color: var(--text-3); font-family: var(--font-display); font-size: 14px; font-weight: 600;
+            padding: 10px 20px; cursor: pointer; transition: all 0.2s;
+        }
+        .tab-btn:hover { color: var(--text-2); }
+        .tab-btn.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* ── Form ───────────────────────────────────────────── */
         .form-group { margin-bottom: 1.25rem; }
         .form-label {
             display: block; font-size: 13px; font-weight: 600; color: var(--text-1);
@@ -81,6 +96,7 @@
             outline: none; border-color: var(--cyan);
         }
         .form-textarea { min-height: 120px; resize: vertical; font-family: var(--font-mono); font-size: 13px; }
+        .form-textarea.lg { min-height: 240px; }
 
         .form-checkbox-row {
             display: flex; align-items: flex-start; gap: 10px; margin-bottom: 1.25rem;
@@ -90,14 +106,18 @@
         }
         .form-checkbox-row label { font-size: 13px; color: var(--text-2); cursor: pointer; }
 
-        .submit-btn {
+        .submit-btn, .process-btn {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 12px 32px; border-radius: 8px; font-size: 15px; font-weight: 600;
             text-decoration: none; transition: all 0.2s; border: none; cursor: pointer;
-            background: var(--cyan); color: #000; font-family: var(--font-display);
+            font-family: var(--font-display);
         }
+        .submit-btn { background: var(--cyan); color: #000; }
         .submit-btn:hover { opacity: 0.9; }
         .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .process-btn { background: var(--surface-3); color: var(--text-1); border: 1px solid var(--border); }
+        .process-btn:hover { border-color: var(--border-hover); }
+        .process-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
         .result-box {
             background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
@@ -117,11 +137,43 @@
             padding: 2px 6px; border-radius: 4px; font-size: 0.85em; color: var(--cyan);
         }
 
+        /* ── Preview card ───────────────────────────────────── */
+        .preview-card {
+            background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
+            padding: 1.25rem; margin-bottom: 1.5rem; display: none;
+        }
+        .preview-header {
+            font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: #fff;
+            margin-bottom: 0.75rem;
+        }
+        .preview-meta { font-size: 13px; color: var(--text-2); margin-bottom: 0.5rem; }
+        .preview-meta strong { color: var(--text-1); }
+        .preview-dims {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.75rem;
+        }
+        .preview-dim {
+            font-size: 12px; padding: 6px 10px; border-radius: 6px;
+            background: var(--surface-3); border: 1px solid var(--border);
+        }
+        .preview-dim .dim-name { color: var(--text-2); }
+        .preview-dim .dim-score { color: var(--cyan); font-weight: 600; font-family: var(--font-mono); }
+
+        /* ── Gates ──────────────────────────────────────────── */
+        .gates-list { list-style: none; margin: 0.75rem 0; padding: 0; }
+        .gates-list li {
+            font-size: 12px; padding: 4px 0; color: var(--text-2);
+            font-family: var(--font-mono);
+        }
+        .gate-pass { color: var(--green); }
+        .gate-fail { color: var(--red); }
+
         .info-card {
             background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
             padding: 1.25rem; margin-bottom: 1.5rem;
         }
         .info-card p:last-child { margin-bottom: 0; }
+
+        .contact-section { display: none; margin-top: 1.5rem; }
 
         .footer-links {
             margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
@@ -148,71 +200,135 @@
         </div>
 
         <h1>Submit to AMI</h1>
-        <p>Request an assessment, propose a correction, or challenge an existing score. All submissions are reviewed by AMI editors before any changes are published.</p>
+        <p>Submit an LLM-generated self-assessment draft or use the manual form. All submissions are reviewed by AMI editors before any changes are published.</p>
 
-        <div class="info-card">
-            <p><strong>What happens next?</strong> Your submission enters a moderated review queue. An editor will evaluate your evidence and either accept, request clarification, or decline with reasoning. You will receive a confirmation email if you provide one.</p>
+        <!-- ── Tab bar ────────────────────────────────────────── -->
+        <div class="tab-bar">
+            <button class="tab-btn active" data-tab="paste">Paste LLM Output</button>
+            <button class="tab-btn" data-tab="manual">Manual Submission</button>
         </div>
 
-        <form id="submitForm" novalidate>
-            <div class="form-group">
-                <label class="form-label" for="submissionType">Submission Type</label>
-                <select class="form-select" id="submissionType" required>
-                    <option value="">Select type...</option>
-                    <option value="assessment_request">Assessment Request (new system)</option>
-                    <option value="correction">Correction (fix existing score)</option>
-                    <option value="challenge">Challenge (dispute existing score)</option>
-                </select>
+        <!-- ══════════════════════════════════════════════════════
+             TAB A: PASTE LLM OUTPUT
+             ══════════════════════════════════════════════════════ -->
+        <div class="tab-panel active" id="tab-paste">
+            <div class="info-card">
+                <p><strong>How it works:</strong> Copy the AMI prompt from the <a href="/">landing page</a> or <a href="/ami-download">assessment kit</a>, paste it into any LLM with details about your system, then paste the LLM's output below.</p>
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="systemId">System ID</label>
-                <div class="form-hint">Lowercase, alphanumeric with hyphens. e.g. <code>my-agent</code></div>
-                <input class="form-input" type="text" id="systemId" placeholder="my-agent-system" required pattern="^[a-z0-9][a-z0-9_-]{0,63}$">
+                <label class="form-label" for="llmOutput">LLM Output</label>
+                <div class="form-hint">Paste the full markdown output from your LLM. We'll extract the <code>AMI_DRAFT_JSON</code> block automatically.</div>
+                <textarea class="form-textarea lg" id="llmOutput" placeholder="Paste the markdown output from your LLM here..."></textarea>
             </div>
 
-            <div class="form-group" id="assessmentIdGroup" style="display:none">
-                <label class="form-label" for="assessmentId">Assessment ID</label>
-                <div class="form-hint">Required for corrections and challenges.</div>
-                <input class="form-input" type="text" id="assessmentId" placeholder="AMI_ASSESS_20260217_system_v1">
+            <button class="process-btn" id="processBtn">Process Output</button>
+
+            <!-- Preview card (shown after processing) -->
+            <div class="preview-card" id="previewCard">
+                <div class="preview-header" id="previewName"></div>
+                <div class="preview-meta"><strong>System ID:</strong> <span id="previewSystemId"></span></div>
+                <div class="preview-meta"><strong>Category:</strong> <span id="previewCategory"></span></div>
+                <div class="preview-meta"><strong>Status:</strong> <span id="previewStatus"></span></div>
+                <div class="preview-dims" id="previewDims"></div>
+
+                <h2 style="font-size:1rem;margin-top:1.25rem">Validation Gates</h2>
+                <ul class="gates-list" id="gatesList"></ul>
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="claims">Claims</label>
-                <div class="form-hint">Describe what you are asserting. One claim per line.</div>
-                <textarea class="form-textarea" id="claims" rows="4" placeholder="Safety score should be 4 based on formal audit results.&#10;Tooling score underestimates plugin ecosystem." required></textarea>
+            <!-- Contact section (shown after valid preview) -->
+            <div class="contact-section" id="pasteContactSection">
+                <h2>Contact</h2>
+                <div class="form-group">
+                    <label class="form-label" for="pasteContactName">Your Name</label>
+                    <input class="form-input" type="text" id="pasteContactName" placeholder="Jane Doe" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="pasteContactEmail">Email</label>
+                    <div class="form-hint">Used for review follow-ups. Not displayed publicly.</div>
+                    <input class="form-input" type="email" id="pasteContactEmail" placeholder="jane@example.com" required>
+                </div>
+                <div class="form-checkbox-row">
+                    <input type="checkbox" id="pasteCoi">
+                    <label for="pasteCoi">I have a financial or employment relationship with this system's maintainers.</label>
+                </div>
+                <button class="submit-btn" id="pasteSubmitBtn">Submit Assessment Draft</button>
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="evidence">Evidence</label>
-                <div class="form-hint">One URL + description per line. Format: <code>URL | Description</code></div>
-                <textarea class="form-textarea" id="evidence" rows="4" placeholder="https://example.com/audit-report | Third-party security audit&#10;https://github.com/org/repo | Source code repository" required></textarea>
+            <div class="result-box" id="pasteResultBox">
+                <div class="result-title" id="pasteResultTitle"></div>
+                <div class="result-detail" id="pasteResultDetail"></div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════
+             TAB B: MANUAL SUBMISSION
+             ══════════════════════════════════════════════════════ -->
+        <div class="tab-panel" id="tab-manual">
+            <div class="info-card">
+                <p><strong>What happens next?</strong> Your submission enters a moderated review queue. An editor will evaluate your evidence and either accept, request clarification, or decline with reasoning. You will receive a confirmation email if you provide one.</p>
             </div>
 
-            <h2>Contact</h2>
+            <form id="submitForm" novalidate>
+                <div class="form-group">
+                    <label class="form-label" for="submissionType">Submission Type</label>
+                    <select class="form-select" id="submissionType" required>
+                        <option value="">Select type...</option>
+                        <option value="assessment_request">Assessment Request (new system)</option>
+                        <option value="correction">Correction (fix existing score)</option>
+                        <option value="challenge">Challenge (dispute existing score)</option>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label class="form-label" for="contactName">Your Name</label>
-                <input class="form-input" type="text" id="contactName" placeholder="Jane Doe" required>
+                <div class="form-group">
+                    <label class="form-label" for="systemId">System ID</label>
+                    <div class="form-hint">Lowercase, alphanumeric with hyphens. e.g. <code>my-agent</code></div>
+                    <input class="form-input" type="text" id="systemId" placeholder="my-agent-system" required pattern="^[a-z0-9][a-z0-9_-]{0,63}$">
+                </div>
+
+                <div class="form-group" id="assessmentIdGroup" style="display:none">
+                    <label class="form-label" for="assessmentId">Assessment ID</label>
+                    <div class="form-hint">Required for corrections and challenges.</div>
+                    <input class="form-input" type="text" id="assessmentId" placeholder="AMI_ASSESS_20260217_system_v1">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="claims">Claims</label>
+                    <div class="form-hint">Describe what you are asserting. One claim per line.</div>
+                    <textarea class="form-textarea" id="claims" rows="4" placeholder="Safety score should be 4 based on formal audit results.&#10;Tooling score underestimates plugin ecosystem." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="evidence">Evidence</label>
+                    <div class="form-hint">One URL + description per line. Format: <code>URL | Description</code></div>
+                    <textarea class="form-textarea" id="evidence" rows="4" placeholder="https://example.com/audit-report | Third-party security audit&#10;https://github.com/org/repo | Source code repository" required></textarea>
+                </div>
+
+                <h2>Contact</h2>
+
+                <div class="form-group">
+                    <label class="form-label" for="contactName">Your Name</label>
+                    <input class="form-input" type="text" id="contactName" placeholder="Jane Doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="contactEmail">Email</label>
+                    <div class="form-hint">Used for review follow-ups. Not displayed publicly.</div>
+                    <input class="form-input" type="email" id="contactEmail" placeholder="jane@example.com" required>
+                </div>
+
+                <div class="form-checkbox-row">
+                    <input type="checkbox" id="conflictOfInterest">
+                    <label for="conflictOfInterest">I have a financial or employment relationship with this system's maintainers.</label>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
+            </form>
+
+            <div class="result-box" id="resultBox">
+                <div class="result-title" id="resultTitle"></div>
+                <div class="result-detail" id="resultDetail"></div>
             </div>
-
-            <div class="form-group">
-                <label class="form-label" for="contactEmail">Email</label>
-                <div class="form-hint">Used for review follow-ups. Not displayed publicly.</div>
-                <input class="form-input" type="email" id="contactEmail" placeholder="jane@example.com" required>
-            </div>
-
-            <div class="form-checkbox-row">
-                <input type="checkbox" id="conflictOfInterest">
-                <label for="conflictOfInterest">I have a financial or employment relationship with this system's maintainers.</label>
-            </div>
-
-            <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
-        </form>
-
-        <div class="result-box" id="resultBox">
-            <div class="result-title" id="resultTitle"></div>
-            <div class="result-detail" id="resultDetail"></div>
         </div>
 
         <div class="footer-links">
@@ -224,22 +340,356 @@
 
     <script>
     (function() {
-        const form = document.getElementById('submitForm');
-        const btn = document.getElementById('submitBtn');
-        const resultBox = document.getElementById('resultBox');
-        const resultTitle = document.getElementById('resultTitle');
-        const resultDetail = document.getElementById('resultDetail');
-        const typeSelect = document.getElementById('submissionType');
-        const assessmentGroup = document.getElementById('assessmentIdGroup');
+        'use strict';
+
+        // ── Tab switching ────────────────────────────────────────
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+                document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+                btn.classList.add('active');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // ── Helpers ──────────────────────────────────────────────
+        function esc(s) {
+            if (!s) return '';
+            var d = document.createElement('div');
+            d.textContent = s;
+            return d.innerHTML;
+        }
+
+        // ══════════════════════════════════════════════════════════
+        // TAB A: PASTE LLM OUTPUT
+        // ══════════════════════════════════════════════════════════
+
+        var parsedDraft = null;
+        var parsedSources = null;
+
+        var processBtn = document.getElementById('processBtn');
+        var previewCard = document.getElementById('previewCard');
+        var contactSection = document.getElementById('pasteContactSection');
+        var pasteSubmitBtn = document.getElementById('pasteSubmitBtn');
+        var pasteResultBox = document.getElementById('pasteResultBox');
+        var pasteResultTitle = document.getElementById('pasteResultTitle');
+        var pasteResultDetail = document.getElementById('pasteResultDetail');
+
+        function extractJsonBlock(markdown, blockName) {
+            // Match ```json block after a heading containing blockName
+            var pattern = new RegExp(
+                '###?\\s*' + blockName + '\\s*\\n```(?:json)?\\s*\\n([\\s\\S]*?)\\n```',
+                'i'
+            );
+            var match = markdown.match(pattern);
+            if (match) {
+                try { return JSON.parse(match[1]); } catch (e) { return null; }
+            }
+            // Fallback: look for any fenced JSON block after the blockName text
+            pattern = new RegExp(blockName + '[\\s\\S]*?```(?:json)?\\s*\\n([\\s\\S]*?)\\n```', 'i');
+            match = markdown.match(pattern);
+            if (match) {
+                try { return JSON.parse(match[1]); } catch (e) { return null; }
+            }
+            return null;
+        }
+
+        function validateDraft(draft) {
+            var gates = [];
+            var dims = (draft.assessment && draft.assessment.dimensions) || {};
+            var evidence = (draft.assessment && draft.assessment.evidence) || [];
+            var dimKeys = Object.keys(dims);
+            var scoredCount = 0;
+            var unscoredCount = 0;
+
+            // Count scored vs unscored
+            for (var i = 0; i < dimKeys.length; i++) {
+                var d = dims[dimKeys[i]];
+                if (d && typeof d.score === 'number' && d.score >= 0) {
+                    scoredCount++;
+                } else {
+                    unscoredCount++;
+                }
+            }
+
+            // GATE 1: No scored dimension without evidence
+            var gate1 = true;
+            for (var i = 0; i < dimKeys.length; i++) {
+                var d = dims[dimKeys[i]];
+                if (d && typeof d.score === 'number' && d.score > 0) {
+                    if (!d.evidence_ids || d.evidence_ids.length === 0) gate1 = false;
+                }
+            }
+            gates.push({ name: 'GATE 1: Scored dimensions have evidence', pass: gate1 });
+
+            // GATE 2: Each evidence references >= 1 source
+            var gate2 = evidence.length > 0;
+            for (var i = 0; i < evidence.length; i++) {
+                if (!evidence[i].source_ids || evidence[i].source_ids.length === 0) gate2 = false;
+            }
+            gates.push({ name: 'GATE 2: Evidence references sources', pass: gate2 });
+
+            // GATE 3: Scored dimensions need confidence
+            var gate3 = true;
+            for (var i = 0; i < dimKeys.length; i++) {
+                var d = dims[dimKeys[i]];
+                if (d && typeof d.score === 'number' && d.score >= 0) {
+                    if (!d.confidence) gate3 = false;
+                }
+            }
+            gates.push({ name: 'GATE 3: Scored dimensions have confidence', pass: gate3 });
+
+            // GATE 4: Max 2 unscored dimensions
+            gates.push({ name: 'GATE 4: Max 2 unscored dimensions', pass: unscoredCount <= 2 });
+
+            // GATE 5: Score >= 4 requires >= 2 distinct sources
+            var gate5 = true;
+            for (var i = 0; i < dimKeys.length; i++) {
+                var d = dims[dimKeys[i]];
+                if (d && d.score >= 4 && d.evidence_ids) {
+                    var sourceSet = {};
+                    for (var j = 0; j < d.evidence_ids.length; j++) {
+                        var ev = evidence.find(function(e) { return e.evidence_id === d.evidence_ids[j]; });
+                        if (ev && ev.source_ids) {
+                            for (var k = 0; k < ev.source_ids.length; k++) sourceSet[ev.source_ids[k]] = true;
+                        }
+                    }
+                    if (Object.keys(sourceSet).length < 2) gate5 = false;
+                }
+            }
+            gates.push({ name: 'GATE 5: Score >= 4 has >= 2 sources', pass: gate5 });
+
+            // GATE 7: >= 3 distinct sources total
+            var allSources = {};
+            for (var i = 0; i < evidence.length; i++) {
+                if (evidence[i].source_ids) {
+                    for (var j = 0; j < evidence[i].source_ids.length; j++) {
+                        allSources[evidence[i].source_ids[j]] = true;
+                    }
+                }
+            }
+            gates.push({ name: 'GATE 7: >= 3 distinct sources total', pass: Object.keys(allSources).length >= 3 });
+
+            // GATE 8: Scored dimensions need rubric_refs
+            var gate8 = true;
+            for (var i = 0; i < dimKeys.length; i++) {
+                var d = dims[dimKeys[i]];
+                if (d && typeof d.score === 'number' && d.score >= 0) {
+                    if (!d.rubric_refs || d.rubric_refs.length === 0) gate8 = false;
+                }
+            }
+            gates.push({ name: 'GATE 8: Scored dimensions have rubric_refs', pass: gate8 });
+
+            return gates;
+        }
+
+        function showPasteResult(success, title, detail) {
+            pasteResultBox.className = 'result-box ' + (success ? 'success' : 'error');
+            pasteResultBox.style.display = 'block';
+            pasteResultTitle.textContent = title;
+            pasteResultDetail.innerHTML = detail;
+            pasteResultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        var DIMENSION_LABELS = {
+            execution_reliability: 'Execution Reliability',
+            tooling_integration_breadth: 'Tooling & Integration',
+            safety_guardrails: 'Safety & Guardrails',
+            observability: 'Observability',
+            deployment_maturity: 'Deployment Maturity',
+            real_world_validation: 'Real-World Validation'
+        };
+
+        processBtn.addEventListener('click', function() {
+            pasteResultBox.style.display = 'none';
+            previewCard.style.display = 'none';
+            contactSection.style.display = 'none';
+            parsedDraft = null;
+            parsedSources = null;
+
+            var raw = document.getElementById('llmOutput').value.trim();
+            if (!raw) {
+                showPasteResult(false, 'Empty Input', 'Please paste the LLM output above.');
+                return;
+            }
+
+            // Extract AMI_DRAFT_JSON
+            var draft = extractJsonBlock(raw, 'AMI_DRAFT_JSON');
+            if (!draft) {
+                showPasteResult(false, 'JSON Not Found', 'Could not find an <code>AMI_DRAFT_JSON</code> code block in the pasted text. Make sure the LLM output contains a fenced JSON block under an <code>AMI_DRAFT_JSON</code> heading.');
+                return;
+            }
+
+            // Basic structure validation
+            if (!draft.system || !draft.system.system_id) {
+                showPasteResult(false, 'Invalid JSON', 'The <code>AMI_DRAFT_JSON</code> block is missing <code>system.system_id</code>.');
+                return;
+            }
+            if (!draft.assessment || !draft.assessment.dimensions) {
+                showPasteResult(false, 'Invalid JSON', 'The <code>AMI_DRAFT_JSON</code> block is missing <code>assessment.dimensions</code>.');
+                return;
+            }
+
+            // Extract SOURCE_CATALOG_CANDIDATES (optional)
+            parsedSources = extractJsonBlock(raw, 'SOURCE_CATALOG_CANDIDATES');
+            parsedDraft = draft;
+
+            // Show preview
+            document.getElementById('previewName').textContent = draft.system.name || draft.system.system_id;
+            document.getElementById('previewSystemId').textContent = esc(draft.system.system_id);
+            document.getElementById('previewCategory').textContent = esc(draft.system.category || 'N/A');
+            document.getElementById('previewStatus').textContent = esc((draft.assessment && draft.assessment.status) || 'UNDER_REVIEW');
+
+            // Dimensions
+            var dimsHtml = '';
+            var dims = draft.assessment.dimensions;
+            var dimKeys = Object.keys(DIMENSION_LABELS);
+            for (var i = 0; i < dimKeys.length; i++) {
+                var key = dimKeys[i];
+                var dim = dims[key];
+                var score = dim && typeof dim.score === 'number' ? dim.score + '/5' : 'N/S';
+                var conf = dim && dim.confidence ? dim.confidence : '';
+                dimsHtml += '<div class="preview-dim"><span class="dim-name">' + esc(DIMENSION_LABELS[key]) + '</span><br><span class="dim-score">' + esc(score) + '</span> <span style="color:var(--text-3);font-size:11px">' + esc(conf) + '</span></div>';
+            }
+            document.getElementById('previewDims').innerHTML = dimsHtml;
+
+            // Gates
+            var gates = validateDraft(draft);
+            var gatesHtml = '';
+            for (var i = 0; i < gates.length; i++) {
+                var cls = gates[i].pass ? 'gate-pass' : 'gate-fail';
+                var icon = gates[i].pass ? 'PASS' : 'FAIL';
+                gatesHtml += '<li class="' + cls + '">[' + icon + '] ' + esc(gates[i].name) + '</li>';
+            }
+            document.getElementById('gatesList').innerHTML = gatesHtml;
+
+            previewCard.style.display = 'block';
+            contactSection.style.display = 'block';
+            previewCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        // Submit draft
+        pasteSubmitBtn.addEventListener('click', function() {
+            if (!parsedDraft) return;
+
+            var contactName = document.getElementById('pasteContactName').value.trim();
+            var contactEmail = document.getElementById('pasteContactEmail').value.trim();
+            var coi = document.getElementById('pasteCoi').checked;
+
+            if (!contactName || !contactEmail) {
+                showPasteResult(false, 'Missing Fields', 'Please fill in your name and email.');
+                return;
+            }
+
+            pasteSubmitBtn.disabled = true;
+            pasteSubmitBtn.textContent = 'Submitting...';
+            pasteResultBox.style.display = 'none';
+
+            var dims = parsedDraft.assessment.dimensions;
+            var dimKeys = Object.keys(dims);
+            var claims = [];
+            for (var i = 0; i < dimKeys.length; i++) {
+                var d = dims[dimKeys[i]];
+                if (d && typeof d.score === 'number') {
+                    claims.push({
+                        summary: (DIMENSION_LABELS[dimKeys[i]] || dimKeys[i]) + ': score ' + d.score + '/5 (' + (d.confidence || 'unverified') + ')',
+                        dimension_id: dimKeys[i]
+                    });
+                }
+            }
+
+            var evidenceArr = (parsedDraft.assessment.evidence || []).map(function(ev) {
+                var url = '';
+                if (ev.source_ids && ev.source_ids.length > 0) {
+                    // Check SOURCE_CATALOG_CANDIDATES for URLs
+                    if (parsedSources && Array.isArray(parsedSources)) {
+                        var src = parsedSources.find(function(s) { return s.source_id === ev.source_ids[0]; });
+                        if (src && src.url) url = src.url;
+                    }
+                }
+                return {
+                    url: url || ('source:' + (ev.source_ids && ev.source_ids[0] || 'unknown')),
+                    description: ev.claim || ev.title || ev.summary || 'Evidence'
+                };
+            });
+
+            // Ensure at least one evidence item
+            if (evidenceArr.length === 0) {
+                evidenceArr.push({ url: 'self-assessment', description: 'LLM self-assessment draft' });
+            }
+
+            var notes = coi ? 'Conflict of interest declared. ' : '';
+            notes += 'AMI_DRAFT_JSON: ' + JSON.stringify(parsedDraft);
+            if (parsedSources) {
+                notes += '\nSOURCE_CATALOG_CANDIDATES: ' + JSON.stringify(parsedSources);
+            }
+
+            var payload = {
+                type: 'self_assessment_draft',
+                system_id: parsedDraft.system.system_id,
+                claims: claims,
+                evidence: evidenceArr,
+                contact: { name: contactName, email: contactEmail },
+                notes: notes
+            };
+
+            fetch('/api/ami/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, status: res.status, data: data }; }); })
+            .then(function(result) {
+                if (result.ok) {
+                    showPasteResult(true, 'Submission Received',
+                        'Your self-assessment draft has been created.<br>' +
+                        'ID: <code>' + esc(result.data.submission_id) + '</code><br>' +
+                        'Status: <code>' + esc(result.data.status) + '</code><br>' +
+                        'An editor will review your submission shortly.'
+                    );
+                    document.getElementById('llmOutput').value = '';
+                    previewCard.style.display = 'none';
+                    contactSection.style.display = 'none';
+                    parsedDraft = null;
+                    parsedSources = null;
+                } else if (result.data.error === 'validation_failed') {
+                    var errors = (result.data.errors || []).map(function(e) { return '&bull; ' + esc(e); }).join('<br>');
+                    showPasteResult(false, 'Validation Error', errors);
+                } else if (result.data.error === 'rate_limit_exceeded') {
+                    showPasteResult(false, 'Rate Limited', esc(result.data.message || 'Too many submissions. Please try again later.'));
+                } else {
+                    showPasteResult(false, 'Error', esc(result.data.message || result.data.error || 'Submission failed.'));
+                }
+            })
+            .catch(function() {
+                showPasteResult(false, 'Network Error', 'Could not reach the server. Please try again.');
+            })
+            .finally(function() {
+                pasteSubmitBtn.disabled = false;
+                pasteSubmitBtn.textContent = 'Submit Assessment Draft';
+            });
+        });
+
+        // ══════════════════════════════════════════════════════════
+        // TAB B: MANUAL SUBMISSION (existing form logic)
+        // ══════════════════════════════════════════════════════════
+
+        var form = document.getElementById('submitForm');
+        var btn = document.getElementById('submitBtn');
+        var resultBox = document.getElementById('resultBox');
+        var resultTitle = document.getElementById('resultTitle');
+        var resultDetail = document.getElementById('resultDetail');
+        var typeSelect = document.getElementById('submissionType');
+        var assessmentGroup = document.getElementById('assessmentIdGroup');
 
         typeSelect.addEventListener('change', function() {
-            const needsAssessment = this.value === 'correction' || this.value === 'challenge';
+            var needsAssessment = this.value === 'correction' || this.value === 'challenge';
             assessmentGroup.style.display = needsAssessment ? 'block' : 'none';
             document.getElementById('assessmentId').required = needsAssessment;
         });
 
         function parseClaims(text) {
-            return text.split('\n').filter(function(l) { return l.trim(); }).map(function(line, i) {
+            return text.split('\n').filter(function(l) { return l.trim(); }).map(function(line) {
                 return { summary: line.trim() };
             });
         }
@@ -306,24 +756,24 @@
                 if (result.ok) {
                     showResult(true, 'Submission Received',
                         'Your submission has been created.<br>' +
-                        'ID: <code>' + result.data.submission_id + '</code><br>' +
-                        'Status: <code>' + result.data.status + '</code><br>' +
+                        'ID: <code>' + esc(result.data.submission_id) + '</code><br>' +
+                        'Status: <code>' + esc(result.data.status) + '</code><br>' +
                         'An editor will review your submission shortly.'
                     );
                     form.reset();
                     assessmentGroup.style.display = 'none';
                 } else if (result.data.error === 'validation_failed') {
-                    var errors = (result.data.errors || []).map(function(e) { return '&bull; ' + e; }).join('<br>');
+                    var errors = (result.data.errors || []).map(function(e) { return '&bull; ' + esc(e); }).join('<br>');
                     showResult(false, 'Validation Error', errors);
                 } else if (result.data.error === 'rate_limit_exceeded') {
-                    showResult(false, 'Rate Limited', result.data.message || 'Too many submissions. Please try again later.');
+                    showResult(false, 'Rate Limited', esc(result.data.message || 'Too many submissions. Please try again later.'));
                 } else if (result.data.error === 'forbidden_fields') {
                     showResult(false, 'Invalid Fields', 'Submission contains disallowed fields: ' + (result.data.fields || []).join(', '));
                 } else {
-                    showResult(false, 'Error', result.data.message || result.data.error || 'Submission failed.');
+                    showResult(false, 'Error', esc(result.data.message || result.data.error || 'Submission failed.'));
                 }
             })
-            .catch(function(err) {
+            .catch(function() {
                 showResult(false, 'Network Error', 'Could not reach the server. Please try again.');
             })
             .finally(function() {

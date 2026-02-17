@@ -721,6 +721,7 @@
             border: 1px solid var(--border);
         }
         .dl-btn-secondary:hover { border-color: var(--border-hover); color: #fff; }
+        button.dl-btn { border: none; cursor: pointer; }
 
         /* ==================== SECTION RAIL ==================== */
         .section-rail {
@@ -1432,7 +1433,7 @@
     <a href="/AGENTS_2026_PREMIUM_REPORT.html" class="dl-btn dl-btn-primary" download="AI_Tools_2026_Premium_Report.html">Premium Report (.html)</a>
     <a href="/AGENTS_2026_SOURCES.md" class="dl-btn dl-btn-secondary" download>Sources & Citations</a>
     <a href="/AGENTS_2026_CHART_DATA.csv" class="dl-btn dl-btn-secondary" download>Raw Data (.csv)</a>
-    <a href="/download/ami-v1-kit/ami-v1-rubric.md" class="dl-btn dl-btn-secondary" download>AMI Rubric (.md)</a>
+    <button class="dl-btn dl-btn-secondary" onclick="copyAmiPrompt(this)" id="copy-ami-prompt-btn">Copy AMI Prompt</button>
     <a href="/download/ami-v1-kit.zip" class="dl-btn dl-btn-secondary" download>Assessment Kit (.zip)</a>
 </div>
 
@@ -2652,6 +2653,23 @@ fetch('/frameworks.json')
 const fadeObserver2 = new IntersectionObserver((entries) => {
     entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
 }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+// ==================== COPY AMI PROMPT ====================
+function copyAmiPrompt(btn) {
+    Promise.all([
+        fetch('/download/ami-self-assessment-prompt.txt').then(r => r.text()),
+        fetch('/api/ami/rubric').then(r => r.json())
+    ]).then(([promptText, rubricData]) => {
+        const hash = rubricData.specHash || 'unknown';
+        const final = promptText.replace('<SPEC_HASH>', hash);
+        return navigator.clipboard.writeText(final).then(() => {
+            btn.textContent = 'Copied!';
+            setTimeout(() => { btn.textContent = 'Copy AMI Prompt'; }, 2000);
+        });
+    }).catch(() => {
+        window.open('/download/ami-self-assessment-prompt.txt', '_blank');
+    });
+}
 
 // ==================== COPY CITATION ====================
 function copyCite(title) {

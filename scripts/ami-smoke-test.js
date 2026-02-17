@@ -358,13 +358,14 @@ const submissions = require(path.join(ROOT, 'lib', 'ami', 'submissions.js'));
 
 // Constants
 assert(
-  submissions.SUBMISSION_TYPES.length === 3,
-  'Three submission types defined'
+  submissions.SUBMISSION_TYPES.length === 4,
+  'Four submission types defined (incl. self_assessment_draft)'
 );
 assert(
   submissions.SUBMISSION_TYPES.includes('assessment_request') &&
   submissions.SUBMISSION_TYPES.includes('correction') &&
-  submissions.SUBMISSION_TYPES.includes('challenge'),
+  submissions.SUBMISSION_TYPES.includes('challenge') &&
+  submissions.SUBMISSION_TYPES.includes('self_assessment_draft'),
   'Expected submission types present'
 );
 assert(

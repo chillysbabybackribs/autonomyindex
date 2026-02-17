@@ -233,31 +233,68 @@ AMI v${meta.ami_version} | Generated ${new Date().toISOString().slice(0, 10)} | 
 // ── Generate LLM self-assessment prompt ──────────────────────────────────────
 
 function generateLlmPrompt() {
-  const dimList = meta.dimensions.map((d) => `  - ${d.name} (${d.id}, weight: ${(d.weight * 100).toFixed(0)}%)`).join('\n');
+  const dimList = meta.dimensions.map((d) => `- ${d.name} (${(d.weight * 100).toFixed(0)}%)`).join('\n');
 
-  return `# AMI v1.0 Self-Assessment Prompt
+  const rubricRefs = meta.dimensions.map((d) => {
+    const rubric = meta.rubrics[d.id];
+    if (!rubric) return '';
+    const refs = [];
+    for (let level = 0; level <= 5; level++) {
+      const bullets = rubric[String(level)] || [];
+      for (const b of bullets) {
+        refs.push(`  ${b.id}: ${b.text}`);
+      }
+    }
+    return `### ${d.name}\n${refs.join('\n')}`;
+  }).join('\n\n');
 
-You are an AI agent evaluator. Your task is to produce a structured AMI v1.0
-(Agent Maturity Index) assessment for a specified AI agent system.
+  return `# AMI v1.0 Self-Assessment Draft (Strict)
 
-## STRICT RULES
+You are generating a **draft AMI v1.0 assessment** for an autonomous agent system.
 
-1. You MUST follow the AMI v1.0 rubric exactly.
-2. You MUST cite real, verifiable evidence for every scored dimension.
-3. You MUST NOT invent, hallucinate, or fabricate evidence.
-4. You MUST provide source URLs or source IDs for all evidence.
-5. You MUST assign a confidence level per dimension: verified, inferred, or unverified.
-6. You MUST output valid AMI JSON matching the schema structure below.
-7. You MUST set "assessed_by" to a descriptive name (e.g., "llm-self-assessment").
-8. This assessment is self-reported: review.state MUST be "draft".
-9. Each scored dimension MUST have rubric_refs pointing to specific rubric IDs.
-10. Excerpts MUST be 25 words or fewer.
+## Rules (mandatory)
+- You MUST NOT invent, hallucinate, or fabricate evidence.
+- If you cannot cite a source for a claim, mark the confidence **unverified** and score conservatively.
+- You MUST provide source URLs or source IDs for all evidence.
+- You MUST assign a confidence level per dimension: verified, inferred, or unverified.
+- Every **scored** dimension (0-5) MUST include:
+  - \`confidence\`: verified | inferred | unverified
+  - \`evidence\` with **source_ids** (>=1)
+  - \`rubric_refs\` (>=1) referencing the rubric bullet IDs
+- A dimension may be \`not_scored\` only if there is insufficient evidence, and must include a reason.
+- Output MUST be machine-parseable and follow the exact format below.
 
-## DIMENSIONS (${meta.dimensions.length} total)
+## What you must produce
+Return a Markdown report with:
+1) A short summary (5-10 bullets)
+2) A per-dimension breakdown
+3) A single JSON block named \`AMI_DRAFT_JSON\` (exact schema below)
+4) A \`SOURCE_CATALOG_CANDIDATES\` JSON block if you cite URLs that don't have a source_id yet.
 
+## Input: System description (provided by user)
+- Name:
+- Repo URL:
+- Docs URL:
+- What it does:
+- Deployment model:
+- Observability:
+- Security/guardrails:
+- Production usage proof:
+- Any logs / screenshots / metrics links:
+
+(If any fields are missing, ask for the minimum missing info in a "MISSING INFO" section, but still produce a best-effort draft with low confidence.)
+
+---
+
+## AMI Dimensions (weights)
 ${dimList}
 
-## SCORING SCALE (per dimension: 0-5)
+## Rubric refs format
+Use rubric bullet IDs like: ER4a, TI3b, SG2a, OB4a, DM3a, RV2a.
+
+${rubricRefs}
+
+## Scoring Scale (per dimension: 0-5)
 
 | Level | Meaning |
 |-------|---------|
@@ -268,28 +305,7 @@ ${dimList}
 | 4 | Strong / comprehensive (requires >= 2 distinct sources) |
 | 5 | Industry-leading / formal (requires primary source) |
 
-## RUBRIC REFERENCE IDs
-
-${meta.dimensions.map((d) => {
-  const rubric = meta.rubrics[d.id];
-  if (!rubric) return '';
-  const refs = [];
-  for (let level = 0; level <= 5; level++) {
-    const bullets = rubric[String(level)] || [];
-    for (const b of bullets) {
-      refs.push(`  ${b.id}: ${b.text}`);
-    }
-  }
-  return `### ${d.name}\n${refs.join('\n')}`;
-}).join('\n\n')}
-
-## CONFIDENCE LEVELS
-
-- **verified**: Evidence directly confirms the claim (official docs, audits, code)
-- **inferred**: Reasonable inference from indirect evidence
-- **unverified**: Claim exists but evidence is weak or absent
-
-## ANTI-GAMING GATES (all must pass)
+## Anti-Gaming Gates (all must pass)
 
 - No scored dimension without evidence (GATE 1)
 - Each evidence must reference >= 1 source (GATE 2)
@@ -300,90 +316,85 @@ ${meta.dimensions.map((d) => {
 - Scored assessment needs >= 3 distinct sources total (GATE 7)
 - Scored dimensions need rubric_refs (GATE 8)
 
-## OUTPUT FORMAT
+---
 
-Produce a JSON object with this structure:
+## OUTPUT FORMAT (must match exactly)
 
+### SUMMARY
+- ...
+
+### DIMENSIONS
+#### Execution Reliability
+Score: X
+Confidence: verified|inferred|unverified
+Rubric refs: ER...
+Evidence:
+- EV_... (source_ids: [SRC_...], claim: "...", summary: "...")
+
+(repeat for all 6)
+
+### AMI_DRAFT_JSON
 \`\`\`json
 {
-  "assessment_id": "AMI_ASSESS_YYYYMMDD_<system_id>_v1",
-  "system_id": "<system_id>",
-  "version": 1,
-  "assessed_at": "<ISO_TIMESTAMP>",
-  "system_version": "<version or null>",
-  "previous_assessment_id": null,
-  "overall_score": <0-100 or null>,
-  "grade": "<A|B|C|D|F or null>",
-  "overall_confidence": "<high|medium|low>",
-  "status": "<scored|insufficient_evidence|under_review>",
-  "category": "<cloud_autonomous|cloud_workflow|local_autonomous|enterprise|vertical_agent>",
-  "eligibility": {
-    "agent_system": true,
-    "public_artifact": <boolean>,
-    "active_development": <boolean>,
-    "maintainer_identifiable": <boolean>,
-    "verified_sources_count": <number>,
-    "exclusion_flags": {
-      "base_llm_only": false,
-      "prompt_library_only": false,
-      "research_prototype_only": false,
-      "wrapper_only": false
+  "ami_version": "1.0.0",
+  "spec_hash": "<SPEC_HASH>",
+  "system": {
+    "name": "",
+    "system_id": "",
+    "category": ""
+  },
+  "assessment": {
+    "assessment_id": "DRAFT_<YYYYMMDD>_<random>",
+    "assessed_at": "<ISO8601>",
+    "status": "UNDER_REVIEW",
+    "review": { "state": "draft" },
+    "dimensions": {
+      "execution_reliability": {
+        "score": 0,
+        "confidence": "unverified",
+        "rubric_refs": ["ER0a"],
+        "evidence_ids": ["EV_1"]
+      },
+      "tooling_integration_breadth": { "...": "..." },
+      "safety_guardrails": { "...": "..." },
+      "observability": { "...": "..." },
+      "deployment_maturity": { "...": "..." },
+      "real_world_validation": { "...": "..." }
     },
-    "notes": "<eligibility determination>"
-  },
-  "dimensions": [
-    {
-      "dimension_id": "<id>",
-      "dimension_name": "<display name>",
-      "score": <0-5 or null>,
-      "confidence": "<verified|inferred|unverified>",
-      "weight": <weight>,
-      "rationale": "<concise rationale>",
-      "scored": <boolean>,
-      "not_scored_reason": "<reason if not scored>",
-      "rubric_refs": ["<rubric_id>", ...],
-      "evidence": [
-        {
-          "id": "EV_YYYYMMDD_NNN",
-          "url": "<source URL>",
-          "title": "<source title>",
-          "publisher": "<publisher>",
-          "published_date": "YYYY-MM-DD",
-          "excerpt": "<max 25 words>",
-          "claim_supported": "<what this proves>",
-          "evidence_type": "<official_docs|source_code|security_audit|...>",
-          "confidence_contribution": "<verified|inferred|unverified>",
-          "relevance_weight": <0.0-1.0>,
-          "captured_at": "<ISO_TIMESTAMP>",
-          "source_ids": ["SRC_NNN"]
-        }
-      ]
-    }
-  ],
-  "methodology_version": "1.0",
-  "assessed_by": "llm-self-assessment",
-  "notes": "<assessment notes>",
-  "review": {
-    "state": "draft",
-    "reviewers": []
-  },
-  "integrity": null
+    "evidence": [
+      {
+        "evidence_id": "EV_1",
+        "title": "",
+        "claim": "",
+        "summary": "",
+        "source_ids": ["SRC_..."],
+        "tags": []
+      }
+    ]
+  }
 }
 \`\`\`
 
-## AGGREGATION FORMULA
-
+### SOURCE_CATALOG_CANDIDATES
+\`\`\`json
+[
+  {
+    "source_id": "SRC_SUGGESTED_1",
+    "title": "",
+    "url": "",
+    "published_date": "",
+    "tier": 3,
+    "type": "url",
+    "access": "public",
+    "reliability": "self_reported"
+  }
+]
 \`\`\`
-overall_score = round( SUM(score_i * renorm_weight_i) / 5 * 100 )
-renorm_weight_i = original_weight_i / SUM(weights of scored dimensions)
-\`\`\`
 
-## YOUR TASK
+## Notes
 
-Assess the following AI agent system: [SYSTEM_NAME]
-
-Provide your assessment as a JSON object following the schema above.
-Be honest, evidence-based, and conservative in scoring.
+- If you used an existing source_id, keep it.
+- If you only have URLs, put them in SOURCE_CATALOG_CANDIDATES and reference those suggested IDs in evidence.source_ids.
 
 ---
 
