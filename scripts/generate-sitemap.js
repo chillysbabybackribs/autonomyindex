@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const ROOT = process.cwd();
-const SITE = 'https://autonomyindex.io';
+const SITE = 'https://www.autonomyindex.io';
 
 function existsRoute(route) {
   if (route === '/') return true;

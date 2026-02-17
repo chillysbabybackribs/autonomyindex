@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://autonomyindex.io/sitemap.xml
+Sitemap: https://www.autonomyindex.io/sitemap.xml
 
 Disallow: /api/
 Disallow: /logs/

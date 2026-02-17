@@ -1,7 +1,15 @@
 {
-  "buildCommand": "echo 'Static site'",
+  "buildCommand": "npm run build",
   "outputDirectory": ".",
   "cleanUrls": true,
+  "functions": {
+    "api/**/*.js": {
+      "includeFiles": "data/**"
+    },
+    "api/**/*.ts": {
+      "includeFiles": "data/**"
+    }
+  },
   "headers": [
     {
       "source": "/AGENTS_2026_PREMIUM_REPORT",

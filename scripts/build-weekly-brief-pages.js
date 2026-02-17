@@ -4,7 +4,7 @@ const path = require('node:path');
 const ROOT = process.cwd();
 const BRIEFS_FILE = path.join(ROOT, 'data', 'weekly-briefs.json');
 const OUTPUT_DIR = path.join(ROOT, 'weekly-briefs');
-const SITE = 'https://autonomyindex.io';
+const SITE = 'https://www.autonomyindex.io';
 
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -56,6 +56,8 @@ function renderBriefPage(brief) {
   <link rel="stylesheet" href="/style.css">
   <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Organization', name: 'Autonomy Index', url: SITE, logo: `${SITE}/assets/icon.png` })}</script>
   <script type="application/ld+json">${JSON.stringify(articleJsonLd)}</script>
+  <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
   <main class="section">
@@ -91,6 +93,8 @@ function renderIndexPage(briefs) {
   <link rel="canonical" href="${SITE}/weekly-briefs">
   <link rel="stylesheet" href="/style.css">
   <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'Organization', name: 'Autonomy Index', url: SITE, logo: `${SITE}/assets/icon.png` })}</script>
+  <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
   <main class="section">
