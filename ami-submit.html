@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit to AMI — Autonomy Index</title>
+    <meta name="description" content="Submit an assessment request, correction, or challenge to the Agent Maturity Index.">
+    <link rel="canonical" href="https://www.autonomyindex.io/ami-submit">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #06b6d4;
+            --cyan-dim: rgba(6,182,212,0.08);
+            --green: #34d59a;
+            --green-dim: rgba(52,213,154,0.08);
+            --amber: #f59e0b;
+            --amber-dim: rgba(245,158,11,0.08);
+            --red: #ef4444;
+            --red-dim: rgba(239,68,68,0.08);
+            --surface-1: #0a0a0a;
+            --surface-2: #111111;
+            --surface-3: #1a1a1a;
+            --surface-4: #262626;
+            --border: rgba(255,255,255,0.06);
+            --border-hover: rgba(255,255,255,0.12);
+            --text-1: #f5f5f5;
+            --text-2: #a1a1a1;
+            --text-3: #666;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'IBM Plex Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { color-scheme: dark; scroll-behavior: smooth; }
+        body { font-family: var(--font-body); background: #000; color: var(--text-2); line-height: 1.7; font-size: 15px; }
+
+        .header {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(0,0,0,0.92); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; height: 56px;
+        }
+        .logo { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: #fff; text-decoration: none; }
+        .nav-menu { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-link { color: var(--text-3); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; }
+        .nav-link:hover { color: var(--text-2); }
+        .nav-link.active { color: var(--cyan); }
+
+        .container { max-width: 680px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+
+        .breadcrumb { font-size: 12px; color: var(--text-3); margin-bottom: 2rem; }
+        .breadcrumb a { color: var(--text-3); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--cyan); }
+
+        h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+        h2 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; color: #fff; margin: 2rem 0 0.75rem; }
+        p { margin-bottom: 1rem; }
+        a { color: var(--cyan); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .form-group { margin-bottom: 1.25rem; }
+        .form-label {
+            display: block; font-size: 13px; font-weight: 600; color: var(--text-1);
+            margin-bottom: 0.4rem; font-family: var(--font-display);
+        }
+        .form-hint { font-size: 12px; color: var(--text-3); margin-bottom: 0.4rem; }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%; padding: 10px 14px; border-radius: 8px;
+            background: var(--surface-2); border: 1px solid var(--border); color: var(--text-1);
+            font-family: var(--font-body); font-size: 14px; line-height: 1.5;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none; border-color: var(--cyan);
+        }
+        .form-textarea { min-height: 120px; resize: vertical; font-family: var(--font-mono); font-size: 13px; }
+
+        .form-checkbox-row {
+            display: flex; align-items: flex-start; gap: 10px; margin-bottom: 1.25rem;
+        }
+        .form-checkbox-row input[type="checkbox"] {
+            accent-color: var(--cyan); width: 16px; height: 16px; margin-top: 3px; flex-shrink: 0;
+        }
+        .form-checkbox-row label { font-size: 13px; color: var(--text-2); cursor: pointer; }
+
+        .submit-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 32px; border-radius: 8px; font-size: 15px; font-weight: 600;
+            text-decoration: none; transition: all 0.2s; border: none; cursor: pointer;
+            background: var(--cyan); color: #000; font-family: var(--font-display);
+        }
+        .submit-btn:hover { opacity: 0.9; }
+        .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .result-box {
+            background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
+            padding: 1.5rem; margin-top: 1.5rem; display: none;
+        }
+        .result-box.success { border-color: var(--green); }
+        .result-box.error { border-color: var(--red); }
+        .result-title {
+            font-family: var(--font-display); font-size: 1rem; font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .result-box.success .result-title { color: var(--green); }
+        .result-box.error .result-title { color: var(--red); }
+        .result-detail { font-size: 13px; color: var(--text-2); }
+        .result-detail code {
+            font-family: var(--font-mono); background: var(--surface-3);
+            padding: 2px 6px; border-radius: 4px; font-size: 0.85em; color: var(--cyan);
+        }
+
+        .info-card {
+            background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
+            padding: 1.25rem; margin-bottom: 1.5rem;
+        }
+        .info-card p:last-child { margin-bottom: 0; }
+
+        .footer-links {
+            margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+            font-size: 13px; color: var(--text-3);
+        }
+        .footer-links a { color: var(--text-3); margin-right: 1.5rem; }
+        .footer-links a:hover { color: var(--cyan); }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">Autonomy Index</a>
+        <nav class="nav-menu">
+            <a href="/" class="nav-link">Main Report</a>
+            <a href="/agents-2026" class="nav-link">Agents 2026</a>
+            <a href="/methodology#ami" class="nav-link">Methodology</a>
+            <a href="/ami-systems" class="nav-link">AMI</a>
+            <a href="/ami-submit" class="nav-link active">Submit</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="breadcrumb">
+            <a href="/">Home</a> / <a href="/ami-systems">AMI</a> / Submit
+        </div>
+
+        <h1>Submit to AMI</h1>
+        <p>Request an assessment, propose a correction, or challenge an existing score. All submissions are reviewed by AMI editors before any changes are published.</p>
+
+        <div class="info-card">
+            <p><strong>What happens next?</strong> Your submission enters a moderated review queue. An editor will evaluate your evidence and either accept, request clarification, or decline with reasoning. You will receive a confirmation email if you provide one.</p>
+        </div>
+
+        <form id="submitForm" novalidate>
+            <div class="form-group">
+                <label class="form-label" for="submissionType">Submission Type</label>
+                <select class="form-select" id="submissionType" required>
+                    <option value="">Select type...</option>
+                    <option value="assessment_request">Assessment Request (new system)</option>
+                    <option value="correction">Correction (fix existing score)</option>
+                    <option value="challenge">Challenge (dispute existing score)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="systemId">System ID</label>
+                <div class="form-hint">Lowercase, alphanumeric with hyphens. e.g. <code>my-agent</code></div>
+                <input class="form-input" type="text" id="systemId" placeholder="my-agent-system" required pattern="^[a-z0-9][a-z0-9_-]{0,63}$">
+            </div>
+
+            <div class="form-group" id="assessmentIdGroup" style="display:none">
+                <label class="form-label" for="assessmentId">Assessment ID</label>
+                <div class="form-hint">Required for corrections and challenges.</div>
+                <input class="form-input" type="text" id="assessmentId" placeholder="AMI_ASSESS_20260217_system_v1">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="claims">Claims</label>
+                <div class="form-hint">Describe what you are asserting. One claim per line.</div>
+                <textarea class="form-textarea" id="claims" rows="4" placeholder="Safety score should be 4 based on formal audit results.&#10;Tooling score underestimates plugin ecosystem." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="evidence">Evidence</label>
+                <div class="form-hint">One URL + description per line. Format: <code>URL | Description</code></div>
+                <textarea class="form-textarea" id="evidence" rows="4" placeholder="https://example.com/audit-report | Third-party security audit&#10;https://github.com/org/repo | Source code repository" required></textarea>
+            </div>
+
+            <h2>Contact</h2>
+
+            <div class="form-group">
+                <label class="form-label" for="contactName">Your Name</label>
+                <input class="form-input" type="text" id="contactName" placeholder="Jane Doe" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="contactEmail">Email</label>
+                <div class="form-hint">Used for review follow-ups. Not displayed publicly.</div>
+                <input class="form-input" type="email" id="contactEmail" placeholder="jane@example.com" required>
+            </div>
+
+            <div class="form-checkbox-row">
+                <input type="checkbox" id="conflictOfInterest">
+                <label for="conflictOfInterest">I have a financial or employment relationship with this system's maintainers.</label>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
+        </form>
+
+        <div class="result-box" id="resultBox">
+            <div class="result-title" id="resultTitle"></div>
+            <div class="result-detail" id="resultDetail"></div>
+        </div>
+
+        <div class="footer-links">
+            <a href="/ami-systems">All Assessments</a>
+            <a href="/ami-download">Assessment Kit</a>
+            <a href="/methodology#ami">Methodology</a>
+        </div>
+    </main>
+
+    <script>
+    (function() {
+        const form = document.getElementById('submitForm');
+        const btn = document.getElementById('submitBtn');
+        const resultBox = document.getElementById('resultBox');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultDetail = document.getElementById('resultDetail');
+        const typeSelect = document.getElementById('submissionType');
+        const assessmentGroup = document.getElementById('assessmentIdGroup');
+
+        typeSelect.addEventListener('change', function() {
+            const needsAssessment = this.value === 'correction' || this.value === 'challenge';
+            assessmentGroup.style.display = needsAssessment ? 'block' : 'none';
+            document.getElementById('assessmentId').required = needsAssessment;
+        });
+
+        function parseClaims(text) {
+            return text.split('\n').filter(function(l) { return l.trim(); }).map(function(line, i) {
+                return { summary: line.trim() };
+            });
+        }
+
+        function parseEvidence(text) {
+            return text.split('\n').filter(function(l) { return l.trim(); }).map(function(line) {
+                var parts = line.split('|');
+                var url = (parts[0] || '').trim();
+                var desc = (parts[1] || url).trim();
+                return { url: url, description: desc };
+            });
+        }
+
+        function showResult(success, title, detail) {
+            resultBox.className = 'result-box ' + (success ? 'success' : 'error');
+            resultBox.style.display = 'block';
+            resultTitle.textContent = title;
+            resultDetail.innerHTML = detail;
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            btn.disabled = true;
+            btn.textContent = 'Submitting...';
+            resultBox.style.display = 'none';
+
+            var type = typeSelect.value;
+            var systemId = document.getElementById('systemId').value.trim().toLowerCase();
+            var assessmentId = document.getElementById('assessmentId').value.trim();
+            var claimsRaw = document.getElementById('claims').value;
+            var evidenceRaw = document.getElementById('evidence').value;
+            var contactName = document.getElementById('contactName').value.trim();
+            var contactEmail = document.getElementById('contactEmail').value.trim();
+            var coi = document.getElementById('conflictOfInterest').checked;
+
+            var claims = parseClaims(claimsRaw);
+            var evidence = parseEvidence(evidenceRaw);
+
+            if (!type || !systemId || claims.length === 0 || evidence.length === 0 || !contactName || !contactEmail) {
+                showResult(false, 'Missing Fields', 'Please fill in all required fields.');
+                btn.disabled = false;
+                btn.textContent = 'Submit';
+                return;
+            }
+
+            var payload = {
+                type: type,
+                system_id: systemId,
+                claims: claims,
+                evidence: evidence,
+                contact: { name: contactName, email: contactEmail },
+                notes: coi ? 'Conflict of interest declared by submitter.' : null
+            };
+            if (assessmentId) payload.assessment_id = assessmentId;
+
+            fetch('/api/ami/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(function(res) { return res.json().then(function(data) { return { ok: res.ok, status: res.status, data: data }; }); })
+            .then(function(result) {
+                if (result.ok) {
+                    showResult(true, 'Submission Received',
+                        'Your submission has been created.<br>' +
+                        'ID: <code>' + result.data.submission_id + '</code><br>' +
+                        'Status: <code>' + result.data.status + '</code><br>' +
+                        'An editor will review your submission shortly.'
+                    );
+                    form.reset();
+                    assessmentGroup.style.display = 'none';
+                } else if (result.data.error === 'validation_failed') {
+                    var errors = (result.data.errors || []).map(function(e) { return '&bull; ' + e; }).join('<br>');
+                    showResult(false, 'Validation Error', errors);
+                } else if (result.data.error === 'rate_limit_exceeded') {
+                    showResult(false, 'Rate Limited', result.data.message || 'Too many submissions. Please try again later.');
+                } else if (result.data.error === 'forbidden_fields') {
+                    showResult(false, 'Invalid Fields', 'Submission contains disallowed fields: ' + (result.data.fields || []).join(', '));
+                } else {
+                    showResult(false, 'Error', result.data.message || result.data.error || 'Submission failed.');
+                }
+            })
+            .catch(function(err) {
+                showResult(false, 'Network Error', 'Could not reach the server. Please try again.');
+            })
+            .finally(function() {
+                btn.disabled = false;
+                btn.textContent = 'Submit';
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

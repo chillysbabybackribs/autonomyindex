@@ -48,6 +48,7 @@ function main() {
     { loc: '/methodology', changefreq: 'monthly', priority: '0.8' },
     { loc: '/ami-systems', changefreq: 'weekly', priority: '0.8' },
     { loc: '/ami-download', changefreq: 'monthly', priority: '0.7' },
+    { loc: '/ami-submit', changefreq: 'monthly', priority: '0.6' },
     { loc: '/daily-signals', changefreq: 'daily', priority: '0.9' },
     { loc: '/weekly-briefs', changefreq: 'weekly', priority: '0.8' }
   ].filter((route) => existsRoute(route.loc));

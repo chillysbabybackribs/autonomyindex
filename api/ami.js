@@ -20,6 +20,33 @@ const schema = require(path.join(process.cwd(), 'lib', 'ami', 'schema.js'));
 const apiUtil = require(path.join(process.cwd(), 'lib', 'ami', 'api-util.js'));
 const profiles = require(path.join(process.cwd(), 'lib', 'ami', 'profiles.js'));
 const submissions = require(path.join(process.cwd(), 'lib', 'ami', 'submissions.js'));
+const notify = require(path.join(process.cwd(), 'lib', 'ami', 'notify.js'));
+
+// ── Rate limiter (in-memory, per-IP) ───────────────────────────────────────
+
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const rateLimitMap = new Map();
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const key = ip || 'unknown';
+  let timestamps = rateLimitMap.get(key);
+  if (!timestamps) { timestamps = []; rateLimitMap.set(key, timestamps); }
+  // Prune expired
+  const cutoff = now - RATE_LIMIT_WINDOW_MS;
+  while (timestamps.length > 0 && timestamps[0] < cutoff) timestamps.shift();
+  if (timestamps.length >= RATE_LIMIT_MAX) return false;
+  timestamps.push(now);
+  return true;
+}
+
+// Forbidden top-level fields for public submission
+const SUBMIT_FORBIDDEN_FIELDS = [
+  'status', 'review', 'integrity', 'overall_score', 'grade',
+  'overall_confidence', 'score', 'submission_id', 'resulting_assessment_id',
+  'updated_at', 'submitted_at',
+];
 
 function loadSourceCatalog() {
   const catalogPath = path.join(process.cwd(), 'data', 'source-catalog.json');
@@ -29,12 +56,12 @@ function loadSourceCatalog() {
   return new Map(sources.map((s) => [s.source_id, s]));
 }
 
-function parseBody(req) {
+function parseBody(req, maxBytes) {
+  const MAX_BODY = maxBytes || 512 * 1024;
   return new Promise((resolve, reject) => {
     if (req.body) { resolve(req.body); return; }
     const chunks = [];
     let size = 0;
-    const MAX_BODY = 512 * 1024;
     req.on('data', (chunk) => {
       size += chunk.length;
       if (size > MAX_BODY) { reject(new Error('payload_too_large')); return; }
@@ -498,7 +525,8 @@ function handleValidate(req, res) {
   }
 }
 
-// ── POST /api/ami/submit — Submit assessment request/correction/challenge ────
+// ── POST /api/ami/submit — Public submission endpoint ────────────────────────
+// No auth required. Rate-limited. Sanitized. Forbidden fields rejected.
 
 async function handleSubmit(req, res) {
   if (req.method !== 'POST') {
@@ -506,16 +534,42 @@ async function handleSubmit(req, res) {
     return;
   }
 
-  try {
-    const body = await parseBody(req);
+  // Rate limit by IP
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim()
+           || req.socket?.remoteAddress
+           || 'unknown';
+  if (!checkRateLimit(ip)) {
+    res.status(429).json({ error: 'rate_limit_exceeded', message: 'Max 5 submissions per 10 minutes' });
+    return;
+  }
 
-    const validation = submissions.validateSubmission(body);
+  try {
+    const body = await parseBody(req, 200 * 1024); // 200KB limit
+
+    // Reject forbidden top-level fields
+    const forbidden = SUBMIT_FORBIDDEN_FIELDS.filter((f) => body[f] !== undefined);
+    if (forbidden.length > 0) {
+      res.status(400).json({
+        error: 'forbidden_fields',
+        fields: forbidden,
+        message: 'Public submissions cannot set these fields',
+      });
+      return;
+    }
+
+    // Sanitize all string inputs
+    const sanitized = apiUtil.sanitizeDeep(body);
+
+    const validation = submissions.validateSubmission(sanitized);
     if (!validation.valid) {
       res.status(422).json({ error: 'validation_failed', errors: validation.errors });
       return;
     }
 
-    const submission = submissions.createSubmission(body);
+    const submission = submissions.createSubmission(sanitized);
+
+    // Fire-and-forget notifications (never blocks response)
+    notify.notifyNewSubmission(submission);
 
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.status(201).json({

@@ -3,10 +3,14 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Consolidated Submissions API handler
 //
-// Routes (dispatched via Vercel rewrites → ?action=...):
-//   GET  /api/submissions            → action=list (default GET)
-//   GET  /api/submissions/:id        → action=get&id=...
-//   POST /api/submissions/:id/review → action=review&id=...
+// Access control:
+//   PUBLIC (no token):
+//     GET  /api/ami/submissions         → action=list  (redacted view)
+//     GET  /api/ami/submissions/:id     → action=get   (redacted view)
+//   INTERNAL (x-internal-token required):
+//     GET  /api/ami/submissions?full=true         → full payload
+//     GET  /api/ami/submissions/:id?full=true     → full payload
+//     POST /api/ami/submissions/:id/review        → action=review
 // ─────────────────────────────────────────────────────────────────────────────
 
 const fs = require('node:fs');
@@ -43,11 +47,31 @@ function loadSourceCatalog() {
   return new Map(sources.map((s) => [s.source_id, s]));
 }
 
+/**
+ * Redact sensitive fields from a submission for public view.
+ * Strips: contact info, review reasoning/signature, notes.
+ */
+function redactSubmission(s) {
+  return {
+    submission_id: s.submission_id,
+    type: s.type,
+    system_id: s.system_id,
+    assessment_id: s.assessment_id || null,
+    status: s.status,
+    submitted_at: s.submitted_at,
+    updated_at: s.updated_at,
+    resulting_assessment_id: s.resulting_assessment_id || null,
+  };
+}
+
 module.exports = async function handler(req, res) {
   if (apiUtil.handleCors(req, res)) return;
 
-  // All submission endpoints require auth
-  if (!apiUtil.requireAuth(req, res)) return;
+  // Only allow GET and POST
+  if (req.method !== 'GET' && req.method !== 'POST') {
+    res.status(405).json({ error: 'method_not_allowed', allowed: ['GET', 'POST'] });
+    return;
+  }
 
   const action = req.query?.action || 'list';
 
@@ -61,12 +85,17 @@ module.exports = async function handler(req, res) {
 };
 
 // ── GET /api/submissions — List submissions ──────────────────────────────────
+// Public: returns redacted view. With ?full=true + valid token: full payload.
 
 function handleList(req, res) {
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'method_not_allowed', allowed: ['GET'] });
     return;
   }
+
+  const wantsFull = req.query?.full === 'true';
+  if (wantsFull && !apiUtil.requireAuth(req, res)) return;
+  const authed = wantsFull || apiUtil.isAuthenticated(req);
 
   try {
     const filters = {};
@@ -83,16 +112,21 @@ function handleList(req, res) {
 
     const submissions = subs.listSubmissions(Object.keys(filters).length > 0 ? filters : undefined);
 
-    const items = submissions.map((s) => ({
-      submission_id: s.submission_id,
-      type: s.type,
-      system_id: s.system_id,
-      assessment_id: s.assessment_id,
-      status: s.status,
-      submitted_at: s.submitted_at,
-      updated_at: s.updated_at,
-      resulting_assessment_id: s.resulting_assessment_id || null,
-    }));
+    const items = authed
+      ? submissions.map((s) => ({
+          submission_id: s.submission_id,
+          type: s.type,
+          system_id: s.system_id,
+          assessment_id: s.assessment_id,
+          status: s.status,
+          submitted_at: s.submitted_at,
+          updated_at: s.updated_at,
+          resulting_assessment_id: s.resulting_assessment_id || null,
+          contact: s.contact,
+          review: s.review,
+          notes: s.notes,
+        }))
+      : submissions.map(redactSubmission);
 
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.status(200).json({
@@ -105,6 +139,7 @@ function handleList(req, res) {
 }
 
 // ── GET /api/submissions/:id — Get single submission ─────────────────────────
+// Public: returns redacted view. With ?full=true + valid token: full payload.
 
 function handleGet(req, res) {
   if (req.method !== 'GET') {
@@ -118,6 +153,16 @@ function handleGet(req, res) {
     return;
   }
 
+  // Path traversal guard: submission IDs must be alphanumeric + underscore + hyphen
+  if (!/^[A-Za-z0-9_-]+$/.test(submissionId)) {
+    res.status(400).json({ error: 'invalid_submission_id' });
+    return;
+  }
+
+  const wantsFull = req.query?.full === 'true';
+  if (wantsFull && !apiUtil.requireAuth(req, res)) return;
+  const authed = wantsFull || apiUtil.isAuthenticated(req);
+
   try {
     const submission = subs.getSubmission(submissionId);
     if (!submission) {
@@ -126,13 +171,14 @@ function handleGet(req, res) {
     }
 
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.status(200).json(submission);
+    res.status(200).json(authed ? submission : redactSubmission(submission));
   } catch (error) {
     res.status(500).json({ error: 'fetch_failed', message: error?.message || 'Failed to fetch submission' });
   }
 }
 
 // ── POST /api/submissions/:id/review — Apply review decision ─────────────────
+// Internal only — requires x-internal-token.
 
 async function handleReview(req, res) {
   if (req.method !== 'POST') {
@@ -140,9 +186,18 @@ async function handleReview(req, res) {
     return;
   }
 
+  // Auth required for review actions
+  if (!apiUtil.requireAuth(req, res)) return;
+
   const submissionId = req.query?.id;
   if (!submissionId) {
     res.status(400).json({ error: 'missing_submission_id' });
+    return;
+  }
+
+  // Path traversal guard
+  if (!/^[A-Za-z0-9_-]+$/.test(submissionId)) {
+    res.status(400).json({ error: 'invalid_submission_id' });
     return;
   }
 
