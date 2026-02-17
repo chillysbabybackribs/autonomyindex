@@ -203,7 +203,7 @@ function handleIndex(req, res) {
 
 // ── GET /api/ami/:assessmentId — Full assessment by ID + signals ─────────────
 
-function handleAssessment(req, res) {
+async function handleAssessment(req, res) {
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'method_not_allowed', allowed: ['GET'] });
     return;
@@ -247,7 +247,7 @@ function handleAssessment(req, res) {
       }
     }
 
-    const submissionHistory = submissions.listSubmissionsForAssessment(assessmentId).map((s) => ({
+    const submissionHistory = (await submissions.listSubmissionsForAssessment(assessmentId)).map((s) => ({
       submission_id: s.submission_id,
       type: s.type,
       status: s.status,
@@ -566,7 +566,7 @@ async function handleSubmit(req, res) {
       return;
     }
 
-    const submission = submissions.createSubmission(sanitized);
+    const submission = await submissions.createSubmission(sanitized);
 
     // Fire-and-forget notifications (never blocks response)
     notify.notifyNewSubmission(submission);

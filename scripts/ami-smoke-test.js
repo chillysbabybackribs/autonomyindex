@@ -423,269 +423,272 @@ assert(submissions.isValidTransition('under_review', 'rejected') === true, 'unde
 assert(submissions.isValidTransition('accepted', 'rejected') === false, 'accepted → rejected invalid (terminal)');
 assert(submissions.isValidTransition('rejected', 'accepted') === false, 'rejected → accepted invalid (terminal)');
 
-// CRUD test (create, get, list, review, cleanup)
-const testSub = submissions.createSubmission({
-  type: 'challenge',
-  system_id: 'openclaw',
-  assessment_id: 'AMI_ASSESS_20260217_openclaw_v1',
-  claims: [{ summary: 'Safety score underrated', dimension_id: 'safety_guardrails' }],
-  evidence: [{ url: 'https://example.com/evidence', description: 'New audit report' }],
-  contact: { name: 'Smoke Test', email: 'smoke@test.com' },
-});
-assert(testSub.submission_id.startsWith('SUB_'), 'Created submission has SUB_ prefix');
-assert(testSub.status === 'received', 'New submission status is received');
-assert(testSub.type === 'challenge', 'Submission type preserved');
-
-// Get
-const fetched = submissions.getSubmission(testSub.submission_id);
-assert(fetched !== null, 'Can retrieve submission by ID');
-assert(fetched.system_id === 'openclaw', 'Retrieved submission has correct system_id');
-
-// List
-const listed = submissions.listSubmissions({ system_id: 'openclaw' });
-assert(listed.some((s) => s.submission_id === testSub.submission_id), 'Submission appears in filtered list');
-
-// List for assessment
-const forAssessment = submissions.listSubmissionsForAssessment('AMI_ASSESS_20260217_openclaw_v1');
-assert(forAssessment.some((s) => s.submission_id === testSub.submission_id), 'Submission appears in assessment list');
-
-// Review — move to under_review
-const review1 = submissions.reviewSubmission(testSub.submission_id, {
-  status: 'under_review',
-  reviewer_name: 'Smoke Reviewer',
-  reviewer_handle: 'smoke-reviewer',
-  reasoning: 'Reviewing evidence quality',
-});
-assert(review1.success === true, 'Review to under_review succeeds');
-assert(review1.submission.status === 'under_review', 'Status updated to under_review');
-assert(review1.submission.review.signature_hash != null, 'Review has signature hash');
-
-// Review — reject
-const review2 = submissions.reviewSubmission(testSub.submission_id, {
-  status: 'rejected',
-  reviewer_name: 'Smoke Reviewer',
-  reviewer_handle: 'smoke-reviewer',
-  reasoning: 'Insufficient evidence',
-});
-assert(review2.success === true, 'Review to rejected succeeds');
-assert(review2.submission.status === 'rejected', 'Status updated to rejected');
-
-// Invalid transition from terminal state
-const review3 = submissions.reviewSubmission(testSub.submission_id, {
-  status: 'accepted',
-  reviewer_name: 'Smoke Reviewer',
-  reviewer_handle: 'smoke-reviewer',
-});
-assert(review3.success === false, 'Cannot transition from rejected');
-assert(review3.error === 'invalid_transition', 'Error is invalid_transition');
-
-// Cleanup test submission
-const subFile = path.join(submissions.submissionsDir(), testSub.submission_id + '.json');
-if (fs.existsSync(subFile)) fs.unlinkSync(subFile);
-
-// Assessment page shows _submissions
-assert(
-  fileContains('ami-assessment.html', '_submissions', 'Submission History'),
-  'Assessment page renders submission history'
-);
-
-// Consolidated API files contain proper patterns
-assert(
-  fileContains('api/ami.js', 'validateSubmission', 'createSubmission'),
-  'api/ami.js handles submit with validation'
-);
-assert(
-  fileContains('api/submissions.js', 'requireAuth', 'handleList', 'handleReview'),
-  'api/submissions.js uses auth and handles list/review'
-);
-
-// ── Auth & Security Hardening ─────────────────────────────────────────────
-
-console.log('10. Auth & security hardening:');
-
-// api-util.js has new helpers
-assert(
-  fileContains('lib/ami/api-util.js', 'isAuthenticated', 'sanitizeString', 'sanitizeDeep'),
-  'api-util.js exports isAuthenticated, sanitizeString, sanitizeDeep'
-);
-
-// Verify isAuthenticated works (non-blocking check)
-const utilModule = require(path.join(ROOT, 'lib', 'ami', 'api-util.js'));
-assert(typeof utilModule.isAuthenticated === 'function', 'isAuthenticated is a function');
-assert(typeof utilModule.sanitizeString === 'function', 'sanitizeString is a function');
-assert(typeof utilModule.sanitizeDeep === 'function', 'sanitizeDeep is a function');
-
-// sanitizeString strips control chars
-assert(utilModule.sanitizeString('hello\x00world') === 'helloworld', 'sanitizeString strips null bytes');
-assert(utilModule.sanitizeString('  test  ') === 'test', 'sanitizeString trims whitespace');
-assert(utilModule.sanitizeString('line\ttab') === 'line\ttab', 'sanitizeString preserves tabs');
-assert(utilModule.sanitizeString('line\nnewline') === 'line\nnewline', 'sanitizeString preserves newlines');
-
-// sanitizeDeep handles nested objects
-const deepResult = utilModule.sanitizeDeep({
-  name: ' hello\x00 ',
-  nested: { val: 'test\x07' },
-  arr: ['clean', 'with\x01ctrl'],
-});
-assert(deepResult.name === 'hello', 'sanitizeDeep cleans nested string');
-assert(deepResult.nested.val === 'test', 'sanitizeDeep cleans deep nested string');
-assert(deepResult.arr[1] === 'withctrl', 'sanitizeDeep cleans array elements');
-
-// Rate limiter in api/ami.js
-assert(
-  fileContains('api/ami.js', 'checkRateLimit', 'RATE_LIMIT_MAX', 'RATE_LIMIT_WINDOW_MS', 'rateLimitMap'),
-  'api/ami.js has rate limiter infrastructure'
-);
-assert(
-  fileContains('api/ami.js', 'SUBMIT_FORBIDDEN_FIELDS', 'forbidden_fields'),
-  'api/ami.js rejects forbidden fields on public submit'
-);
-assert(
-  fileContains('api/ami.js', '200 * 1024'),
-  'api/ami.js limits submit payload to 200KB'
-);
-assert(
-  fileContains('api/ami.js', 'sanitizeDeep'),
-  'api/ami.js sanitizes submission input'
-);
-
-// handleSubmit does NOT require auth (public endpoint)
-const amiContent = fs.readFileSync(path.join(ROOT, 'api', 'ami.js'), 'utf8');
-// The submit handler should not call requireAuth before creating submission
-const submitSection = amiContent.slice(amiContent.indexOf('async function handleSubmit'));
-assert(
-  !submitSection.includes('requireAuth'),
-  'handleSubmit does NOT call requireAuth (public endpoint)'
-);
-
-// submissions.js has public/internal split
-assert(
-  fileContains('api/submissions.js', 'redactSubmission', 'isAuthenticated'),
-  'api/submissions.js uses redaction and isAuthenticated'
-);
-assert(
-  fileContains('api/submissions.js', 'full=true', 'wantsFull'),
-  'api/submissions.js supports ?full=true for internal access'
-);
-
-// submissions.js handleReview requires auth
-const subsContent = fs.readFileSync(path.join(ROOT, 'api', 'submissions.js'), 'utf8');
-const reviewSection = subsContent.slice(subsContent.indexOf('async function handleReview'));
-assert(
-  reviewSection.includes('requireAuth'),
-  'handleReview requires auth (internal only)'
-);
-
-// submissions.js handleList/handleGet do NOT block on auth
-const listSection = subsContent.slice(subsContent.indexOf('function handleList'), subsContent.indexOf('function handleGet'));
-assert(
-  !listSection.includes('if (!apiUtil.requireAuth(req, res)) return;\n\n  const action'),
-  'handleList does not blanket-require auth'
-);
-
-// Path traversal guard in handleGet
-assert(
-  fileContains('api/submissions.js', 'invalid_submission_id', '/^[A-Za-z0-9_-]+$/'),
-  'submissions.js guards against path traversal in submission IDs'
-);
-
-// ── Submission Page & Notifications ────────────────────────────────────────
-
-console.log('11. Submission page & notifications:');
-
-// Submission page exists
-assert(fileExists('ami-submit.html'), 'ami-submit.html exists');
-assert(
-  fileContains('ami-submit.html', 'Submit to AMI', '/api/ami/submit', 'submitForm'),
-  'ami-submit.html has form that POSTs to submit endpoint'
-);
-assert(
-  fileContains('ami-submit.html', 'assessment_request', 'correction', 'challenge'),
-  'ami-submit.html has all three submission types'
-);
-assert(
-  fileContains('ami-submit.html', 'contactEmail', 'contactName', 'conflictOfInterest'),
-  'ami-submit.html has contact fields and COI checkbox'
-);
-assert(
-  fileContains('ami-submit.html', 'result-box', 'success', 'error', 'submission_id'),
-  'ami-submit.html displays success/error results'
-);
-assert(
-  fileContains('ami-submit.html', 'validation_failed', 'rate_limit_exceeded', 'forbidden_fields'),
-  'ami-submit.html handles all error types gracefully'
-);
-
-// Notification module
-assert(fileExists('lib/ami/notify.js'), 'notify.js exists');
-const notifyModule = require(path.join(ROOT, 'lib', 'ami', 'notify.js'));
-assert(typeof notifyModule.notifyNewSubmission === 'function', 'notifyNewSubmission is a function');
-assert(typeof notifyModule.sendAdminEmail === 'function', 'sendAdminEmail is a function');
-assert(typeof notifyModule.sendSubmitterConfirmation === 'function', 'sendSubmitterConfirmation is a function');
-assert(typeof notifyModule.sendTelegramNotification === 'function', 'sendTelegramNotification is a function');
-
-// Notification is wired into handleSubmit
-assert(
-  fileContains('api/ami.js', "require(path.join(process.cwd(), 'lib', 'ami', 'notify.js'))"),
-  'api/ami.js imports notify module'
-);
-assert(
-  fileContains('api/ami.js', 'notify.notifyNewSubmission'),
-  'api/ami.js calls notifyNewSubmission after submission creation'
-);
-
-// Notification module uses built-in https (no npm deps)
-assert(
-  fileContains('lib/ami/notify.js', "require('node:https')"),
-  'notify.js uses built-in https module (no npm deps)'
-);
-assert(
-  fileContains('lib/ami/notify.js', 'RESEND_API_KEY', 'ADMIN_EMAIL', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID'),
-  'notify.js checks all required env vars'
-);
-assert(
-  fileContains('lib/ami/notify.js', 'Promise.allSettled'),
-  'notify.js fires all notifications in parallel'
-);
-
-// notifyNewSubmission does not throw (fire-and-forget)
-try {
-  notifyModule.notifyNewSubmission({
-    submission_id: 'SUB_TEST_123',
-    type: 'assessment_request',
-    system_id: 'test',
-    status: 'received',
-    submitted_at: new Date().toISOString(),
-    contact: { name: 'Test', email: 'test@test.com' },
+// CRUD test (create, get, list, review, cleanup) — async because storage may use DB
+async function runAsyncTests() {
+  const testSub = await submissions.createSubmission({
+    type: 'challenge',
+    system_id: 'openclaw',
+    assessment_id: 'AMI_ASSESS_20260217_openclaw_v1',
+    claims: [{ summary: 'Safety score underrated', dimension_id: 'safety_guardrails' }],
+    evidence: [{ url: 'https://example.com/evidence', description: 'New audit report' }],
+    contact: { name: 'Smoke Test', email: 'smoke@test.com' },
   });
-  assert(true, 'notifyNewSubmission does not throw without env vars');
-} catch {
-  assert(false, 'notifyNewSubmission does not throw without env vars');
+  assert(testSub.submission_id.startsWith('SUB_'), 'Created submission has SUB_ prefix');
+  assert(testSub.status === 'received', 'New submission status is received');
+  assert(testSub.type === 'challenge', 'Submission type preserved');
+
+  const fetched = await submissions.getSubmission(testSub.submission_id);
+  assert(fetched !== null, 'Can retrieve submission by ID');
+  assert(fetched.system_id === 'openclaw', 'Retrieved submission has correct system_id');
+
+  const listed = await submissions.listSubmissions({ system_id: 'openclaw' });
+  assert(listed.some((s) => s.submission_id === testSub.submission_id), 'Submission appears in filtered list');
+
+  const forAssessment = await submissions.listSubmissionsForAssessment('AMI_ASSESS_20260217_openclaw_v1');
+  assert(forAssessment.some((s) => s.submission_id === testSub.submission_id), 'Submission appears in assessment list');
+
+  const review1 = await submissions.reviewSubmission(testSub.submission_id, {
+    status: 'under_review',
+    reviewer_name: 'Smoke Reviewer',
+    reviewer_handle: 'smoke-reviewer',
+    reasoning: 'Reviewing evidence quality',
+  });
+  assert(review1.success === true, 'Review to under_review succeeds');
+  assert(review1.submission.status === 'under_review', 'Status updated to under_review');
+  assert(review1.submission.review.signature_hash != null, 'Review has signature hash');
+
+  const review2 = await submissions.reviewSubmission(testSub.submission_id, {
+    status: 'rejected',
+    reviewer_name: 'Smoke Reviewer',
+    reviewer_handle: 'smoke-reviewer',
+    reasoning: 'Insufficient evidence',
+  });
+  assert(review2.success === true, 'Review to rejected succeeds');
+  assert(review2.submission.status === 'rejected', 'Status updated to rejected');
+
+  const review3 = await submissions.reviewSubmission(testSub.submission_id, {
+    status: 'accepted',
+    reviewer_name: 'Smoke Reviewer',
+    reviewer_handle: 'smoke-reviewer',
+  });
+  assert(review3.success === false, 'Cannot transition from rejected');
+  assert(review3.error === 'invalid_transition', 'Error is invalid_transition');
+
+  // Cleanup test submission
+  const subFile = path.join(submissions.submissionsDir(), testSub.submission_id + '.json');
+  if (fs.existsSync(subFile)) fs.unlinkSync(subFile);
 }
 
-// ── Sitemap ─────────────────────────────────────────────────────────────────
+function runRemainingTests() {
+  // Assessment page shows _submissions
+  assert(
+    fileContains('ami-assessment.html', '_submissions', 'Submission History'),
+    'Assessment page renders submission history'
+  );
 
-console.log('12. Sitemap:');
-assert(fileExists('scripts/generate-sitemap.js'), 'Sitemap generator exists');
-assert(
-  fileContains('scripts/generate-sitemap.js', '/ami-systems'),
-  'Sitemap includes /ami-systems route'
-);
-assert(
-  fileContains('scripts/generate-sitemap.js', '/ami-download'),
-  'Sitemap includes /ami-download route'
-);
-assert(
-  fileContains('scripts/generate-sitemap.js', '/ami-submit'),
-  'Sitemap includes /ami-submit route'
-);
+  assert(
+    fileContains('api/ami.js', 'validateSubmission', 'createSubmission'),
+    'api/ami.js handles submit with validation'
+  );
+  assert(
+    fileContains('api/submissions.js', 'requireAuth', 'handleList', 'handleReview'),
+    'api/submissions.js uses auth and handles list/review'
+  );
 
-// ── Summary ─────────────────────────────────────────────────────────────────
+  // ── Auth & Security Hardening ─────────────────────────────────────────────
 
-console.log(`\nResults: ${passed} passed, ${failed} failed`);
-if (failed > 0) {
-  console.error('SMOKE TESTS FAILED');
-  process.exit(1);
-} else {
-  console.log('ALL SMOKE TESTS PASSED');
+  console.log('10. Auth & security hardening:');
+
+  const utilModule = require(path.join(ROOT, 'lib', 'ami', 'api-util.js'));
+  assert(
+    fileContains('lib/ami/api-util.js', 'isAuthenticated', 'sanitizeString', 'sanitizeDeep'),
+    'api-util.js exports isAuthenticated, sanitizeString, sanitizeDeep'
+  );
+  assert(typeof utilModule.isAuthenticated === 'function', 'isAuthenticated is a function');
+  assert(typeof utilModule.sanitizeString === 'function', 'sanitizeString is a function');
+  assert(typeof utilModule.sanitizeDeep === 'function', 'sanitizeDeep is a function');
+
+  assert(utilModule.sanitizeString('hello\x00world') === 'helloworld', 'sanitizeString strips null bytes');
+  assert(utilModule.sanitizeString('  test  ') === 'test', 'sanitizeString trims whitespace');
+  assert(utilModule.sanitizeString('line\ttab') === 'line\ttab', 'sanitizeString preserves tabs');
+  assert(utilModule.sanitizeString('line\nnewline') === 'line\nnewline', 'sanitizeString preserves newlines');
+
+  const deepResult = utilModule.sanitizeDeep({
+    name: ' hello\x00 ',
+    nested: { val: 'test\x07' },
+    arr: ['clean', 'with\x01ctrl'],
+  });
+  assert(deepResult.name === 'hello', 'sanitizeDeep cleans nested string');
+  assert(deepResult.nested.val === 'test', 'sanitizeDeep cleans deep nested string');
+  assert(deepResult.arr[1] === 'withctrl', 'sanitizeDeep cleans array elements');
+
+  assert(
+    fileContains('api/ami.js', 'checkRateLimit', 'RATE_LIMIT_MAX', 'RATE_LIMIT_WINDOW_MS', 'rateLimitMap'),
+    'api/ami.js has rate limiter infrastructure'
+  );
+  assert(
+    fileContains('api/ami.js', 'SUBMIT_FORBIDDEN_FIELDS', 'forbidden_fields'),
+    'api/ami.js rejects forbidden fields on public submit'
+  );
+  assert(
+    fileContains('api/ami.js', '200 * 1024'),
+    'api/ami.js limits submit payload to 200KB'
+  );
+  assert(
+    fileContains('api/ami.js', 'sanitizeDeep'),
+    'api/ami.js sanitizes submission input'
+  );
+
+  const amiContent = fs.readFileSync(path.join(ROOT, 'api', 'ami.js'), 'utf8');
+  const submitSection = amiContent.slice(amiContent.indexOf('async function handleSubmit'));
+  assert(
+    !submitSection.includes('requireAuth'),
+    'handleSubmit does NOT call requireAuth (public endpoint)'
+  );
+
+  assert(
+    fileContains('api/submissions.js', 'redactSubmission', 'isAuthenticated'),
+    'api/submissions.js uses redaction and isAuthenticated'
+  );
+  assert(
+    fileContains('api/submissions.js', 'full=true', 'wantsFull'),
+    'api/submissions.js supports ?full=true for internal access'
+  );
+
+  const subsContent = fs.readFileSync(path.join(ROOT, 'api', 'submissions.js'), 'utf8');
+  const reviewSection = subsContent.slice(subsContent.indexOf('async function handleReview'));
+  assert(
+    reviewSection.includes('requireAuth'),
+    'handleReview requires auth (internal only)'
+  );
+
+  const listSection = subsContent.slice(subsContent.indexOf('function handleList'), subsContent.indexOf('function handleGet'));
+  assert(
+    !listSection.includes('if (!apiUtil.requireAuth(req, res)) return;\n\n  const action'),
+    'handleList does not blanket-require auth'
+  );
+
+  assert(
+    fileContains('api/submissions.js', 'invalid_submission_id', '/^[A-Za-z0-9_-]+$/'),
+    'submissions.js guards against path traversal in submission IDs'
+  );
+
+  // ── Submission Page & Notifications ────────────────────────────────────────
+
+  console.log('11. Submission page & notifications:');
+
+  assert(fileExists('ami-submit.html'), 'ami-submit.html exists');
+  assert(
+    fileContains('ami-submit.html', 'Submit to AMI', '/api/ami/submit', 'submitForm'),
+    'ami-submit.html has form that POSTs to submit endpoint'
+  );
+  assert(
+    fileContains('ami-submit.html', 'assessment_request', 'correction', 'challenge'),
+    'ami-submit.html has all three submission types'
+  );
+  assert(
+    fileContains('ami-submit.html', 'contactEmail', 'contactName', 'conflictOfInterest'),
+    'ami-submit.html has contact fields and COI checkbox'
+  );
+  assert(
+    fileContains('ami-submit.html', 'result-box', 'success', 'error', 'submission_id'),
+    'ami-submit.html displays success/error results'
+  );
+  assert(
+    fileContains('ami-submit.html', 'validation_failed', 'rate_limit_exceeded', 'forbidden_fields'),
+    'ami-submit.html handles all error types gracefully'
+  );
+
+  assert(fileExists('lib/ami/notify.js'), 'notify.js exists');
+  const notifyModule = require(path.join(ROOT, 'lib', 'ami', 'notify.js'));
+  assert(typeof notifyModule.notifyNewSubmission === 'function', 'notifyNewSubmission is a function');
+  assert(typeof notifyModule.sendAdminEmail === 'function', 'sendAdminEmail is a function');
+  assert(typeof notifyModule.sendSubmitterConfirmation === 'function', 'sendSubmitterConfirmation is a function');
+  assert(typeof notifyModule.sendTelegramNotification === 'function', 'sendTelegramNotification is a function');
+
+  assert(
+    fileContains('api/ami.js', "require(path.join(process.cwd(), 'lib', 'ami', 'notify.js'))"),
+    'api/ami.js imports notify module'
+  );
+  assert(
+    fileContains('api/ami.js', 'notify.notifyNewSubmission'),
+    'api/ami.js calls notifyNewSubmission after submission creation'
+  );
+
+  assert(
+    fileContains('lib/ami/notify.js', "require('node:https')"),
+    'notify.js uses built-in https module (no npm deps)'
+  );
+  assert(
+    fileContains('lib/ami/notify.js', 'RESEND_API_KEY', 'ADMIN_EMAIL', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID'),
+    'notify.js checks all required env vars'
+  );
+  assert(
+    fileContains('lib/ami/notify.js', 'Promise.allSettled'),
+    'notify.js fires all notifications in parallel'
+  );
+
+  try {
+    notifyModule.notifyNewSubmission({
+      submission_id: 'SUB_TEST_123',
+      type: 'assessment_request',
+      system_id: 'test',
+      status: 'received',
+      submitted_at: new Date().toISOString(),
+      contact: { name: 'Test', email: 'test@test.com' },
+    });
+    assert(true, 'notifyNewSubmission does not throw without env vars');
+  } catch {
+    assert(false, 'notifyNewSubmission does not throw without env vars');
+  }
+
+  // ── Database storage ──────────────────────────────────────────────────────
+
+  console.log('12. Database storage:');
+  assert(
+    fileContains('lib/ami/submissions.js', 'DATABASE_URL', 'neonQuery', 'useDatabase'),
+    'submissions.js supports Neon Postgres via DATABASE_URL'
+  );
+  assert(
+    fileContains('lib/ami/submissions.js', "require('node:https')"),
+    'submissions.js uses built-in https for Neon SQL-over-HTTP'
+  );
+  assert(
+    fileContains('lib/ami/submissions.js', 'INSERT INTO submissions', 'SELECT * FROM submissions'),
+    'submissions.js has SQL queries for CRUD operations'
+  );
+
+  // ── Sitemap ─────────────────────────────────────────────────────────────────
+
+  console.log('13. Sitemap:');
+  assert(fileExists('scripts/generate-sitemap.js'), 'Sitemap generator exists');
+  assert(
+    fileContains('scripts/generate-sitemap.js', '/ami-systems'),
+    'Sitemap includes /ami-systems route'
+  );
+  assert(
+    fileContains('scripts/generate-sitemap.js', '/ami-download'),
+    'Sitemap includes /ami-download route'
+  );
+  assert(
+    fileContains('scripts/generate-sitemap.js', '/ami-submit'),
+    'Sitemap includes /ami-submit route'
+  );
 }
+
+// Run async CRUD tests, then remaining sync tests, then print summary
+runAsyncTests()
+  .then(() => {
+    runRemainingTests();
+    console.log(`\nResults: ${passed} passed, ${failed} failed`);
+    if (failed > 0) {
+      console.error('SMOKE TESTS FAILED');
+      process.exit(1);
+    } else {
+      console.log('ALL SMOKE TESTS PASSED');
+    }
+  })
+  .catch((err) => {
+    console.error('SMOKE TEST ERROR:', err);
+    process.exit(1);
+  });

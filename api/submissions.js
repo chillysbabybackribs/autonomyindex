@@ -87,7 +87,7 @@ module.exports = async function handler(req, res) {
 // ── GET /api/submissions — List submissions ──────────────────────────────────
 // Public: returns redacted view. With ?full=true + valid token: full payload.
 
-function handleList(req, res) {
+async function handleList(req, res) {
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'method_not_allowed', allowed: ['GET'] });
     return;
@@ -110,7 +110,7 @@ function handleList(req, res) {
       if (status) filters.status = status;
     }
 
-    const submissions = subs.listSubmissions(Object.keys(filters).length > 0 ? filters : undefined);
+    const submissions = await subs.listSubmissions(Object.keys(filters).length > 0 ? filters : undefined);
 
     const items = authed
       ? submissions.map((s) => ({
@@ -141,7 +141,7 @@ function handleList(req, res) {
 // ── GET /api/submissions/:id — Get single submission ─────────────────────────
 // Public: returns redacted view. With ?full=true + valid token: full payload.
 
-function handleGet(req, res) {
+async function handleGet(req, res) {
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'method_not_allowed', allowed: ['GET'] });
     return;
@@ -164,7 +164,7 @@ function handleGet(req, res) {
   const authed = wantsFull || apiUtil.isAuthenticated(req);
 
   try {
-    const submission = subs.getSubmission(submissionId);
+    const submission = await subs.getSubmission(submissionId);
     if (!submission) {
       res.status(404).json({ error: 'submission_not_found', submission_id: submissionId });
       return;
@@ -205,7 +205,7 @@ async function handleReview(req, res) {
     const body = await parseBody(req);
     const { status, reviewer_name, reviewer_handle, reasoning } = body;
 
-    const result = subs.reviewSubmission(submissionId, {
+    const result = await subs.reviewSubmission(submissionId, {
       status, reviewer_name, reviewer_handle, reasoning,
     });
 
@@ -234,7 +234,7 @@ async function handleReview(req, res) {
       if (newAssessment) {
         response.resulting_assessment_id = newAssessment.assessment_id;
         response.resulting_version = newAssessment.version;
-        subs.linkAssessmentToSubmission(submissionId, newAssessment.assessment_id);
+        await subs.linkAssessmentToSubmission(submissionId, newAssessment.assessment_id);
       }
     }
 
