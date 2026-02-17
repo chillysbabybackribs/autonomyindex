@@ -1,0 +1,220 @@
+{
+  "assessment_id": "AMI_ASSESS_20260217_openclaw_v1",
+  "system_id": "openclaw",
+  "version": 1,
+  "assessed_at": "2026-02-17T12:00:00Z",
+  "system_version": "0.9.3",
+  "previous_assessment_id": null,
+  "overall_score": 55,
+  "grade": "C",
+  "overall_confidence": "medium",
+  "status": "scored",
+  "category": "cloud_autonomous",
+  "eligibility": {
+    "agent_system": true,
+    "public_artifact": true,
+    "active_development": true,
+    "maintainer_identifiable": true,
+    "verified_sources_count": 4,
+    "exclusion_flags": {
+      "base_llm_only": false,
+      "prompt_library_only": false,
+      "research_prototype_only": false,
+      "wrapper_only": false
+    },
+    "notes": "OpenClaw Foundation with OpenAI backing; active GitHub repository; 4 verified T1 sources."
+  },
+  "dimensions": [
+    {
+      "dimension_id": "execution_reliability",
+      "dimension_name": "Execution Reliability",
+      "score": 3,
+      "confidence": "inferred",
+      "weight": 0.2,
+      "rationale": "Rapid adoption signals real-world task completion, but immature error handling reported in production deployments. No formal reliability engineering or SLA.",
+      "scored": true,
+      "evidence": [
+        {
+          "id": "EV_20260217_001",
+          "url": "https://github.com/openclaw/openclaw",
+          "title": "OpenClaw GitHub Repository",
+          "publisher": "OpenClaw Foundation",
+          "published_date": "2026-02-16",
+          "excerpt": "185K stars in 6 weeks with active issue tracker showing error handling improvements",
+          "claim_supported": "Rapid adoption indicates baseline task completion capability but error handling is still maturing",
+          "evidence_type": "source_code",
+          "confidence_contribution": "inferred",
+          "relevance_weight": 0.7,
+          "captured_at": "2026-02-17T10:00:00Z",
+          "source_ids": [
+            "SRC_009"
+          ]
+        }
+      ]
+    },
+    {
+      "dimension_id": "tooling_integration",
+      "dimension_name": "Tooling & Integration Breadth",
+      "score": 4,
+      "confidence": "verified",
+      "weight": 0.15,
+      "rationale": "185K GitHub stars, large contributor base, multi-LLM support, MCP protocol support, VS Code extension, browser-based interface. Extensive third-party tool ecosystem.",
+      "scored": true,
+      "evidence": [
+        {
+          "id": "EV_20260217_002",
+          "url": "https://github.com/openclaw/openclaw",
+          "title": "OpenClaw GitHub Repository",
+          "publisher": "OpenClaw Foundation",
+          "published_date": "2026-02-16",
+          "excerpt": "Multi-LLM support, MCP integration, VS Code extension, community tools",
+          "claim_supported": "Extensive integration ecosystem with protocol support and IDE integration",
+          "evidence_type": "source_code",
+          "confidence_contribution": "verified",
+          "relevance_weight": 0.9,
+          "captured_at": "2026-02-17T10:00:00Z",
+          "source_ids": [
+            "SRC_009"
+          ]
+        }
+      ]
+    },
+    {
+      "dimension_id": "safety_guardrails",
+      "dimension_name": "Safety & Guardrails",
+      "score": 1,
+      "confidence": "verified",
+      "weight": 0.2,
+      "rationale": "512 vulnerabilities identified by Kaspersky audit, 3 published CVEs, 40K instances publicly exposed with default credentials. Permission model exists but defaults are permissive.",
+      "scored": true,
+      "evidence": [
+        {
+          "id": "EV_20260217_003",
+          "url": "https://www.kaspersky.com/blog/openclaw-vulnerabilities-exposed/55263/",
+          "title": "Kaspersky — OpenClaw vulnerabilities exposed",
+          "publisher": "Kaspersky",
+          "published_date": "2026-02-09",
+          "excerpt": "512 vulnerabilities identified across OpenClaw codebase with 3 published CVEs",
+          "claim_supported": "Critical vulnerability count and published CVEs demonstrate weak security posture",
+          "evidence_type": "security_audit",
+          "confidence_contribution": "verified",
+          "relevance_weight": 1,
+          "captured_at": "2026-02-17T10:00:00Z",
+          "source_ids": [
+            "SRC_003"
+          ]
+        },
+        {
+          "id": "EV_20260217_004",
+          "url": "https://securityscorecard.com/blog/beyond-the-hype-moltbots-real-risk-is-exposed-infrastructure-not-ai-superintelligence/",
+          "title": "SecurityScorecard — exposed OpenClaw instances",
+          "publisher": "SecurityScorecard",
+          "published_date": "2026-02-08",
+          "excerpt": "40,214 OpenClaw instances found publicly exposed on the internet",
+          "claim_supported": "Mass exposure of default-configured instances indicates poor secure defaults",
+          "evidence_type": "independent_analysis",
+          "confidence_contribution": "verified",
+          "relevance_weight": 0.9,
+          "captured_at": "2026-02-17T10:00:00Z",
+          "source_ids": [
+            "SRC_004"
+          ]
+        }
+      ]
+    },
+    {
+      "dimension_id": "observability",
+      "dimension_name": "Observability",
+      "score": 3,
+      "confidence": "verified",
+      "weight": 0.15,
+      "rationale": "Built-in logging, web dashboard, execution traces available. Structured logging and tool call visibility. No SIEM integration or anomaly detection.",
+      "scored": true,
+      "evidence": [
+        {
+          "id": "EV_20260217_005",
+          "url": "https://github.com/openclaw/openclaw",
+          "title": "OpenClaw GitHub Repository",
+          "publisher": "OpenClaw Foundation",
+          "published_date": "2026-02-16",
+          "excerpt": "Built-in web dashboard with execution traces and structured logging",
+          "claim_supported": "Moderate observability with built-in monitoring tools and trace visibility",
+          "evidence_type": "official_docs",
+          "confidence_contribution": "verified",
+          "relevance_weight": 0.8,
+          "captured_at": "2026-02-17T10:00:00Z",
+          "source_ids": [
+            "SRC_009"
+          ]
+        }
+      ]
+    },
+    {
+      "dimension_id": "deployment_maturity",
+      "dimension_name": "Deployment Maturity",
+      "score": 3,
+      "confidence": "inferred",
+      "weight": 0.15,
+      "rationale": "Docker support and cloud deployment options exist but no enterprise SLA, no Kubernetes-native support, no multi-region deployment documentation.",
+      "scored": true,
+      "evidence": [
+        {
+          "id": "EV_20260217_006",
+          "url": "https://github.com/openclaw/openclaw",
+          "title": "OpenClaw GitHub Repository",
+          "publisher": "OpenClaw Foundation",
+          "published_date": "2026-02-16",
+          "excerpt": "Docker support and cloud deployment guides available in repository",
+          "claim_supported": "Basic containerized deployment without enterprise-grade operational support",
+          "evidence_type": "source_code",
+          "confidence_contribution": "inferred",
+          "relevance_weight": 0.6,
+          "captured_at": "2026-02-17T10:00:00Z",
+          "source_ids": [
+            "SRC_009"
+          ]
+        }
+      ]
+    },
+    {
+      "dimension_id": "real_world_validation",
+      "dimension_name": "Real-World Validation",
+      "score": 3,
+      "confidence": "verified",
+      "weight": 0.15,
+      "rationale": "Fastest agent adoption recorded (185K stars in 6 weeks), large active community, OpenAI institutional backing. Limited named enterprise case studies.",
+      "scored": true,
+      "evidence": [
+        {
+          "id": "EV_20260217_007",
+          "url": "https://www.reuters.com/business/openclaw-founder-steinberger-joins-openai-open-source-bot-becomes-foundation-2026-02-15/",
+          "title": "Reuters — OpenClaw founder joins OpenAI",
+          "publisher": "Reuters",
+          "published_date": "2026-02-15",
+          "excerpt": "OpenClaw became independent foundation with OpenAI backing after record adoption",
+          "claim_supported": "Significant real-world adoption and institutional backing validates production interest",
+          "evidence_type": "news_report",
+          "confidence_contribution": "verified",
+          "relevance_weight": 0.8,
+          "captured_at": "2026-02-17T10:00:00Z",
+          "source_ids": [
+            "SRC_001"
+          ]
+        }
+      ]
+    }
+  ],
+  "methodology_version": "1.0",
+  "assessed_by": "editorial-board",
+  "notes": "Initial v1.0 methodology assessment. Security dimension heavily weighted down by Kaspersky audit findings and SecurityScorecard exposure data.",
+  "review": {
+    "state": "published",
+    "reviewed_by": null,
+    "reviewed_at": null
+  },
+  "integrity": {
+    "assessment_hash": "d90977803d9643bdd0e04e70aa2aadd98ee0e6f60b30640e033c4bc39538570f",
+    "hash_algorithm": "sha256",
+    "hashed_at": "2026-02-17T09:12:39.475Z"
+  }
+}
