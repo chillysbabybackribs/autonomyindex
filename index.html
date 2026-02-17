@@ -104,22 +104,29 @@
         }
 
         /* ==================== HERO ==================== */
+        .hero-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem 2rem;
+            align-items: start;
+        }
+
         .hero {
-            padding: 5rem 2rem 2rem;
-            text-align: center;
+            padding: 1rem 0 0;
+            text-align: left;
             position: relative;
             overflow: hidden;
-            max-width: 900px;
-            margin: 0 auto;
         }
 
         .hero::before {
             content: '';
             position: absolute;
             top: -200px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 900px;
+            left: -100px;
+            width: 700px;
             height: 500px;
             background: radial-gradient(ellipse, rgba(6,182,212,0.06) 0%, transparent 70%);
             pointer-events: none;
@@ -148,40 +155,102 @@
             font-size: 1.05rem;
             color: var(--text-2);
             max-width: 640px;
-            margin: 0 auto 2rem;
+            margin: 0 0 1.5rem;
             line-height: 1.7;
         }
 
-        .hero-cta {
-            text-align: center;
-            margin: 0 auto 2rem;
-            max-width: 900px;
+        .hero-cta-inline {
+            margin-top: 0.5rem;
         }
-        .ami-prompt-btn {
+        .hero-cta-inline .ami-prompt-hint {
+            font-size: 12px;
+            color: var(--text-3);
+            margin-top: 0.4rem;
+        }
+
+        /* ── Prompt preview card ──────────────────────────── */
+        .prompt-card {
+            position: relative;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            max-height: 420px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .prompt-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface-3);
+            border-radius: 12px 12px 0 0;
+            flex-shrink: 0;
+        }
+        .prompt-card-title {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-3);
+            font-weight: 500;
+        }
+        .prompt-copy-btn {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            padding: 14px 32px;
-            border-radius: 10px;
-            font-size: 15px;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
             font-weight: 600;
-            font-family: var(--font-display);
-            border: 1px solid var(--cyan);
-            background: rgba(6,182,212,0.08);
+            font-family: var(--font-body);
+            border: 1px solid var(--border);
+            background: var(--surface-2);
             color: var(--cyan);
             cursor: pointer;
             transition: all 0.2s;
         }
-        .ami-prompt-btn:hover {
-            background: rgba(6,182,212,0.16);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(6,182,212,0.15);
+        .prompt-copy-btn:hover {
+            background: rgba(6,182,212,0.1);
+            border-color: var(--cyan);
         }
-        .ami-prompt-icon { font-size: 18px; }
-        .ami-prompt-hint {
-            font-size: 12px;
-            color: var(--text-3);
-            margin-top: 0.5rem;
+        .prompt-card-body {
+            overflow-y: auto;
+            padding: 14px;
+            flex: 1;
+            scrollbar-width: thin;
+            scrollbar-color: var(--surface-4) transparent;
+        }
+        .prompt-card-body::-webkit-scrollbar { width: 6px; }
+        .prompt-card-body::-webkit-scrollbar-track { background: transparent; }
+        .prompt-card-body::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 3px; }
+        .prompt-card-body pre {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            line-height: 1.6;
+            color: var(--text-2);
+            white-space: pre-wrap;
+            word-break: break-word;
+            margin: 0;
+        }
+        .prompt-card-fade {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 48px;
+            background: linear-gradient(transparent, var(--surface-2));
+            pointer-events: none;
+            border-radius: 0 0 12px 12px;
+        }
+
+        @media (max-width: 900px) {
+            .hero-row {
+                grid-template-columns: 1fr;
+                padding: 3rem 1.5rem 1.5rem;
+            }
+            .hero { text-align: center; }
+            .hero p { margin: 0 auto 1.5rem; }
+            .hero-cta-inline { text-align: center; }
+            .prompt-card { max-height: 320px; }
         }
 
         .hero-meta {
@@ -926,7 +995,7 @@
 
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 640px) {
-            .hero { padding: 3rem 1rem 1.5rem; }
+            .hero { padding: 1rem 0 0; }
             .section { padding: 2rem 1rem; }
             .insights-grid { grid-template-columns: 1fr; }
             .charts-grid { grid-template-columns: 1fr; }
@@ -1427,20 +1496,30 @@
     </div>
 </div>
 
-<!-- ==================== HERO ==================== -->
-<section class="hero">
-    <div class="badge">February 2026</div>
-    <h1>The Autonomy Index</h1>
-    <p>Tracking and scoring the global AI agent ecosystem across autonomy, security, ecosystem strength, and execution control.</p>
-</section>
+<!-- ==================== HERO + PROMPT CARD ==================== -->
+<div class="hero-row">
+    <section class="hero">
+        <div class="badge">February 2026</div>
+        <h1>The Autonomy Index</h1>
+        <p>Tracking and scoring the global AI agent ecosystem across autonomy, security, ecosystem strength, and execution control.</p>
+        <div class="hero-cta-inline">
+            <div class="ami-prompt-hint">Copy the prompt, paste into any LLM, get a scored assessment draft.</div>
+        </div>
+    </section>
 
-<!-- ==================== AMI PROMPT CTA ==================== -->
-<div class="hero-cta">
-    <button class="ami-prompt-btn" onclick="copyAmiPrompt(this)" id="copy-ami-prompt-btn">
-        <span class="ami-prompt-icon">📋</span>
-        Copy AMI Self-Assessment Prompt
-    </button>
-    <div class="ami-prompt-hint">Paste into any LLM to generate a scored assessment draft</div>
+    <div class="prompt-card" id="promptCard">
+        <div class="prompt-card-header">
+            <span class="prompt-card-title">ami-self-assessment-prompt.txt</span>
+            <button class="prompt-copy-btn" onclick="copyAmiPrompt(this)" id="copy-ami-prompt-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+            </button>
+        </div>
+        <div class="prompt-card-body" id="promptCardBody">
+            <pre id="promptCardText">Loading prompt...</pre>
+        </div>
+        <div class="prompt-card-fade"></div>
+    </div>
 </div>
 
 <!-- ==================== INDEX MOVEMENT ==================== -->
@@ -2694,21 +2773,46 @@ const fadeObserver2 = new IntersectionObserver((entries) => {
     entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
 }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-// ==================== COPY AMI PROMPT ====================
-function copyAmiPrompt(btn) {
+// ==================== AMI PROMPT CARD + COPY ====================
+var _cachedPrompt = null;
+
+function loadPromptCard() {
     Promise.all([
         fetch('/download/ami-self-assessment-prompt.txt').then(r => r.text()),
-        fetch('/api/ami/rubric').then(r => r.json())
+        fetch('/api/ami/rubric').then(r => r.json()).catch(() => ({ specHash: '' }))
     ]).then(([promptText, rubricData]) => {
-        const hash = rubricData.specHash || 'unknown';
-        const final = promptText.replace('<SPEC_HASH>', hash);
-        return navigator.clipboard.writeText(final).then(() => {
+        const hash = rubricData.specHash || '';
+        _cachedPrompt = hash ? promptText.replace('<SPEC_HASH>', hash) : promptText;
+        const el = document.getElementById('promptCardText');
+        if (el) el.textContent = _cachedPrompt;
+    }).catch(() => {});
+}
+loadPromptCard();
+
+function copyAmiPrompt(btn) {
+    const origHTML = btn.innerHTML;
+    if (_cachedPrompt) {
+        navigator.clipboard.writeText(_cachedPrompt).then(() => {
             btn.textContent = 'Copied!';
-            setTimeout(() => { btn.textContent = 'Copy AMI Prompt'; }, 2000);
+            setTimeout(() => { btn.innerHTML = origHTML; }, 2000);
+        }).catch(() => {
+            window.open('/download/ami-self-assessment-prompt.txt', '_blank');
         });
-    }).catch(() => {
-        window.open('/download/ami-self-assessment-prompt.txt', '_blank');
-    });
+    } else {
+        Promise.all([
+            fetch('/download/ami-self-assessment-prompt.txt').then(r => r.text()),
+            fetch('/api/ami/rubric').then(r => r.json()).catch(() => ({ specHash: '' }))
+        ]).then(([promptText, rubricData]) => {
+            const hash = rubricData.specHash || '';
+            _cachedPrompt = hash ? promptText.replace('<SPEC_HASH>', hash) : promptText;
+            return navigator.clipboard.writeText(_cachedPrompt);
+        }).then(() => {
+            btn.textContent = 'Copied!';
+            setTimeout(() => { btn.innerHTML = origHTML; }, 2000);
+        }).catch(() => {
+            window.open('/download/ami-self-assessment-prompt.txt', '_blank');
+        });
+    }
 }
 
 // ==================== COPY CITATION ====================
