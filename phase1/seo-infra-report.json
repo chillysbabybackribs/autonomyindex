@@ -1,0 +1,59 @@
+{
+  "robots_status": {
+    "status": "implemented",
+    "file": "robots.txt",
+    "sitemap": "https://autonomyindex.io/sitemap.xml",
+    "disallow": [
+      "/api/",
+      "/logs/",
+      "/data/index-history/",
+      "/data/deltas/"
+    ]
+  },
+  "sitemap_status": {
+    "status": "implemented_dynamic",
+    "file": "sitemap.xml",
+    "generator": "scripts/generate-sitemap.js",
+    "auto_update": "Triggered by .github/workflows/daily-signals.yml after weekly brief page generation",
+    "url_count": 8
+  },
+  "canonical_status": {
+    "status": "implemented",
+    "verified_pages": [
+      "/",
+      "/agents-2026",
+      "/methodology",
+      "/daily-signals",
+      "/weekly-briefs",
+      "/weekly-briefs/AI-20260216-weekly-signal-brief-01",
+      "/weekly-briefs/AI-20260209-weekly-signal-brief-02",
+      "/weekly-briefs/AI-20260202-weekly-signal-brief-03",
+      "/premium-report"
+    ]
+  },
+  "structured_data_status": {
+    "status": "implemented",
+    "organization": "site pages",
+    "dataset": [
+      "/agents-2026",
+      "/methodology",
+      "/daily-signals"
+    ],
+    "article": [
+      "/weekly-briefs/AI-20260216-weekly-signal-brief-01",
+      "/weekly-briefs/AI-20260209-weekly-signal-brief-02",
+      "/weekly-briefs/AI-20260202-weekly-signal-brief-03"
+    ]
+  },
+  "lighthouse_scores": {
+    "mobile": null,
+    "desktop": null,
+    "status": "blocked_in_environment",
+    "attempted_command": "npx --yes lighthouse ...",
+    "error": "ENOTFOUND registry.npmjs.org"
+  },
+  "blocking_issues": [
+    "Lighthouse package install blocked by network resolution failure (registry.npmjs.org unreachable in current environment).",
+    "Performance/SEO/Accessibility score targets (>90) could not be validated automatically in this session."
+  ]
+}

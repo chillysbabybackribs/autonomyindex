@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://autonomyindex.io/sitemap.xml
+
+Disallow: /api/
+Disallow: /logs/
+Disallow: /data/index-history/
+Disallow: /data/deltas/

@@ -1,0 +1,242 @@
+{
+  "version": "2026-02-17",
+  "briefs": [
+    {
+      "report_id": "AI-20260216-weekly-signal-brief-01",
+      "report_type": "weekly_brief",
+      "title": "Weekly Brief 1: Security Patches vs Exposure Drag",
+      "subtitle": "Coverage window: 2026-02-09 to 2026-02-15",
+      "published_at_utc": "2026-02-16T20:00:00Z",
+      "as_of_utc": "2026-02-15T23:59:59Z",
+      "methodology_version": "v0.1",
+      "index_data_version": "2026.02.16.1",
+      "pillar": "agents",
+      "tags": ["weekly", "security", "ecosystem", "mcp"],
+      "executive_delta_summary": [
+        "OpenClaw EPI increased on foundation transition evidence.",
+        "OpenClaw ARI also increased due to unresolved exposure findings.",
+        "CrewAI ARI improved after sandbox hardening release.",
+        "LangChain ARI improved after reported tool-injection patch.",
+        "MCP ecosystem EPI rose on continued endpoint adoption growth."
+      ],
+      "top_index_movements": [
+        {
+          "rank": 1,
+          "entity": "CrewAI",
+          "index": "ARI",
+          "delta": -5,
+          "direction": "down",
+          "driver_claim_ids": ["CLM_20260214_01"],
+          "confidence": "confirmed",
+          "source_ids": ["SRC_007"]
+        },
+        {
+          "rank": 2,
+          "entity": "OpenClaw",
+          "index": "EPI",
+          "delta": 4,
+          "direction": "up",
+          "driver_claim_ids": ["CLM_20260215_01"],
+          "confidence": "confirmed",
+          "source_ids": ["SRC_001", "SRC_009"]
+        },
+        {
+          "rank": 3,
+          "entity": "n8n",
+          "index": "EPI",
+          "delta": 3,
+          "direction": "up",
+          "driver_claim_ids": ["CLM_20260211_01"],
+          "confidence": "inferred",
+          "source_ids": ["SRC_008"]
+        },
+        {
+          "rank": 4,
+          "entity": "LangChain",
+          "index": "ARI",
+          "delta": -3,
+          "direction": "down",
+          "driver_claim_ids": ["CLM_20260212_01"],
+          "confidence": "confirmed",
+          "source_ids": ["SRC_006"]
+        },
+        {
+          "rank": 5,
+          "entity": "OpenClaw",
+          "index": "ARI",
+          "delta": 2,
+          "direction": "up",
+          "driver_claim_ids": ["CLM_20260216_01"],
+          "confidence": "confirmed",
+          "source_ids": ["SRC_003", "SRC_004"]
+        }
+      ],
+      "evidence_ledger": [
+        {"source_id": "SRC_001", "used_for": "OpenClaw foundation transition"},
+        {"source_id": "SRC_003", "used_for": "OpenClaw vulnerability persistence"},
+        {"source_id": "SRC_004", "used_for": "Exposed infrastructure risk"},
+        {"source_id": "SRC_006", "used_for": "LangChain patch signal"},
+        {"source_id": "SRC_007", "used_for": "CrewAI sandbox update"},
+        {"source_id": "SRC_008", "used_for": "n8n adoption signal"},
+        {"source_id": "SRC_009", "used_for": "OpenClaw ecosystem adoption context"}
+      ]
+    },
+    {
+      "report_id": "AI-20260209-weekly-signal-brief-02",
+      "report_type": "weekly_brief",
+      "title": "Weekly Brief 2: Benchmark Leadership and Risk Disclosure",
+      "subtitle": "Coverage window: 2026-02-02 to 2026-02-08",
+      "published_at_utc": "2026-02-09T20:00:00Z",
+      "as_of_utc": "2026-02-08T23:59:59Z",
+      "methodology_version": "v0.1",
+      "index_data_version": "2026.02.09.1",
+      "pillar": "benchmarks",
+      "tags": ["weekly", "benchmarks", "security"],
+      "executive_delta_summary": [
+        "Claude Opus 4.6 benchmark evidence strengthened Anthropic maturity positioning.",
+        "SecurityScorecard exposure findings added material downside to OpenClaw risk posture.",
+        "Kaspersky audit introduced high-severity risk confirmation in the open-agent tier.",
+        "MCP standard momentum continued as a cross-vendor alignment signal.",
+        "No methodology change occurred during the week."
+      ],
+      "top_index_movements": [
+        {
+          "rank": 1,
+          "entity": "OpenClaw",
+          "index": "ARI",
+          "delta": 6,
+          "direction": "up",
+          "driver_claim_ids": ["CLM_20260216_01"],
+          "confidence": "confirmed",
+          "source_ids": ["SRC_003", "SRC_004"]
+        },
+        {
+          "rank": 2,
+          "entity": "Anthropic Claude",
+          "index": "AMI",
+          "delta": 4,
+          "direction": "up",
+          "driver_claim_ids": ["CLM_20260210_01"],
+          "confidence": "confirmed",
+          "source_ids": ["SRC_002", "SRC_010"]
+        },
+        {
+          "rank": 3,
+          "entity": "MCP ecosystem",
+          "index": "EPI",
+          "delta": 3,
+          "direction": "up",
+          "driver_claim_ids": ["CLM_20260213_01"],
+          "confidence": "confirmed",
+          "source_ids": ["SRC_005"]
+        },
+        {
+          "rank": 4,
+          "entity": "OpenClaw",
+          "index": "EPI",
+          "delta": 2,
+          "direction": "up",
+          "driver_claim_ids": ["CLM_20260215_01"],
+          "confidence": "inferred",
+          "source_ids": ["SRC_001", "SRC_009"]
+        },
+        {
+          "rank": 5,
+          "entity": "LangChain",
+          "index": "ARI",
+          "delta": -1,
+          "direction": "down",
+          "driver_claim_ids": ["CLM_20260212_01"],
+          "confidence": "inferred",
+          "source_ids": ["SRC_006"]
+        }
+      ],
+      "evidence_ledger": [
+        {"source_id": "SRC_002", "used_for": "Claude Opus 4.6 benchmark baseline"},
+        {"source_id": "SRC_003", "used_for": "Kaspersky vulnerability audit"},
+        {"source_id": "SRC_004", "used_for": "SecurityScorecard exposure report"},
+        {"source_id": "SRC_005", "used_for": "MCP standardization trajectory"},
+        {"source_id": "SRC_010", "used_for": "Claude tooling capabilities context"}
+      ]
+    },
+    {
+      "report_id": "AI-20260202-weekly-signal-brief-03",
+      "report_type": "weekly_brief",
+      "title": "Weekly Brief 3: Framework Distribution and Adoption Signals",
+      "subtitle": "Coverage window: 2026-01-26 to 2026-02-01",
+      "published_at_utc": "2026-02-02T20:00:00Z",
+      "as_of_utc": "2026-02-01T23:59:59Z",
+      "methodology_version": "v0.1",
+      "index_data_version": "2026.02.02.1",
+      "pillar": "ecosystem",
+      "tags": ["weekly", "adoption", "distribution"],
+      "executive_delta_summary": [
+        "OpenClaw community acceleration remained the strongest ecosystem signal.",
+        "MCP alignment strengthened cross-framework interoperability narratives.",
+        "n8n retained adoption momentum in enterprise automation workflows.",
+        "LangChain and CrewAI maintained security hardening trajectories.",
+        "No speculative-only deltas were applied this week."
+      ],
+      "top_index_movements": [
+        {
+          "rank": 1,
+          "entity": "OpenClaw",
+          "index": "EPI",
+          "delta": 5,
+          "direction": "up",
+          "driver_claim_ids": ["CLM_20260215_01"],
+          "confidence": "confirmed",
+          "source_ids": ["SRC_001", "SRC_009"]
+        },
+        {
+          "rank": 2,
+          "entity": "MCP ecosystem",
+          "index": "EPI",
+          "delta": 3,
+          "direction": "up",
+          "driver_claim_ids": ["CLM_20260213_01"],
+          "confidence": "confirmed",
+          "source_ids": ["SRC_005"]
+        },
+        {
+          "rank": 3,
+          "entity": "n8n",
+          "index": "EPI",
+          "delta": 2,
+          "direction": "up",
+          "driver_claim_ids": ["CLM_20260211_01"],
+          "confidence": "inferred",
+          "source_ids": ["SRC_008"]
+        },
+        {
+          "rank": 4,
+          "entity": "CrewAI",
+          "index": "ARI",
+          "delta": -2,
+          "direction": "down",
+          "driver_claim_ids": ["CLM_20260214_01"],
+          "confidence": "inferred",
+          "source_ids": ["SRC_007"]
+        },
+        {
+          "rank": 5,
+          "entity": "LangChain",
+          "index": "ARI",
+          "delta": -1,
+          "direction": "down",
+          "driver_claim_ids": ["CLM_20260212_01"],
+          "confidence": "inferred",
+          "source_ids": ["SRC_006"]
+        }
+      ],
+      "evidence_ledger": [
+        {"source_id": "SRC_001", "used_for": "OpenClaw governance/distribution context"},
+        {"source_id": "SRC_005", "used_for": "MCP standards trajectory"},
+        {"source_id": "SRC_006", "used_for": "LangChain operational updates"},
+        {"source_id": "SRC_007", "used_for": "CrewAI release cadence"},
+        {"source_id": "SRC_008", "used_for": "n8n adoption signals"},
+        {"source_id": "SRC_009", "used_for": "OpenClaw adoption baseline"}
+      ]
+    }
+  ]
+}

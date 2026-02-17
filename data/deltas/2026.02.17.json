@@ -1,0 +1,486 @@
+{
+  "generated_at_utc": "2026-02-17T05:29:49.135Z",
+  "snapshot_file": "data/index-history/2026.02.17.json",
+  "previous_snapshot_file": "data/index-history/2026.02.16.json",
+  "diff": {
+    "previous_snapshot_date": "2026-02-16",
+    "current_snapshot_date": "2026-02-17",
+    "previous_index_data_version": "2026.02.16.1",
+    "current_index_data_version": "0.1",
+    "version_changed": true,
+    "total_index_comparisons": 27,
+    "changed_index_count": 5,
+    "changed_dimension_count": 5,
+    "index_deltas": [
+      {
+        "framework_id": "openclaw",
+        "entity": "OpenClaw",
+        "index": "AMI",
+        "previous_score": 52,
+        "current_score": 52,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "confirmed"
+      },
+      {
+        "framework_id": "openclaw",
+        "entity": "OpenClaw",
+        "index": "ARI",
+        "previous_score": 80,
+        "current_score": 82,
+        "delta": 2,
+        "direction": "up",
+        "changed_dimensions": [
+          {
+            "dimension": "Default Network Exposure",
+            "previous": 92,
+            "current": 95,
+            "delta": 3
+          }
+        ],
+        "confidence": "confirmed"
+      },
+      {
+        "framework_id": "openclaw",
+        "entity": "OpenClaw",
+        "index": "EPI",
+        "previous_score": 89,
+        "current_score": 91,
+        "delta": 2,
+        "direction": "up",
+        "changed_dimensions": [
+          {
+            "dimension": "Adoption Signals",
+            "previous": 96,
+            "current": 98,
+            "delta": 2
+          }
+        ],
+        "confidence": "confirmed"
+      },
+      {
+        "framework_id": "langchain",
+        "entity": "LangChain",
+        "index": "AMI",
+        "previous_score": 71,
+        "current_score": 71,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "confirmed"
+      },
+      {
+        "framework_id": "langchain",
+        "entity": "LangChain",
+        "index": "ARI",
+        "previous_score": 48,
+        "current_score": 45,
+        "delta": -3,
+        "direction": "down",
+        "changed_dimensions": [
+          {
+            "dimension": "Permission Model Strength",
+            "previous": 45,
+            "current": 42,
+            "delta": -3
+          }
+        ],
+        "confidence": "inferred"
+      },
+      {
+        "framework_id": "langchain",
+        "entity": "LangChain",
+        "index": "EPI",
+        "previous_score": 85,
+        "current_score": 85,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "confirmed"
+      },
+      {
+        "framework_id": "n8n-make",
+        "entity": "n8n / Make",
+        "index": "AMI",
+        "previous_score": 68,
+        "current_score": 68,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "confirmed"
+      },
+      {
+        "framework_id": "n8n-make",
+        "entity": "n8n / Make",
+        "index": "ARI",
+        "previous_score": 38,
+        "current_score": 38,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "inferred"
+      },
+      {
+        "framework_id": "n8n-make",
+        "entity": "n8n / Make",
+        "index": "EPI",
+        "previous_score": 73,
+        "current_score": 76,
+        "delta": 3,
+        "direction": "up",
+        "changed_dimensions": [
+          {
+            "dimension": "Adoption Signals",
+            "previous": 77,
+            "current": 80,
+            "delta": 3
+          }
+        ],
+        "confidence": "confirmed"
+      },
+      {
+        "framework_id": "clawdia",
+        "entity": "Clawdia",
+        "index": "AMI",
+        "previous_score": 44,
+        "current_score": 44,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "confirmed"
+      },
+      {
+        "framework_id": "clawdia",
+        "entity": "Clawdia",
+        "index": "ARI",
+        "previous_score": 18,
+        "current_score": 18,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "confirmed"
+      },
+      {
+        "framework_id": "clawdia",
+        "entity": "Clawdia",
+        "index": "EPI",
+        "previous_score": 8,
+        "current_score": 8,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "confirmed"
+      },
+      {
+        "framework_id": "autogen",
+        "entity": "AutoGen",
+        "index": "AMI",
+        "previous_score": 62,
+        "current_score": 62,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "inferred"
+      },
+      {
+        "framework_id": "autogen",
+        "entity": "AutoGen",
+        "index": "ARI",
+        "previous_score": 42,
+        "current_score": 42,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "inferred"
+      },
+      {
+        "framework_id": "autogen",
+        "entity": "AutoGen",
+        "index": "EPI",
+        "previous_score": 65,
+        "current_score": 65,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "confirmed"
+      },
+      {
+        "framework_id": "crewai",
+        "entity": "CrewAI",
+        "index": "AMI",
+        "previous_score": 55,
+        "current_score": 55,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "inferred"
+      },
+      {
+        "framework_id": "crewai",
+        "entity": "CrewAI",
+        "index": "ARI",
+        "previous_score": 50,
+        "current_score": 48,
+        "delta": -2,
+        "direction": "down",
+        "changed_dimensions": [
+          {
+            "dimension": "Sandboxing / Isolation",
+            "previous": 55,
+            "current": 52,
+            "delta": -3
+          }
+        ],
+        "confidence": "inferred"
+      },
+      {
+        "framework_id": "crewai",
+        "entity": "CrewAI",
+        "index": "EPI",
+        "previous_score": 58,
+        "current_score": 58,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "confirmed"
+      },
+      {
+        "framework_id": "vercel-ai-sdk",
+        "entity": "Vercel AI SDK",
+        "index": "AMI",
+        "previous_score": 66,
+        "current_score": 66,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "confirmed"
+      },
+      {
+        "framework_id": "vercel-ai-sdk",
+        "entity": "Vercel AI SDK",
+        "index": "ARI",
+        "previous_score": 32,
+        "current_score": 32,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "inferred"
+      },
+      {
+        "framework_id": "vercel-ai-sdk",
+        "entity": "Vercel AI SDK",
+        "index": "EPI",
+        "previous_score": 72,
+        "current_score": 72,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "confirmed"
+      },
+      {
+        "framework_id": "openai-agents-sdk",
+        "entity": "OpenAI Agents SDK",
+        "index": "AMI",
+        "previous_score": 64,
+        "current_score": 64,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "inferred"
+      },
+      {
+        "framework_id": "openai-agents-sdk",
+        "entity": "OpenAI Agents SDK",
+        "index": "ARI",
+        "previous_score": 40,
+        "current_score": 40,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "inferred"
+      },
+      {
+        "framework_id": "openai-agents-sdk",
+        "entity": "OpenAI Agents SDK",
+        "index": "EPI",
+        "previous_score": 70,
+        "current_score": 70,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "inferred"
+      },
+      {
+        "framework_id": "semantic-kernel",
+        "entity": "Semantic Kernel",
+        "index": "AMI",
+        "previous_score": 69,
+        "current_score": 69,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "inferred"
+      },
+      {
+        "framework_id": "semantic-kernel",
+        "entity": "Semantic Kernel",
+        "index": "ARI",
+        "previous_score": 35,
+        "current_score": 35,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "inferred"
+      },
+      {
+        "framework_id": "semantic-kernel",
+        "entity": "Semantic Kernel",
+        "index": "EPI",
+        "previous_score": 68,
+        "current_score": 68,
+        "delta": 0,
+        "direction": "flat",
+        "changed_dimensions": [],
+        "confidence": "inferred"
+      }
+    ],
+    "daily_diff_summary": [
+      {
+        "entity": "OpenClaw",
+        "index": "ARI",
+        "delta": 2,
+        "changed_dimensions": [
+          "Default Network Exposure"
+        ]
+      },
+      {
+        "entity": "OpenClaw",
+        "index": "EPI",
+        "delta": 2,
+        "changed_dimensions": [
+          "Adoption Signals"
+        ]
+      },
+      {
+        "entity": "LangChain",
+        "index": "ARI",
+        "delta": -3,
+        "changed_dimensions": [
+          "Permission Model Strength"
+        ]
+      },
+      {
+        "entity": "n8n / Make",
+        "index": "EPI",
+        "delta": 3,
+        "changed_dimensions": [
+          "Adoption Signals"
+        ]
+      },
+      {
+        "entity": "CrewAI",
+        "index": "ARI",
+        "delta": -2,
+        "changed_dimensions": [
+          "Sandboxing / Isolation"
+        ]
+      }
+    ]
+  },
+  "generated_signals_count": 5,
+  "generated_signals": [
+    {
+      "id": "AUTO_SIGNAL_20260217_OPENCLAW_ARI",
+      "timestamp_utc": "2026-02-17T05:29:49.135Z",
+      "entity": "OpenClaw",
+      "index": "ARI",
+      "delta": 2,
+      "direction": "up",
+      "driver_claim_ids": [
+        "CLM_20260216_01"
+      ],
+      "primary_source_ids": [
+        "SRC_003",
+        "SRC_004"
+      ],
+      "confidence": "confirmed",
+      "headline": "OpenClaw ARI +2 on daily framework update",
+      "summary": "Score moved from 80 to 82; key dimension changes: Default Network Exposure."
+    },
+    {
+      "id": "AUTO_SIGNAL_20260217_OPENCLAW_EPI",
+      "timestamp_utc": "2026-02-17T05:29:49.135Z",
+      "entity": "OpenClaw",
+      "index": "EPI",
+      "delta": 2,
+      "direction": "up",
+      "driver_claim_ids": [
+        "CLM_20260215_01"
+      ],
+      "primary_source_ids": [
+        "SRC_001",
+        "SRC_009"
+      ],
+      "confidence": "confirmed",
+      "headline": "OpenClaw EPI +2 on daily framework update",
+      "summary": "Score moved from 89 to 91; key dimension changes: Adoption Signals."
+    },
+    {
+      "id": "AUTO_SIGNAL_20260217_LANGCHAIN_ARI",
+      "timestamp_utc": "2026-02-17T05:29:49.135Z",
+      "entity": "LangChain",
+      "index": "ARI",
+      "delta": -3,
+      "direction": "down",
+      "driver_claim_ids": [
+        "CLM_20260212_01"
+      ],
+      "primary_source_ids": [
+        "SRC_006"
+      ],
+      "confidence": "confirmed",
+      "headline": "LangChain ARI -3 on daily framework update",
+      "summary": "Score moved from 48 to 45; key dimension changes: Permission Model Strength."
+    },
+    {
+      "id": "AUTO_SIGNAL_20260217_N8N_MAKE_EPI",
+      "timestamp_utc": "2026-02-17T05:29:49.135Z",
+      "entity": "n8n / Make",
+      "index": "EPI",
+      "delta": 3,
+      "direction": "up",
+      "driver_claim_ids": [
+        "CLM_20260211_01"
+      ],
+      "primary_source_ids": [
+        "SRC_008"
+      ],
+      "confidence": "inferred",
+      "headline": "n8n / Make EPI +3 on daily framework update",
+      "summary": "Score moved from 73 to 76; key dimension changes: Adoption Signals."
+    },
+    {
+      "id": "AUTO_SIGNAL_20260217_CREWAI_ARI",
+      "timestamp_utc": "2026-02-17T05:29:49.135Z",
+      "entity": "CrewAI",
+      "index": "ARI",
+      "delta": -2,
+      "direction": "down",
+      "driver_claim_ids": [
+        "CLM_20260214_01"
+      ],
+      "primary_source_ids": [
+        "SRC_007"
+      ],
+      "confidence": "confirmed",
+      "headline": "CrewAI ARI -2 on daily framework update",
+      "summary": "Score moved from 50 to 48; key dimension changes: Sandboxing / Isolation."
+    }
+  ],
+  "qa_validation": {
+    "passed": true,
+    "failure_count": 0,
+    "failures": []
+  }
+}

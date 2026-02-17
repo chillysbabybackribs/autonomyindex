@@ -1,0 +1,40 @@
+{
+  "endpoint": "GET /api/daily-signals?limit=7",
+  "query_params": {
+    "limit": {
+      "type": "integer",
+      "required": false,
+      "default": 7,
+      "min": 1,
+      "max": 100
+    }
+  },
+  "sorting": "timestamp_utc descending",
+  "response": {
+    "version": "string",
+    "count": "number",
+    "signals": [
+      {
+        "id": "AUTO_SIGNAL_YYYYMMDD_HHMMSS",
+        "timestamp_utc": "ISO-8601",
+        "entity": "string",
+        "index": "AMI|ARI|EPI",
+        "delta": "number",
+        "direction": "up|down|flat",
+        "driver_claim_ids": ["string"],
+        "primary_source_ids": ["string"],
+        "confidence": "confirmed|inferred|speculative",
+        "headline": "string"
+      }
+    ]
+  },
+  "errors": [
+    {
+      "status": 405,
+      "body": {
+        "error": "method_not_allowed",
+        "allowed": ["GET"]
+      }
+    }
+  ]
+}

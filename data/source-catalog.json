@@ -1,0 +1,76 @@
+{
+  "version": "2026-02-17",
+  "description": "Normalized source IDs used by phase-1 signals and briefs.",
+  "sources": [
+    {
+      "source_id": "SRC_001",
+      "title": "Reuters — OpenClaw founder joins OpenAI",
+      "url": "https://www.reuters.com/business/openclaw-founder-steinberger-joins-openai-open-source-bot-becomes-foundation-2026-02-15/",
+      "published_date": "2026-02-15",
+      "tier": "T1"
+    },
+    {
+      "source_id": "SRC_002",
+      "title": "Anthropic — Introducing Claude Opus 4.6",
+      "url": "https://www.anthropic.com/news/claude-opus-4-6",
+      "published_date": "2026-02-05",
+      "tier": "T1"
+    },
+    {
+      "source_id": "SRC_003",
+      "title": "Kaspersky — OpenClaw vulnerabilities exposed",
+      "url": "https://www.kaspersky.com/blog/openclaw-vulnerabilities-exposed/55263/",
+      "published_date": "2026-02-09",
+      "tier": "T1"
+    },
+    {
+      "source_id": "SRC_004",
+      "title": "SecurityScorecard — exposed OpenClaw instances",
+      "url": "https://securityscorecard.com/blog/beyond-the-hype-moltbots-real-risk-is-exposed-infrastructure-not-ai-superintelligence/",
+      "published_date": "2026-02-08",
+      "tier": "T1"
+    },
+    {
+      "source_id": "SRC_005",
+      "title": "Anthropic — MCP donation and foundation",
+      "url": "https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation",
+      "published_date": "2025-12-09",
+      "tier": "T1"
+    },
+    {
+      "source_id": "SRC_006",
+      "title": "LangChain docs / LangSmith",
+      "url": "https://docs.smith.langchain.com/",
+      "published_date": "2026-02-12",
+      "tier": "T1"
+    },
+    {
+      "source_id": "SRC_007",
+      "title": "CrewAI GitHub",
+      "url": "https://github.com/crewAIInc/crewAI",
+      "published_date": "2026-02-14",
+      "tier": "T1"
+    },
+    {
+      "source_id": "SRC_008",
+      "title": "n8n documentation",
+      "url": "https://docs.n8n.io/",
+      "published_date": "2026-02-11",
+      "tier": "T1"
+    },
+    {
+      "source_id": "SRC_009",
+      "title": "OpenClaw GitHub",
+      "url": "https://github.com/openclaw/openclaw",
+      "published_date": "2026-02-16",
+      "tier": "T1"
+    },
+    {
+      "source_id": "SRC_010",
+      "title": "Anthropic platform docs — computer use tool",
+      "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool",
+      "published_date": "2026-02-10",
+      "tier": "T1"
+    }
+  ]
+}

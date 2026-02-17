@@ -1,0 +1,627 @@
+{
+  "meta": {
+    "version": "0.1",
+    "edition": "February 2026",
+    "lastUpdated": "2026-02-16T00:00:00Z",
+    "sourcesCount": 38,
+    "methodology": "/methodology",
+    "reportUrl": "/agents-2026"
+  },
+  "indices": {
+    "AMI": {
+      "name": "Agent Maturity Index",
+      "abbrev": "AMI",
+      "range": [0, 100],
+      "description": "Measures how production-ready an agent framework/system is across 6 weighted dimensions.",
+      "dimensions": [
+        { "name": "Reliability", "weight": 20, "description": "Uptime, error handling, recovery from failures, consistent output quality" },
+        { "name": "Observability", "weight": 15, "description": "Logging, tracing, debugging tools, execution visibility" },
+        { "name": "Tooling Ecosystem", "weight": 15, "description": "Available integrations, plugins, MCP servers, third-party tools" },
+        { "name": "Security Posture", "weight": 20, "description": "Vulnerability count, CVEs, audit results, secure defaults" },
+        { "name": "Execution Control", "weight": 15, "description": "Permission models, sandboxing, human-in-the-loop, approval gates" },
+        { "name": "Deployment Maturity", "weight": 15, "description": "CI/CD support, containerization, scaling options, enterprise readiness" }
+      ],
+      "grading": {
+        "A": [80, 100],
+        "B": [60, 79],
+        "C": [40, 59],
+        "D": [0, 39]
+      }
+    },
+    "ARI": {
+      "name": "Autonomy Risk Index",
+      "abbrev": "ARI",
+      "range": [0, 100],
+      "description": "Measures risk exposure when running a system autonomously. Higher = more risk.",
+      "dimensions": [
+        { "name": "Permission Model Strength", "weight": 20, "description": "Granularity and enforcement of tool/resource permissions" },
+        { "name": "Sandboxing / Isolation", "weight": 18, "description": "Container isolation, network segmentation, filesystem boundaries" },
+        { "name": "Default Network Exposure", "weight": 18, "description": "Whether the system exposes ports, accepts inbound connections by default" },
+        { "name": "Secret Handling", "weight": 15, "description": "API key storage, credential rotation, encrypted config" },
+        { "name": "Human-in-the-Loop Controls", "weight": 15, "description": "Approval gates, confirmation dialogs, review checkpoints" },
+        { "name": "Audit Logging", "weight": 14, "description": "Execution logs, change tracking, forensic capability" }
+      ],
+      "riskLabels": {
+        "Low": [0, 25],
+        "Medium": [26, 50],
+        "High": [51, 75],
+        "Critical": [76, 100]
+      }
+    },
+    "EPI": {
+      "name": "Ecosystem Power Index",
+      "abbrev": "EPI",
+      "range": [0, 100],
+      "description": "Measures distribution strength, community gravity, and ecosystem reach.",
+      "dimensions": [
+        { "name": "Adoption Signals", "weight": 25, "description": "GitHub stars, npm downloads, Docker pulls, community size" },
+        { "name": "Vendor Integration Breadth", "weight": 20, "description": "Number of platforms, IDEs, and services with native support" },
+        { "name": "Enterprise Penetration", "weight": 20, "description": "Known enterprise deployments, SOC2 compliance, support contracts" },
+        { "name": "Standard Alignment", "weight": 15, "description": "MCP support, OpenAPI compliance, protocol adherence" },
+        { "name": "Release Velocity", "weight": 20, "description": "Commit frequency, release cadence, maintainer activity" }
+      ],
+      "momentumLabels": {
+        "Rising": "Score increasing >10 points quarter-over-quarter",
+        "Stable": "Score change within ±10 points",
+        "Declining": "Score decreasing >10 points quarter-over-quarter"
+      }
+    }
+  },
+  "frameworks": [
+    {
+      "id": "openclaw",
+      "name": "OpenClaw",
+      "category": "Cloud Autonomous",
+      "description": "Open-source AI agent framework. Formerly aligned with creator, now independent foundation with OpenAI backing.",
+      "githubUrl": "https://github.com/openclaw/openclaw",
+      "indices": {
+        "AMI": {
+          "score": 52,
+          "grade": "C",
+          "confidence": "Confirmed",
+          "dimensions": {
+            "Reliability": { "score": 55, "confidence": "Inferred", "note": "Rapid adoption but immature error handling reported" },
+            "Observability": { "score": 60, "confidence": "Confirmed", "note": "Built-in logging, web dashboard, execution traces" },
+            "Tooling Ecosystem": { "score": 75, "confidence": "Confirmed", "note": "185K stars, large contributor base, multi-LLM support" },
+            "Security Posture": { "score": 18, "confidence": "Confirmed", "note": "512 vulnerabilities (Kaspersky Jan 2026), 3 CVEs, 40K exposed instances" },
+            "Execution Control": { "score": 45, "confidence": "Confirmed", "note": "Basic approval modes exist but defaults are permissive" },
+            "Deployment Maturity": { "score": 60, "confidence": "Inferred", "note": "Docker support, cloud deployment options, but no enterprise SLA" }
+          },
+          "evidence": [
+            { "label": "Kaspersky security audit", "url": "https://www.kaspersky.com/blog/openclaw-risks/", "date": "2026-01", "type": "report" },
+            { "label": "SecurityScorecard exposed instances", "url": "https://securityscorecard.com/research/openclaw-exposure", "date": "2026-02", "type": "report" },
+            { "label": "GitHub repository metrics", "url": "https://github.com/openclaw/openclaw", "date": "2026-02", "type": "primary" }
+          ]
+        },
+        "ARI": {
+          "score": 82,
+          "riskLabel": "Critical",
+          "confidence": "Confirmed",
+          "dimensions": {
+            "Permission Model Strength": { "score": 72, "confidence": "Confirmed", "note": "Defaults allow full filesystem + network access" },
+            "Sandboxing / Isolation": { "score": 85, "confidence": "Confirmed", "note": "No container isolation by default" },
+            "Default Network Exposure": { "score": 95, "confidence": "Confirmed", "note": "40,214 instances found on public internet" },
+            "Secret Handling": { "score": 78, "confidence": "Inferred", "note": "API keys stored in plaintext config by default" },
+            "Human-in-the-Loop Controls": { "score": 65, "confidence": "Confirmed", "note": "Optional approval mode, but auto-run is default" },
+            "Audit Logging": { "score": 70, "confidence": "Inferred", "note": "Basic logs, no tamper-proof audit trail" }
+          },
+          "topRiskDrivers": [
+            "40,214 instances publicly exposed on the internet with default credentials",
+            "512 known vulnerabilities with 3 published CVEs as of January 2026",
+            "Permissive defaults: auto-run mode enabled, full filesystem access granted by default"
+          ],
+          "mitigations": [
+            "Never expose to public internet — run behind VPN/firewall",
+            "Enable approval mode for all destructive operations",
+            "Run inside Docker container with limited filesystem mounts"
+          ]
+        },
+        "EPI": {
+          "score": 91,
+          "momentum": "Rising",
+          "confidence": "Confirmed",
+          "dimensions": {
+            "Adoption Signals": { "score": 98, "confidence": "Confirmed", "note": "185K GitHub stars in 6 weeks — fastest agent adoption recorded" },
+            "Vendor Integration Breadth": { "score": 85, "confidence": "Confirmed", "note": "Multi-LLM, VS Code extension, browser-based interface" },
+            "Enterprise Penetration": { "score": 70, "confidence": "Inferred", "note": "Growing but limited by security concerns" },
+            "Standard Alignment": { "score": 88, "confidence": "Inferred", "note": "MCP support, OpenAI API compatibility" },
+            "Release Velocity": { "score": 95, "confidence": "Confirmed", "note": "Daily commits, rapid iteration, large contributor pool" }
+          }
+        }
+      },
+      "radarScores": { "reasoning": 3, "ecosystem": 4, "autonomy": 4, "security": 1, "distribution": 5, "devControl": 3 }
+    },
+    {
+      "id": "langchain",
+      "name": "LangChain",
+      "category": "Cloud Workflow",
+      "description": "Comprehensive LLM application framework. Most established agent orchestration toolkit with LangGraph for stateful agents.",
+      "githubUrl": "https://github.com/langchain-ai/langchain",
+      "indices": {
+        "AMI": {
+          "score": 71,
+          "grade": "B",
+          "confidence": "Confirmed",
+          "dimensions": {
+            "Reliability": { "score": 72, "confidence": "Confirmed", "note": "Battle-tested in production, LangSmith for monitoring" },
+            "Observability": { "score": 85, "confidence": "Confirmed", "note": "LangSmith tracing, LangFuse integration, detailed logs" },
+            "Tooling Ecosystem": { "score": 90, "confidence": "Confirmed", "note": "100K stars, 700+ integrations, largest plugin ecosystem" },
+            "Security Posture": { "score": 48, "confidence": "Inferred", "note": "Better than OpenClaw but prompt injection risks remain" },
+            "Execution Control": { "score": 65, "confidence": "Confirmed", "note": "LangGraph checkpoints, human-in-the-loop support" },
+            "Deployment Maturity": { "score": 70, "confidence": "Confirmed", "note": "LangServe for deployment, Docker support, cloud options" }
+          },
+          "evidence": [
+            { "label": "GitHub repository", "url": "https://github.com/langchain-ai/langchain", "date": "2026-02", "type": "primary" },
+            { "label": "LangSmith documentation", "url": "https://docs.smith.langchain.com/", "date": "2026-02", "type": "documentation" }
+          ]
+        },
+        "ARI": {
+          "score": 45,
+          "riskLabel": "Medium",
+          "confidence": "Inferred",
+          "dimensions": {
+            "Permission Model Strength": { "score": 42, "confidence": "Inferred", "note": "Tool-level permissions configurable but not enforced by default" },
+            "Sandboxing / Isolation": { "score": 50, "confidence": "Inferred", "note": "No built-in sandboxing, relies on deployment environment" },
+            "Default Network Exposure": { "score": 40, "confidence": "Inferred", "note": "Library-based — no default server exposure" },
+            "Secret Handling": { "score": 45, "confidence": "Confirmed", "note": "Environment variable based, no encrypted store" },
+            "Human-in-the-Loop Controls": { "score": 35, "confidence": "Confirmed", "note": "LangGraph interrupts, approval gates available" },
+            "Audit Logging": { "score": 50, "confidence": "Confirmed", "note": "LangSmith provides detailed execution traces" }
+          },
+          "topRiskDrivers": [
+            "No built-in sandboxing — relies entirely on deployment environment for isolation",
+            "Prompt injection vectors in complex chain compositions",
+            "Secret management via environment variables without rotation"
+          ],
+          "mitigations": [
+            "Use LangGraph checkpoints for review before critical actions",
+            "Deploy with container isolation and network policies",
+            "Enable LangSmith tracing for full execution auditability"
+          ]
+        },
+        "EPI": {
+          "score": 85,
+          "momentum": "Stable",
+          "confidence": "Confirmed",
+          "dimensions": {
+            "Adoption Signals": { "score": 90, "confidence": "Confirmed", "note": "100K GitHub stars, largest community in agent space" },
+            "Vendor Integration Breadth": { "score": 95, "confidence": "Confirmed", "note": "700+ integrations, every major LLM provider" },
+            "Enterprise Penetration": { "score": 78, "confidence": "Inferred", "note": "Wide enterprise use, LangChain Inc. offers support" },
+            "Standard Alignment": { "score": 80, "confidence": "Confirmed", "note": "MCP support, OpenAPI tools, multi-protocol" },
+            "Release Velocity": { "score": 82, "confidence": "Confirmed", "note": "Regular releases, active maintainer team" }
+          }
+        }
+      },
+      "radarScores": { "reasoning": 3, "ecosystem": 5, "autonomy": 3, "security": 2, "distribution": 4, "devControl": 4 }
+    },
+    {
+      "id": "n8n-make",
+      "name": "n8n / Make",
+      "category": "Cloud Workflow",
+      "description": "Visual workflow automation platforms with growing AI agent capabilities. No-code/low-code approach.",
+      "githubUrl": "https://github.com/n8n-io/n8n",
+      "indices": {
+        "AMI": {
+          "score": 68,
+          "grade": "B",
+          "confidence": "Confirmed",
+          "dimensions": {
+            "Reliability": { "score": 78, "confidence": "Confirmed", "note": "Production-proven with queue-based execution" },
+            "Observability": { "score": 75, "confidence": "Confirmed", "note": "Visual execution logs, workflow history, error tracking" },
+            "Tooling Ecosystem": { "score": 88, "confidence": "Confirmed", "note": "400+ native integrations, community nodes" },
+            "Security Posture": { "score": 55, "confidence": "Inferred", "note": "Self-hosted option, credential encryption, but agent-specific security minimal" },
+            "Execution Control": { "score": 50, "confidence": "Confirmed", "note": "Workflow-level control, but limited agent-specific gates" },
+            "Deployment Maturity": { "score": 72, "confidence": "Confirmed", "note": "Docker, cloud, Kubernetes support, enterprise tier" }
+          },
+          "evidence": [
+            { "label": "n8n GitHub repository", "url": "https://github.com/n8n-io/n8n", "date": "2026-02", "type": "primary" },
+            { "label": "n8n documentation", "url": "https://docs.n8n.io/", "date": "2026-02", "type": "documentation" }
+          ]
+        },
+        "ARI": {
+          "score": 38,
+          "riskLabel": "Medium",
+          "confidence": "Inferred",
+          "dimensions": {
+            "Permission Model Strength": { "score": 35, "confidence": "Inferred", "note": "Workflow-level permissions, credential scoping" },
+            "Sandboxing / Isolation": { "score": 40, "confidence": "Inferred", "note": "Node isolation within workflows, but limited OS-level sandboxing" },
+            "Default Network Exposure": { "score": 42, "confidence": "Confirmed", "note": "Webhook exposure, but behind auth by default" },
+            "Secret Handling": { "score": 30, "confidence": "Confirmed", "note": "Encrypted credential store, separate from workflow data" },
+            "Human-in-the-Loop Controls": { "score": 35, "confidence": "Confirmed", "note": "Manual trigger nodes, approval workflows possible" },
+            "Audit Logging": { "score": 42, "confidence": "Inferred", "note": "Execution history, but no tamper-proof audit trail" }
+          },
+          "topRiskDrivers": [
+            "Webhook endpoints can be exposed if misconfigured",
+            "Agent nodes may execute with broader permissions than intended",
+            "Credential store encryption relies on deployment configuration"
+          ],
+          "mitigations": [
+            "Use self-hosted deployment behind firewall",
+            "Enable webhook authentication on all endpoints",
+            "Regularly audit credential access and workflow permissions"
+          ]
+        },
+        "EPI": {
+          "score": 76,
+          "momentum": "Rising",
+          "confidence": "Confirmed",
+          "dimensions": {
+            "Adoption Signals": { "score": 80, "confidence": "Confirmed", "note": "n8n: 50K+ stars, Make: millions of users" },
+            "Vendor Integration Breadth": { "score": 92, "confidence": "Confirmed", "note": "400+ native integrations per platform" },
+            "Enterprise Penetration": { "score": 72, "confidence": "Inferred", "note": "Enterprise tiers, SOC2, growing B2B adoption" },
+            "Standard Alignment": { "score": 55, "confidence": "Inferred", "note": "REST/webhook focus, limited MCP adoption" },
+            "Release Velocity": { "score": 75, "confidence": "Confirmed", "note": "Regular releases, active development" }
+          }
+        }
+      },
+      "radarScores": { "reasoning": 2, "ecosystem": 5, "autonomy": 2, "security": 3, "distribution": 4, "devControl": 2 }
+    },
+    {
+      "id": "clawdia",
+      "name": "Clawdia",
+      "category": "Local Autonomous",
+      "description": "Desktop-native autonomous AI workspace. Anthropic-optimized, local-first execution environment with full OS-level integration.",
+      "githubUrl": "https://github.com/chillysbabybackribs/Clawdia",
+      "indices": {
+        "AMI": {
+          "score": 44,
+          "grade": "C",
+          "confidence": "Confirmed",
+          "dimensions": {
+            "Reliability": { "score": 42, "confidence": "Confirmed", "note": "Single-developer project, early-stage stability" },
+            "Observability": { "score": 55, "confidence": "Confirmed", "note": "Conversation history, tool activity logging, but no dashboard" },
+            "Tooling Ecosystem": { "score": 48, "confidence": "Confirmed", "note": "Browser, shell, file, process tools built-in; no plugin marketplace" },
+            "Security Posture": { "score": 72, "confidence": "Confirmed", "note": "Encrypted config, local-only execution, no network exposure" },
+            "Execution Control": { "score": 55, "confidence": "Confirmed", "note": "Approval modes, tool-level permissions, task scheduling gates" },
+            "Deployment Maturity": { "score": 18, "confidence": "Confirmed", "note": "Desktop-only, no cloud deployment, requires Electron + Node.js" }
+          },
+          "evidence": [
+            { "label": "Clawdia GitHub repository", "url": "https://github.com/chillysbabybackribs/Clawdia", "date": "2026-02", "type": "primary" },
+            { "label": "Source code inspection (168 files)", "url": "https://github.com/chillysbabybackribs/Clawdia", "date": "2026-02", "type": "code-audit" }
+          ]
+        },
+        "ARI": {
+          "score": 18,
+          "riskLabel": "Low",
+          "confidence": "Confirmed",
+          "dimensions": {
+            "Permission Model Strength": { "score": 22, "confidence": "Confirmed", "note": "Tool-level permissions, approval gates per operation type" },
+            "Sandboxing / Isolation": { "score": 20, "confidence": "Confirmed", "note": "Local-only execution, no inbound network, OS-level process isolation" },
+            "Default Network Exposure": { "score": 5, "confidence": "Confirmed", "note": "Zero listening ports, zero inbound connections, desktop app only" },
+            "Secret Handling": { "score": 15, "confidence": "Confirmed", "note": "electron-store encrypted config, API keys never transmitted except to Anthropic" },
+            "Human-in-the-Loop Controls": { "score": 22, "confidence": "Confirmed", "note": "Approval modes configurable, task execution review available" },
+            "Audit Logging": { "score": 25, "confidence": "Confirmed", "note": "Full conversation history, tool call logging, but no export/SIEM integration" }
+          },
+          "topRiskDrivers": [
+            "Full OS-level access means a compromised agent could affect the entire system",
+            "Single-developer maintenance — bus factor risk for security patches",
+            "No formal security audit or third-party penetration testing"
+          ],
+          "mitigations": [
+            "Run on a dedicated machine or VM for high-risk tasks",
+            "Review tool call logs regularly via conversation history",
+            "Use approval mode for destructive operations (file delete, shell exec)"
+          ]
+        },
+        "EPI": {
+          "score": 8,
+          "momentum": "Rising",
+          "confidence": "Confirmed",
+          "dimensions": {
+            "Adoption Signals": { "score": 2, "confidence": "Confirmed", "note": "1 GitHub star, single developer — pre-community stage" },
+            "Vendor Integration Breadth": { "score": 10, "confidence": "Confirmed", "note": "Anthropic-only, no multi-LLM support" },
+            "Enterprise Penetration": { "score": 2, "confidence": "Confirmed", "note": "No enterprise deployments, no support tier" },
+            "Standard Alignment": { "score": 15, "confidence": "Confirmed", "note": "No MCP server, but consumes Anthropic tool-use protocol" },
+            "Release Velocity": { "score": 18, "confidence": "Confirmed", "note": "Active single-developer commits, but low frequency" }
+          }
+        }
+      },
+      "radarScores": { "reasoning": 5, "ecosystem": 3, "autonomy": 5, "security": 5, "distribution": 1, "devControl": 5 }
+    },
+    {
+      "id": "autogen",
+      "name": "AutoGen",
+      "category": "Cloud Autonomous",
+      "description": "Microsoft Research multi-agent framework. Enables conversational multi-agent systems with role-based collaboration.",
+      "githubUrl": "https://github.com/microsoft/autogen",
+      "indices": {
+        "AMI": {
+          "score": 62,
+          "grade": "B",
+          "confidence": "Inferred",
+          "dimensions": {
+            "Reliability": { "score": 65, "confidence": "Inferred", "note": "Microsoft Research backing, regular maintenance" },
+            "Observability": { "score": 58, "confidence": "Inferred", "note": "Agent conversation logs, but limited dashboard tooling" },
+            "Tooling Ecosystem": { "score": 68, "confidence": "Confirmed", "note": "40K stars, growing integration set, Azure ecosystem" },
+            "Security Posture": { "score": 52, "confidence": "Inferred", "note": "Better defaults than OpenClaw, but limited formal audits" },
+            "Execution Control": { "score": 65, "confidence": "Confirmed", "note": "Human-in-the-loop built into conversation model" },
+            "Deployment Maturity": { "score": 60, "confidence": "Inferred", "note": "Azure integration, Docker support, enterprise path via Microsoft" }
+          },
+          "evidence": [
+            { "label": "AutoGen GitHub repository", "url": "https://github.com/microsoft/autogen", "date": "2026-02", "type": "primary" }
+          ]
+        },
+        "ARI": {
+          "score": 42,
+          "riskLabel": "Medium",
+          "confidence": "Inferred",
+          "dimensions": {
+            "Permission Model Strength": { "score": 40, "confidence": "Inferred", "note": "Agent-level role definitions with code execution controls" },
+            "Sandboxing / Isolation": { "score": 45, "confidence": "Inferred", "note": "Docker-based code execution option available" },
+            "Default Network Exposure": { "score": 38, "confidence": "Inferred", "note": "Library-based, no default server" },
+            "Secret Handling": { "score": 42, "confidence": "Inferred", "note": "Environment variable based" },
+            "Human-in-the-Loop Controls": { "score": 35, "confidence": "Confirmed", "note": "Built into multi-agent conversation flow" },
+            "Audit Logging": { "score": 48, "confidence": "Inferred", "note": "Conversation logs, but no formal audit system" }
+          },
+          "topRiskDrivers": [
+            "Code execution agent can run arbitrary code without sandboxing by default",
+            "Multi-agent conversations can escalate permissions across agents",
+            "No built-in credential management system"
+          ],
+          "mitigations": [
+            "Enable Docker-based code execution for isolation",
+            "Implement strict role boundaries between agents",
+            "Monitor agent conversations for unexpected tool escalation"
+          ]
+        },
+        "EPI": {
+          "score": 65,
+          "momentum": "Stable",
+          "confidence": "Confirmed",
+          "dimensions": {
+            "Adoption Signals": { "score": 72, "confidence": "Confirmed", "note": "40K GitHub stars, active research community" },
+            "Vendor Integration Breadth": { "score": 65, "confidence": "Inferred", "note": "Azure ecosystem, multi-LLM, but fewer third-party integrations" },
+            "Enterprise Penetration": { "score": 60, "confidence": "Inferred", "note": "Microsoft backing provides enterprise credibility" },
+            "Standard Alignment": { "score": 55, "confidence": "Inferred", "note": "Custom protocol, limited MCP adoption" },
+            "Release Velocity": { "score": 70, "confidence": "Confirmed", "note": "Regular releases from Microsoft Research team" }
+          }
+        }
+      },
+      "radarScores": { "reasoning": 3, "ecosystem": 4, "autonomy": 4, "security": 2, "distribution": 3, "devControl": 4 }
+    },
+    {
+      "id": "crewai",
+      "name": "CrewAI",
+      "category": "Cloud Autonomous",
+      "description": "Role-based multi-agent framework. Enables team-of-agents approach with specialized roles and task delegation.",
+      "githubUrl": "https://github.com/crewAIInc/crewAI",
+      "indices": {
+        "AMI": {
+          "score": 55,
+          "grade": "C",
+          "confidence": "Inferred",
+          "dimensions": {
+            "Reliability": { "score": 58, "confidence": "Inferred", "note": "Growing adoption, but less battle-tested than LangChain" },
+            "Observability": { "score": 50, "confidence": "Inferred", "note": "Task output logging, but limited tracing tools" },
+            "Tooling Ecosystem": { "score": 60, "confidence": "Confirmed", "note": "25K stars, growing tool library, multi-LLM" },
+            "Security Posture": { "score": 45, "confidence": "Inferred", "note": "No formal security audit, standard web security practices" },
+            "Execution Control": { "score": 55, "confidence": "Inferred", "note": "Role-based task delegation, but limited granular control" },
+            "Deployment Maturity": { "score": 55, "confidence": "Inferred", "note": "Python package, Docker support, early enterprise features" }
+          },
+          "evidence": [
+            { "label": "CrewAI GitHub repository", "url": "https://github.com/crewAIInc/crewAI", "date": "2026-02", "type": "primary" }
+          ]
+        },
+        "ARI": {
+          "score": 48,
+          "riskLabel": "Medium",
+          "confidence": "Inferred",
+          "dimensions": {
+            "Permission Model Strength": { "score": 50, "confidence": "Inferred", "note": "Role-based access, but agents share tool access broadly" },
+            "Sandboxing / Isolation": { "score": 52, "confidence": "Inferred", "note": "No built-in sandboxing beyond Python process boundaries" },
+            "Default Network Exposure": { "score": 40, "confidence": "Inferred", "note": "Library-based, minimal exposure" },
+            "Secret Handling": { "score": 48, "confidence": "Inferred", "note": "Environment variables, no encrypted store" },
+            "Human-in-the-Loop Controls": { "score": 45, "confidence": "Inferred", "note": "Possible but not default — agents run autonomously" },
+            "Audit Logging": { "score": 52, "confidence": "Inferred", "note": "Task completion logs, limited forensic capability" }
+          },
+          "topRiskDrivers": [
+            "Multi-agent role delegation can lead to unintended permission escalation",
+            "No sandboxing — agents run in shared Python environment",
+            "Default autonomous execution without human review gates"
+          ],
+          "mitigations": [
+            "Define explicit tool allowlists per agent role",
+            "Implement review gates between agent task handoffs",
+            "Run in containerized environment with restricted system access"
+          ]
+        },
+        "EPI": {
+          "score": 58,
+          "momentum": "Rising",
+          "confidence": "Confirmed",
+          "dimensions": {
+            "Adoption Signals": { "score": 62, "confidence": "Confirmed", "note": "25K GitHub stars, growing YouTube/tutorial community" },
+            "Vendor Integration Breadth": { "score": 55, "confidence": "Inferred", "note": "Multi-LLM, growing tool library" },
+            "Enterprise Penetration": { "score": 42, "confidence": "Inferred", "note": "Early enterprise adoption, CrewAI Enterprise tier" },
+            "Standard Alignment": { "score": 50, "confidence": "Inferred", "note": "Custom agent protocol, limited MCP" },
+            "Release Velocity": { "score": 75, "confidence": "Confirmed", "note": "Active development, frequent releases" }
+          }
+        }
+      },
+      "radarScores": { "reasoning": 3, "ecosystem": 3, "autonomy": 4, "security": 2, "distribution": 3, "devControl": 3 }
+    },
+    {
+      "id": "vercel-ai-sdk",
+      "name": "Vercel AI SDK",
+      "category": "Cloud Workflow",
+      "description": "TypeScript SDK for building AI applications with streaming UI. Strong Next.js integration for product-facing agents.",
+      "githubUrl": "https://github.com/vercel/ai",
+      "indices": {
+        "AMI": {
+          "score": 66,
+          "grade": "B",
+          "confidence": "Confirmed",
+          "dimensions": {
+            "Reliability": { "score": 75, "confidence": "Confirmed", "note": "Vercel-backed, production-proven in Next.js apps" },
+            "Observability": { "score": 65, "confidence": "Inferred", "note": "Streaming callbacks, but limited agent-specific tracing" },
+            "Tooling Ecosystem": { "score": 72, "confidence": "Confirmed", "note": "All major LLM providers, Next.js/React integration" },
+            "Security Posture": { "score": 62, "confidence": "Inferred", "note": "Server-side execution, standard web security, Vercel security model" },
+            "Execution Control": { "score": 55, "confidence": "Inferred", "note": "Tool definitions with schema validation, but limited agent control" },
+            "Deployment Maturity": { "score": 72, "confidence": "Confirmed", "note": "First-class Vercel deployment, serverless-ready" }
+          },
+          "evidence": [
+            { "label": "Vercel AI SDK GitHub", "url": "https://github.com/vercel/ai", "date": "2026-02", "type": "primary" },
+            { "label": "Vercel AI SDK documentation", "url": "https://sdk.vercel.ai/", "date": "2026-02", "type": "documentation" }
+          ]
+        },
+        "ARI": {
+          "score": 32,
+          "riskLabel": "Medium",
+          "confidence": "Inferred",
+          "dimensions": {
+            "Permission Model Strength": { "score": 35, "confidence": "Inferred", "note": "Server-side tool execution with schema validation" },
+            "Sandboxing / Isolation": { "score": 30, "confidence": "Inferred", "note": "Serverless function isolation via Vercel platform" },
+            "Default Network Exposure": { "score": 35, "confidence": "Inferred", "note": "API endpoints exposed, but server-side only" },
+            "Secret Handling": { "score": 25, "confidence": "Confirmed", "note": "Vercel environment variables with encryption" },
+            "Human-in-the-Loop Controls": { "score": 35, "confidence": "Inferred", "note": "Streaming UI enables real-time user interaction" },
+            "Audit Logging": { "score": 30, "confidence": "Inferred", "note": "Vercel logs, but no agent-specific audit trail" }
+          },
+          "topRiskDrivers": [
+            "Serverless execution limits long-running agent tasks",
+            "Tool execution on server side shares function context",
+            "No built-in agent-specific audit logging"
+          ],
+          "mitigations": [
+            "Use Vercel's built-in security features for API protection",
+            "Implement tool-level rate limiting and validation",
+            "Add custom logging middleware for agent action tracking"
+          ]
+        },
+        "EPI": {
+          "score": 72,
+          "momentum": "Rising",
+          "confidence": "Confirmed",
+          "dimensions": {
+            "Adoption Signals": { "score": 70, "confidence": "Confirmed", "note": "Growing rapidly in Next.js ecosystem" },
+            "Vendor Integration Breadth": { "score": 80, "confidence": "Confirmed", "note": "All major LLM providers, strong React/Next.js integration" },
+            "Enterprise Penetration": { "score": 65, "confidence": "Inferred", "note": "Via Vercel Enterprise customers" },
+            "Standard Alignment": { "score": 70, "confidence": "Confirmed", "note": "TypeScript-first, standard web protocols" },
+            "Release Velocity": { "score": 78, "confidence": "Confirmed", "note": "Active Vercel team, frequent updates" }
+          }
+        }
+      },
+      "radarScores": { "reasoning": 3, "ecosystem": 4, "autonomy": 2, "security": 3, "distribution": 4, "devControl": 4 }
+    },
+    {
+      "id": "openai-agents-sdk",
+      "name": "OpenAI Agents SDK",
+      "category": "Cloud Autonomous",
+      "description": "OpenAI's first-party agent SDK. Native integration with GPT models, Operator, and OpenAI platform services.",
+      "githubUrl": "https://github.com/openai/openai-agents-python",
+      "indices": {
+        "AMI": {
+          "score": 64,
+          "grade": "B",
+          "confidence": "Inferred",
+          "dimensions": {
+            "Reliability": { "score": 70, "confidence": "Inferred", "note": "OpenAI infrastructure backing, but newer SDK" },
+            "Observability": { "score": 62, "confidence": "Inferred", "note": "OpenAI dashboard, but agent tracing is early" },
+            "Tooling Ecosystem": { "score": 65, "confidence": "Confirmed", "note": "GPT Actions, function calling, Operator integration" },
+            "Security Posture": { "score": 58, "confidence": "Inferred", "note": "OpenAI security model, but cloud-dependent" },
+            "Execution Control": { "score": 60, "confidence": "Inferred", "note": "Function calling boundaries, but limited fine-grained control" },
+            "Deployment Maturity": { "score": 68, "confidence": "Inferred", "note": "Cloud-native via OpenAI platform, limited self-hosting" }
+          },
+          "evidence": [
+            { "label": "OpenAI Agents SDK", "url": "https://github.com/openai/openai-agents-python", "date": "2026-02", "type": "primary" }
+          ]
+        },
+        "ARI": {
+          "score": 40,
+          "riskLabel": "Medium",
+          "confidence": "Inferred",
+          "dimensions": {
+            "Permission Model Strength": { "score": 38, "confidence": "Inferred", "note": "Function-level permissions, but OpenAI controls execution environment" },
+            "Sandboxing / Isolation": { "score": 35, "confidence": "Inferred", "note": "Cloud-side execution isolation via OpenAI infrastructure" },
+            "Default Network Exposure": { "score": 42, "confidence": "Inferred", "note": "Cloud API — data leaves your infrastructure" },
+            "Secret Handling": { "score": 38, "confidence": "Inferred", "note": "OpenAI manages keys, but all data transits OpenAI servers" },
+            "Human-in-the-Loop Controls": { "score": 42, "confidence": "Inferred", "note": "Confirmation steps available in Operator" },
+            "Audit Logging": { "score": 40, "confidence": "Inferred", "note": "OpenAI API logs, but limited self-service export" }
+          },
+          "topRiskDrivers": [
+            "All data and execution transits OpenAI cloud infrastructure",
+            "Limited control over execution environment and data retention",
+            "Vendor lock-in to OpenAI ecosystem and pricing"
+          ],
+          "mitigations": [
+            "Use function calling with strict schema validation",
+            "Implement client-side logging for audit independence",
+            "Design for portability — abstract OpenAI-specific calls"
+          ]
+        },
+        "EPI": {
+          "score": 70,
+          "momentum": "Rising",
+          "confidence": "Inferred",
+          "dimensions": {
+            "Adoption Signals": { "score": 68, "confidence": "Confirmed", "note": "15K GitHub stars, growing OpenAI developer community" },
+            "Vendor Integration Breadth": { "score": 60, "confidence": "Inferred", "note": "OpenAI-only, but deep platform integration" },
+            "Enterprise Penetration": { "score": 75, "confidence": "Inferred", "note": "Via OpenAI Enterprise agreements" },
+            "Standard Alignment": { "score": 65, "confidence": "Inferred", "note": "OpenAI function calling standard, limited interop" },
+            "Release Velocity": { "score": 80, "confidence": "Inferred", "note": "Active OpenAI development team" }
+          }
+        }
+      },
+      "radarScores": { "reasoning": 4, "ecosystem": 3, "autonomy": 4, "security": 2, "distribution": 4, "devControl": 3 }
+    },
+    {
+      "id": "semantic-kernel",
+      "name": "Semantic Kernel",
+      "category": "Enterprise",
+      "description": "Microsoft's enterprise AI orchestration SDK. Designed for C#/.NET and Python enterprise applications with Azure integration.",
+      "githubUrl": "https://github.com/microsoft/semantic-kernel",
+      "indices": {
+        "AMI": {
+          "score": 69,
+          "grade": "B",
+          "confidence": "Inferred",
+          "dimensions": {
+            "Reliability": { "score": 72, "confidence": "Inferred", "note": "Microsoft-maintained, enterprise-grade testing" },
+            "Observability": { "score": 68, "confidence": "Inferred", "note": "Azure Monitor integration, telemetry hooks" },
+            "Tooling Ecosystem": { "score": 72, "confidence": "Confirmed", "note": "Azure services, Office 365, enterprise connectors" },
+            "Security Posture": { "score": 65, "confidence": "Inferred", "note": "Azure AD integration, enterprise security model" },
+            "Execution Control": { "score": 68, "confidence": "Inferred", "note": "Plugin system with permission boundaries" },
+            "Deployment Maturity": { "score": 72, "confidence": "Inferred", "note": "Azure-native deployment, enterprise CI/CD" }
+          },
+          "evidence": [
+            { "label": "Semantic Kernel GitHub", "url": "https://github.com/microsoft/semantic-kernel", "date": "2026-02", "type": "primary" }
+          ]
+        },
+        "ARI": {
+          "score": 35,
+          "riskLabel": "Medium",
+          "confidence": "Inferred",
+          "dimensions": {
+            "Permission Model Strength": { "score": 32, "confidence": "Inferred", "note": "Plugin permission system, Azure AD integration" },
+            "Sandboxing / Isolation": { "score": 35, "confidence": "Inferred", "note": "Azure container isolation, enterprise boundaries" },
+            "Default Network Exposure": { "score": 35, "confidence": "Inferred", "note": "Library-based, Azure-managed exposure" },
+            "Secret Handling": { "score": 28, "confidence": "Inferred", "note": "Azure Key Vault integration" },
+            "Human-in-the-Loop Controls": { "score": 38, "confidence": "Inferred", "note": "Plugin approval flows, but not default" },
+            "Audit Logging": { "score": 35, "confidence": "Inferred", "note": "Azure Monitor, enterprise logging pipeline" }
+          },
+          "topRiskDrivers": [
+            "Enterprise complexity can mask misconfigurations",
+            "Azure dependency creates cloud lock-in risk",
+            "Plugin system permissions require careful configuration"
+          ],
+          "mitigations": [
+            "Leverage Azure AD for plugin-level authorization",
+            "Enable Azure Monitor for full execution tracing",
+            "Use Azure Key Vault for all credential management"
+          ]
+        },
+        "EPI": {
+          "score": 68,
+          "momentum": "Stable",
+          "confidence": "Inferred",
+          "dimensions": {
+            "Adoption Signals": { "score": 65, "confidence": "Confirmed", "note": "25K GitHub stars, Microsoft enterprise community" },
+            "Vendor Integration Breadth": { "score": 78, "confidence": "Inferred", "note": "Deep Azure/Microsoft ecosystem integration" },
+            "Enterprise Penetration": { "score": 80, "confidence": "Inferred", "note": "Microsoft enterprise channel, existing Azure customers" },
+            "Standard Alignment": { "score": 60, "confidence": "Inferred", "note": "OpenAI API compatible, Azure standard protocols" },
+            "Release Velocity": { "score": 65, "confidence": "Confirmed", "note": "Regular Microsoft-cadence releases" }
+          }
+        }
+      },
+      "radarScores": { "reasoning": 3, "ecosystem": 4, "autonomy": 3, "security": 3, "distribution": 3, "devControl": 4 }
+    }
+  ]
+}

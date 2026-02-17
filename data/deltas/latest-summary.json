@@ -1,0 +1,47 @@
+{
+  "file": "data/deltas/2026.02.17.json",
+  "changed_index_count": 5,
+  "changed_dimension_count": 5,
+  "daily_diff_summary": [
+    {
+      "entity": "OpenClaw",
+      "index": "ARI",
+      "delta": 2,
+      "changed_dimensions": [
+        "Default Network Exposure"
+      ]
+    },
+    {
+      "entity": "OpenClaw",
+      "index": "EPI",
+      "delta": 2,
+      "changed_dimensions": [
+        "Adoption Signals"
+      ]
+    },
+    {
+      "entity": "LangChain",
+      "index": "ARI",
+      "delta": -3,
+      "changed_dimensions": [
+        "Permission Model Strength"
+      ]
+    },
+    {
+      "entity": "n8n / Make",
+      "index": "EPI",
+      "delta": 3,
+      "changed_dimensions": [
+        "Adoption Signals"
+      ]
+    },
+    {
+      "entity": "CrewAI",
+      "index": "ARI",
+      "delta": -2,
+      "changed_dimensions": [
+        "Sandboxing / Isolation"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "tape_source": {
+    "status": "static_client_array",
+    "implementation": "Homepage script array rendered into tape DOM; not sourced from frameworks.json or a dedicated endpoint.",
+    "evidence": [
+      "Live page contains hardcoded update records in script block (e.g. Feb 10-14 entries).",
+      "No public /api/daily-signals endpoint detected on live site during crawl."
+    ]
+  },
+  "data_sync_status": {
+    "status": "partial_sync",
+    "summary": "frameworks.json is internally structured and timestamped, but source alignment to AGENTS_2026_SOURCES.md is incomplete.",
+    "checks": [
+      "frameworks.json meta.lastUpdated present (2026-02-16T00:00:00Z).",
+      "AGENTS_2026_SOURCES.md lists 38 citations.",
+      "framework evidence URLs are a smaller subset and include URL variants not matching markdown catalog exactly."
+    ]
+  },
+  "confidence_integrity": {
+    "status": "partial",
+    "summary": "Confidence labels are present at index and dimension levels, but one-to-one confidence-to-source traceability is not consistently enforced at claim granularity.",
+    "checks": [
+      "AMI/ARI/EPI confidence labels present in frameworks.json.",
+      "Dimension-level notes exist.",
+      "Not every confidence label maps to a normalized source ID list in the public payload."
+    ]
+  },
+  "automation_status": {
+    "status": "manual_static",
+    "summary": "Daily signals appear manually embedded in frontend code and updated by deployment, not via automated ingestion pipeline."
+  },
+  "issues": [
+    {
+      "id": "ISSUE_001",
+      "severity": "high",
+      "area": "live_tape",
+      "description": "Live tape is hardcoded; no API-backed feed or timestamped ingestion process.",
+      "impact": "Limits update cadence and creates stale-signal risk."
+    },
+    {
+      "id": "ISSUE_002",
+      "severity": "high",
+      "area": "source_traceability",
+      "description": "No normalized source ID model shared across frameworks.json, tape updates, and report claims.",
+      "impact": "Confidence labels are harder to audit and automate."
+    },
+    {
+      "id": "ISSUE_003",
+      "severity": "medium",
+      "area": "data_sync",
+      "description": "Evidence URLs in frameworks.json do not fully align with AGENTS_2026_SOURCES.md source inventory.",
+      "impact": "Potential citation drift and mismatch across surfaces."
+    },
+    {
+      "id": "ISSUE_004",
+      "severity": "medium",
+      "area": "seo_infra",
+      "description": "robots/sitemap responses from live crawl were inconsistent and returned not-found in probe attempts.",
+      "impact": "Potential crawl/indexation instability."
+    },
+    {
+      "id": "ISSUE_005",
+      "severity": "low",
+      "area": "cadence_visibility",
+      "description": "Homepage signals are month-scoped and edition-weighted, with weak daily freshness cues.",
+      "impact": "Reduces daily return behavior."
+    }
+  ]
+}

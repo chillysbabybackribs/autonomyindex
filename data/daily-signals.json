@@ -1,0 +1,207 @@
+{
+  "version": "2026-02-17",
+  "signals": [
+    {
+      "id": "AUTO_SIGNAL_20260217_OPENCLAW_ARI",
+      "timestamp_utc": "2026-02-17T05:29:49.135Z",
+      "entity": "OpenClaw",
+      "index": "ARI",
+      "delta": 2,
+      "direction": "up",
+      "driver_claim_ids": [
+        "CLM_20260216_01"
+      ],
+      "primary_source_ids": [
+        "SRC_003",
+        "SRC_004"
+      ],
+      "confidence": "confirmed",
+      "headline": "OpenClaw ARI +2 on daily framework update",
+      "summary": "Score moved from 80 to 82; key dimension changes: Default Network Exposure."
+    },
+    {
+      "id": "AUTO_SIGNAL_20260217_OPENCLAW_EPI",
+      "timestamp_utc": "2026-02-17T05:29:49.135Z",
+      "entity": "OpenClaw",
+      "index": "EPI",
+      "delta": 2,
+      "direction": "up",
+      "driver_claim_ids": [
+        "CLM_20260215_01"
+      ],
+      "primary_source_ids": [
+        "SRC_001",
+        "SRC_009"
+      ],
+      "confidence": "confirmed",
+      "headline": "OpenClaw EPI +2 on daily framework update",
+      "summary": "Score moved from 89 to 91; key dimension changes: Adoption Signals."
+    },
+    {
+      "id": "AUTO_SIGNAL_20260217_LANGCHAIN_ARI",
+      "timestamp_utc": "2026-02-17T05:29:49.135Z",
+      "entity": "LangChain",
+      "index": "ARI",
+      "delta": -3,
+      "direction": "down",
+      "driver_claim_ids": [
+        "CLM_20260212_01"
+      ],
+      "primary_source_ids": [
+        "SRC_006"
+      ],
+      "confidence": "confirmed",
+      "headline": "LangChain ARI -3 on daily framework update",
+      "summary": "Score moved from 48 to 45; key dimension changes: Permission Model Strength."
+    },
+    {
+      "id": "AUTO_SIGNAL_20260217_N8N_MAKE_EPI",
+      "timestamp_utc": "2026-02-17T05:29:49.135Z",
+      "entity": "n8n / Make",
+      "index": "EPI",
+      "delta": 3,
+      "direction": "up",
+      "driver_claim_ids": [
+        "CLM_20260211_01"
+      ],
+      "primary_source_ids": [
+        "SRC_008"
+      ],
+      "confidence": "inferred",
+      "headline": "n8n / Make EPI +3 on daily framework update",
+      "summary": "Score moved from 73 to 76; key dimension changes: Adoption Signals."
+    },
+    {
+      "id": "AUTO_SIGNAL_20260217_CREWAI_ARI",
+      "timestamp_utc": "2026-02-17T05:29:49.135Z",
+      "entity": "CrewAI",
+      "index": "ARI",
+      "delta": -2,
+      "direction": "down",
+      "driver_claim_ids": [
+        "CLM_20260214_01"
+      ],
+      "primary_source_ids": [
+        "SRC_007"
+      ],
+      "confidence": "confirmed",
+      "headline": "CrewAI ARI -2 on daily framework update",
+      "summary": "Score moved from 50 to 48; key dimension changes: Sandboxing / Isolation."
+    },
+    {
+      "id": "AUTO_SIGNAL_20260216_180000",
+      "timestamp_utc": "2026-02-16T18:00:00Z",
+      "entity": "OpenClaw",
+      "index": "ARI",
+      "delta": 2,
+      "direction": "up",
+      "driver_claim_ids": [
+        "CLM_20260216_01"
+      ],
+      "primary_source_ids": [
+        "SRC_003",
+        "SRC_004"
+      ],
+      "confidence": "confirmed",
+      "headline": "OpenClaw ARI rises +2 as exposed-instance risk remains unresolved"
+    },
+    {
+      "id": "AUTO_SIGNAL_20260215_160000",
+      "timestamp_utc": "2026-02-15T16:00:00Z",
+      "entity": "OpenClaw",
+      "index": "EPI",
+      "delta": 4,
+      "direction": "up",
+      "driver_claim_ids": [
+        "CLM_20260215_01"
+      ],
+      "primary_source_ids": [
+        "SRC_001",
+        "SRC_009"
+      ],
+      "confidence": "confirmed",
+      "headline": "OpenClaw EPI +4 after foundation transition and OpenAI-backed continuity"
+    },
+    {
+      "id": "AUTO_SIGNAL_20260214_170000",
+      "timestamp_utc": "2026-02-14T17:00:00Z",
+      "entity": "CrewAI",
+      "index": "ARI",
+      "delta": -5,
+      "direction": "down",
+      "driver_claim_ids": [
+        "CLM_20260214_01"
+      ],
+      "primary_source_ids": [
+        "SRC_007"
+      ],
+      "confidence": "confirmed",
+      "headline": "CrewAI ARI improves by -5 after sandbox hardening release"
+    },
+    {
+      "id": "AUTO_SIGNAL_20260213_150000",
+      "timestamp_utc": "2026-02-13T15:00:00Z",
+      "entity": "MCP ecosystem",
+      "index": "EPI",
+      "delta": 2,
+      "direction": "up",
+      "driver_claim_ids": [
+        "CLM_20260213_01"
+      ],
+      "primary_source_ids": [
+        "SRC_005"
+      ],
+      "confidence": "confirmed",
+      "headline": "MCP ecosystem EPI +2 as endpoint adoption crosses new threshold"
+    },
+    {
+      "id": "AUTO_SIGNAL_20260212_160000",
+      "timestamp_utc": "2026-02-12T16:00:00Z",
+      "entity": "LangChain",
+      "index": "ARI",
+      "delta": -3,
+      "direction": "down",
+      "driver_claim_ids": [
+        "CLM_20260212_01"
+      ],
+      "primary_source_ids": [
+        "SRC_006"
+      ],
+      "confidence": "confirmed",
+      "headline": "LangChain ARI improves -3 following tool-injection patch"
+    },
+    {
+      "id": "AUTO_SIGNAL_20260211_140000",
+      "timestamp_utc": "2026-02-11T14:00:00Z",
+      "entity": "n8n",
+      "index": "EPI",
+      "delta": 3,
+      "direction": "up",
+      "driver_claim_ids": [
+        "CLM_20260211_01"
+      ],
+      "primary_source_ids": [
+        "SRC_008"
+      ],
+      "confidence": "inferred",
+      "headline": "n8n EPI +3 on observed enterprise adoption acceleration"
+    },
+    {
+      "id": "AUTO_SIGNAL_20260210_130000",
+      "timestamp_utc": "2026-02-10T13:00:00Z",
+      "entity": "Anthropic Claude",
+      "index": "AMI",
+      "delta": 2,
+      "direction": "up",
+      "driver_claim_ids": [
+        "CLM_20260210_01"
+      ],
+      "primary_source_ids": [
+        "SRC_002",
+        "SRC_010"
+      ],
+      "confidence": "confirmed",
+      "headline": "Anthropic Claude AMI +2 on expanded enterprise token limits"
+    }
+  ]
+}

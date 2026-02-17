@@ -1,0 +1,38 @@
+{
+  "phase": "1",
+  "objective": "Replace hardcoded tape with API-fed signals and add latest weekly brief module below hero.",
+  "changes": [
+    {
+      "id": "UI_001",
+      "description": "Replace static tape array with GET /api/daily-signals?limit=7",
+      "placement": "existing tape container",
+      "fallback": "render last-known hardcoded message + link to /daily-signals"
+    },
+    {
+      "id": "UI_002",
+      "description": "Insert Latest Weekly Brief card below hero",
+      "placement": "immediately below hero section",
+      "fallback": "show message: Weekly brief unavailable"
+    },
+    {
+      "id": "UI_003",
+      "description": "Add View All Signals link",
+      "placement": "tape header/footer",
+      "target": "/daily-signals"
+    },
+    {
+      "id": "UI_004",
+      "description": "Mobile behavior",
+      "details": [
+        "Horizontal swipe tape container (overflow-x: auto; scroll-snap)",
+        "Tap-to-expand headline into compact detail drawer"
+      ]
+    }
+  ],
+  "code_snippets": {
+    "fetch_daily_signals": "async function fetchDailySignals(limit = 7) {\n  const res = await fetch(`/api/daily-signals?limit=${limit}`);\n  if (!res.ok) throw new Error(`daily-signals ${res.status}`);\n  const data = await res.json();\n  return Array.isArray(data.signals) ? data.signals : [];\n}",
+    "render_tape": "function renderTape(signals) {\n  const root = document.getElementById('live-tape-items');\n  if (!root) return;\n  if (!signals.length) {\n    root.innerHTML = '<div class=\"tape-empty\">No verified signals available. <a href=\"/daily-signals\">View All Signals</a></div>';\n    return;\n  }\n  root.innerHTML = signals.map((s) => `\n    <article class=\"tape-item\" data-id=\"${s.id}\">\n      <time class=\"tape-date\">${new Date(s.timestamp_utc).toISOString().slice(5, 10)}</time>\n      <button class=\"tape-headline\" type=\"button\">${s.headline}</button>\n      <div class=\"tape-meta\">${s.entity} · ${s.index} ${s.delta > 0 ? '+' : ''}${s.delta} · ${s.confidence}</div>\n    </article>`).join('');\n}",
+    "render_weekly_brief_preview": "function renderLatestWeeklyBrief(brief) {\n  const root = document.getElementById('latest-weekly-brief');\n  if (!root) return;\n  if (!brief) {\n    root.innerHTML = '<div class=\"brief-empty\">Weekly brief unavailable.</div>';\n    return;\n  }\n  root.innerHTML = `\n    <h3>${brief.title}</h3>\n    <p>${brief.subtitle}</p>\n    <ul>${brief.executive_delta_summary.slice(0,3).map((x)=>`<li>${x}</li>`).join('')}</ul>\n    <a href=\"/weekly-briefs/${brief.report_id}\">Read weekly brief</a>`;\n}",
+    "error_fallback": "async function bootstrapSignals() {\n  try {\n    const signals = await fetchDailySignals(7);\n    renderTape(signals);\n  } catch (err) {\n    console.error(err);\n    renderTape([]);\n  }\n}"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "version": "2026-02-17",
+  "claims": [
+    {
+      "claim_id": "CLM_20260210_01",
+      "statement": "Claude Opus 4.6 expanded enterprise token limits, improving high-volume deployment readiness.",
+      "confidence": "confirmed",
+      "source_ids": ["SRC_002", "SRC_010"],
+      "index_impact": {"entity": "Anthropic Claude", "index": "AMI", "delta": 2}
+    },
+    {
+      "claim_id": "CLM_20260211_01",
+      "statement": "n8n enterprise adoption increased, supporting upward ecosystem momentum.",
+      "confidence": "inferred",
+      "source_ids": ["SRC_008"],
+      "index_impact": {"entity": "n8n", "index": "EPI", "delta": 3}
+    },
+    {
+      "claim_id": "CLM_20260212_01",
+      "statement": "LangChain patched a tool injection vulnerability, reducing near-term risk posture.",
+      "confidence": "confirmed",
+      "source_ids": ["SRC_006"],
+      "index_impact": {"entity": "LangChain", "index": "ARI", "delta": -3}
+    },
+    {
+      "claim_id": "CLM_20260213_01",
+      "statement": "MCP endpoint adoption crossed a new threshold, increasing standard alignment influence.",
+      "confidence": "confirmed",
+      "source_ids": ["SRC_005"],
+      "index_impact": {"entity": "MCP ecosystem", "index": "EPI", "delta": 2}
+    },
+    {
+      "claim_id": "CLM_20260214_01",
+      "statement": "CrewAI sandbox hardening update reduced operational exposure.",
+      "confidence": "confirmed",
+      "source_ids": ["SRC_007"],
+      "index_impact": {"entity": "CrewAI", "index": "ARI", "delta": -5}
+    },
+    {
+      "claim_id": "CLM_20260215_01",
+      "statement": "OpenClaw foundation transition with OpenAI backing increased ecosystem reach.",
+      "confidence": "confirmed",
+      "source_ids": ["SRC_001", "SRC_009"],
+      "index_impact": {"entity": "OpenClaw", "index": "EPI", "delta": 4}
+    },
+    {
+      "claim_id": "CLM_20260216_01",
+      "statement": "OpenClaw exposure findings maintained critical risk profile despite adoption gains.",
+      "confidence": "confirmed",
+      "source_ids": ["SRC_003", "SRC_004"],
+      "index_impact": {"entity": "OpenClaw", "index": "ARI", "delta": 2}
+    }
+  ]
+}

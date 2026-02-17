@@ -1,0 +1,213 @@
+{
+  "generated_at_utc": "2026-02-17T05:30:01.912Z",
+  "framework_checksum": {
+    "generated_at_utc": "2026-02-17T05:30:01.908Z",
+    "file": "data/frameworks.json",
+    "sha256": "89847ea344119a8412ffda5bda47134886b77b48fce8114443ff1e3713cc4958",
+    "index_data_version": "0.1"
+  },
+  "source_validation": {
+    "evidence_urls_total": 15,
+    "missing_catalog_references": [
+      {
+        "framework_id": "openclaw",
+        "framework_name": "OpenClaw",
+        "index": "AMI",
+        "url": "https://www.kaspersky.com/blog/openclaw-risks/"
+      },
+      {
+        "framework_id": "openclaw",
+        "framework_name": "OpenClaw",
+        "index": "AMI",
+        "url": "https://securityscorecard.com/research/openclaw-exposure"
+      },
+      {
+        "framework_id": "langchain",
+        "framework_name": "LangChain",
+        "index": "AMI",
+        "url": "https://github.com/langchain-ai/langchain"
+      },
+      {
+        "framework_id": "n8n-make",
+        "framework_name": "n8n / Make",
+        "index": "AMI",
+        "url": "https://github.com/n8n-io/n8n"
+      },
+      {
+        "framework_id": "clawdia",
+        "framework_name": "Clawdia",
+        "index": "AMI",
+        "url": "https://github.com/chillysbabybackribs/Clawdia"
+      },
+      {
+        "framework_id": "clawdia",
+        "framework_name": "Clawdia",
+        "index": "AMI",
+        "url": "https://github.com/chillysbabybackribs/Clawdia"
+      },
+      {
+        "framework_id": "autogen",
+        "framework_name": "AutoGen",
+        "index": "AMI",
+        "url": "https://github.com/microsoft/autogen"
+      },
+      {
+        "framework_id": "vercel-ai-sdk",
+        "framework_name": "Vercel AI SDK",
+        "index": "AMI",
+        "url": "https://github.com/vercel/ai"
+      },
+      {
+        "framework_id": "vercel-ai-sdk",
+        "framework_name": "Vercel AI SDK",
+        "index": "AMI",
+        "url": "https://sdk.vercel.ai/"
+      },
+      {
+        "framework_id": "openai-agents-sdk",
+        "framework_name": "OpenAI Agents SDK",
+        "index": "AMI",
+        "url": "https://github.com/openai/openai-agents-python"
+      },
+      {
+        "framework_id": "semantic-kernel",
+        "framework_name": "Semantic Kernel",
+        "index": "AMI",
+        "url": "https://github.com/microsoft/semantic-kernel"
+      }
+    ],
+    "missing_agents_markdown_references": [
+      {
+        "framework_id": "openclaw",
+        "framework_name": "OpenClaw",
+        "index": "AMI",
+        "url": "https://www.kaspersky.com/blog/openclaw-risks/"
+      },
+      {
+        "framework_id": "openclaw",
+        "framework_name": "OpenClaw",
+        "index": "AMI",
+        "url": "https://securityscorecard.com/research/openclaw-exposure"
+      },
+      {
+        "framework_id": "openclaw",
+        "framework_name": "OpenClaw",
+        "index": "AMI",
+        "url": "https://github.com/openclaw/openclaw"
+      },
+      {
+        "framework_id": "langchain",
+        "framework_name": "LangChain",
+        "index": "AMI",
+        "url": "https://github.com/langchain-ai/langchain"
+      },
+      {
+        "framework_id": "langchain",
+        "framework_name": "LangChain",
+        "index": "AMI",
+        "url": "https://docs.smith.langchain.com/"
+      },
+      {
+        "framework_id": "n8n-make",
+        "framework_name": "n8n / Make",
+        "index": "AMI",
+        "url": "https://github.com/n8n-io/n8n"
+      },
+      {
+        "framework_id": "n8n-make",
+        "framework_name": "n8n / Make",
+        "index": "AMI",
+        "url": "https://docs.n8n.io/"
+      },
+      {
+        "framework_id": "autogen",
+        "framework_name": "AutoGen",
+        "index": "AMI",
+        "url": "https://github.com/microsoft/autogen"
+      },
+      {
+        "framework_id": "crewai",
+        "framework_name": "CrewAI",
+        "index": "AMI",
+        "url": "https://github.com/crewAIInc/crewAI"
+      },
+      {
+        "framework_id": "vercel-ai-sdk",
+        "framework_name": "Vercel AI SDK",
+        "index": "AMI",
+        "url": "https://github.com/vercel/ai"
+      },
+      {
+        "framework_id": "vercel-ai-sdk",
+        "framework_name": "Vercel AI SDK",
+        "index": "AMI",
+        "url": "https://sdk.vercel.ai/"
+      },
+      {
+        "framework_id": "openai-agents-sdk",
+        "framework_name": "OpenAI Agents SDK",
+        "index": "AMI",
+        "url": "https://github.com/openai/openai-agents-python"
+      },
+      {
+        "framework_id": "semantic-kernel",
+        "framework_name": "Semantic Kernel",
+        "index": "AMI",
+        "url": "https://github.com/microsoft/semantic-kernel"
+      }
+    ]
+  },
+  "broken_link_detection": {
+    "skipped": true,
+    "checked_count": 0,
+    "broken_count": 0,
+    "broken_links": []
+  },
+  "daily_diff_summary": {
+    "file": "data/deltas/2026.02.17.json",
+    "changed_index_count": 5,
+    "changed_dimension_count": 5,
+    "daily_diff_summary": [
+      {
+        "entity": "OpenClaw",
+        "index": "ARI",
+        "delta": 2,
+        "changed_dimensions": [
+          "Default Network Exposure"
+        ]
+      },
+      {
+        "entity": "OpenClaw",
+        "index": "EPI",
+        "delta": 2,
+        "changed_dimensions": [
+          "Adoption Signals"
+        ]
+      },
+      {
+        "entity": "LangChain",
+        "index": "ARI",
+        "delta": -3,
+        "changed_dimensions": [
+          "Permission Model Strength"
+        ]
+      },
+      {
+        "entity": "n8n / Make",
+        "index": "EPI",
+        "delta": 3,
+        "changed_dimensions": [
+          "Adoption Signals"
+        ]
+      },
+      {
+        "entity": "CrewAI",
+        "index": "ARI",
+        "delta": -2,
+        "changed_dimensions": [
+          "Sandboxing / Isolation"
+        ]
+      }
+    ]
+  }
+}

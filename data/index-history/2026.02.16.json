@@ -1,0 +1,378 @@
+{
+  "snapshot_date": "2026-02-16",
+  "generated_at_utc": "2026-02-16T13:30:00Z",
+  "index_data_version": "2026.02.16.1",
+  "framework_checksum_sha256": "baseline-snapshot-seed",
+  "framework_count": 9,
+  "frameworks": [
+    {
+      "id": "openclaw",
+      "name": "OpenClaw",
+      "indices": {
+        "AMI": {
+          "score": 52,
+          "confidence": "confirmed",
+          "dimensions": {
+            "Reliability": 55,
+            "Observability": 60,
+            "Tooling Ecosystem": 75,
+            "Security Posture": 18,
+            "Execution Control": 45,
+            "Deployment Maturity": 60
+          }
+        },
+        "ARI": {
+          "score": 80,
+          "confidence": "confirmed",
+          "dimensions": {
+            "Permission Model Strength": 72,
+            "Sandboxing / Isolation": 85,
+            "Default Network Exposure": 92,
+            "Secret Handling": 78,
+            "Human-in-the-Loop Controls": 65,
+            "Audit Logging": 70
+          }
+        },
+        "EPI": {
+          "score": 89,
+          "confidence": "confirmed",
+          "dimensions": {
+            "Adoption Signals": 96,
+            "Vendor Integration Breadth": 85,
+            "Enterprise Penetration": 70,
+            "Standard Alignment": 88,
+            "Release Velocity": 95
+          }
+        }
+      }
+    },
+    {
+      "id": "langchain",
+      "name": "LangChain",
+      "indices": {
+        "AMI": {
+          "score": 71,
+          "confidence": "confirmed",
+          "dimensions": {
+            "Reliability": 72,
+            "Observability": 85,
+            "Tooling Ecosystem": 90,
+            "Security Posture": 48,
+            "Execution Control": 65,
+            "Deployment Maturity": 70
+          }
+        },
+        "ARI": {
+          "score": 48,
+          "confidence": "inferred",
+          "dimensions": {
+            "Permission Model Strength": 45,
+            "Sandboxing / Isolation": 50,
+            "Default Network Exposure": 40,
+            "Secret Handling": 45,
+            "Human-in-the-Loop Controls": 35,
+            "Audit Logging": 50
+          }
+        },
+        "EPI": {
+          "score": 85,
+          "confidence": "confirmed",
+          "dimensions": {
+            "Adoption Signals": 90,
+            "Vendor Integration Breadth": 95,
+            "Enterprise Penetration": 78,
+            "Standard Alignment": 80,
+            "Release Velocity": 82
+          }
+        }
+      }
+    },
+    {
+      "id": "n8n-make",
+      "name": "n8n / Make",
+      "indices": {
+        "AMI": {
+          "score": 68,
+          "confidence": "confirmed",
+          "dimensions": {
+            "Reliability": 78,
+            "Observability": 75,
+            "Tooling Ecosystem": 88,
+            "Security Posture": 55,
+            "Execution Control": 50,
+            "Deployment Maturity": 72
+          }
+        },
+        "ARI": {
+          "score": 38,
+          "confidence": "inferred",
+          "dimensions": {
+            "Permission Model Strength": 35,
+            "Sandboxing / Isolation": 40,
+            "Default Network Exposure": 42,
+            "Secret Handling": 30,
+            "Human-in-the-Loop Controls": 35,
+            "Audit Logging": 42
+          }
+        },
+        "EPI": {
+          "score": 73,
+          "confidence": "confirmed",
+          "dimensions": {
+            "Adoption Signals": 77,
+            "Vendor Integration Breadth": 92,
+            "Enterprise Penetration": 72,
+            "Standard Alignment": 55,
+            "Release Velocity": 75
+          }
+        }
+      }
+    },
+    {
+      "id": "clawdia",
+      "name": "Clawdia",
+      "indices": {
+        "AMI": {
+          "score": 44,
+          "confidence": "confirmed",
+          "dimensions": {
+            "Reliability": 42,
+            "Observability": 55,
+            "Tooling Ecosystem": 48,
+            "Security Posture": 72,
+            "Execution Control": 55,
+            "Deployment Maturity": 18
+          }
+        },
+        "ARI": {
+          "score": 18,
+          "confidence": "confirmed",
+          "dimensions": {
+            "Permission Model Strength": 22,
+            "Sandboxing / Isolation": 20,
+            "Default Network Exposure": 5,
+            "Secret Handling": 15,
+            "Human-in-the-Loop Controls": 22,
+            "Audit Logging": 25
+          }
+        },
+        "EPI": {
+          "score": 8,
+          "confidence": "confirmed",
+          "dimensions": {
+            "Adoption Signals": 2,
+            "Vendor Integration Breadth": 10,
+            "Enterprise Penetration": 2,
+            "Standard Alignment": 15,
+            "Release Velocity": 18
+          }
+        }
+      }
+    },
+    {
+      "id": "autogen",
+      "name": "AutoGen",
+      "indices": {
+        "AMI": {
+          "score": 62,
+          "confidence": "inferred",
+          "dimensions": {
+            "Reliability": 65,
+            "Observability": 58,
+            "Tooling Ecosystem": 68,
+            "Security Posture": 52,
+            "Execution Control": 65,
+            "Deployment Maturity": 60
+          }
+        },
+        "ARI": {
+          "score": 42,
+          "confidence": "inferred",
+          "dimensions": {
+            "Permission Model Strength": 40,
+            "Sandboxing / Isolation": 45,
+            "Default Network Exposure": 38,
+            "Secret Handling": 42,
+            "Human-in-the-Loop Controls": 35,
+            "Audit Logging": 48
+          }
+        },
+        "EPI": {
+          "score": 65,
+          "confidence": "confirmed",
+          "dimensions": {
+            "Adoption Signals": 72,
+            "Vendor Integration Breadth": 65,
+            "Enterprise Penetration": 60,
+            "Standard Alignment": 55,
+            "Release Velocity": 70
+          }
+        }
+      }
+    },
+    {
+      "id": "crewai",
+      "name": "CrewAI",
+      "indices": {
+        "AMI": {
+          "score": 55,
+          "confidence": "inferred",
+          "dimensions": {
+            "Reliability": 58,
+            "Observability": 50,
+            "Tooling Ecosystem": 60,
+            "Security Posture": 45,
+            "Execution Control": 55,
+            "Deployment Maturity": 55
+          }
+        },
+        "ARI": {
+          "score": 50,
+          "confidence": "inferred",
+          "dimensions": {
+            "Permission Model Strength": 50,
+            "Sandboxing / Isolation": 55,
+            "Default Network Exposure": 40,
+            "Secret Handling": 48,
+            "Human-in-the-Loop Controls": 45,
+            "Audit Logging": 52
+          }
+        },
+        "EPI": {
+          "score": 58,
+          "confidence": "confirmed",
+          "dimensions": {
+            "Adoption Signals": 62,
+            "Vendor Integration Breadth": 55,
+            "Enterprise Penetration": 42,
+            "Standard Alignment": 50,
+            "Release Velocity": 75
+          }
+        }
+      }
+    },
+    {
+      "id": "vercel-ai-sdk",
+      "name": "Vercel AI SDK",
+      "indices": {
+        "AMI": {
+          "score": 66,
+          "confidence": "confirmed",
+          "dimensions": {
+            "Reliability": 75,
+            "Observability": 65,
+            "Tooling Ecosystem": 72,
+            "Security Posture": 62,
+            "Execution Control": 55,
+            "Deployment Maturity": 72
+          }
+        },
+        "ARI": {
+          "score": 32,
+          "confidence": "inferred",
+          "dimensions": {
+            "Permission Model Strength": 35,
+            "Sandboxing / Isolation": 30,
+            "Default Network Exposure": 35,
+            "Secret Handling": 25,
+            "Human-in-the-Loop Controls": 35,
+            "Audit Logging": 30
+          }
+        },
+        "EPI": {
+          "score": 72,
+          "confidence": "confirmed",
+          "dimensions": {
+            "Adoption Signals": 70,
+            "Vendor Integration Breadth": 80,
+            "Enterprise Penetration": 65,
+            "Standard Alignment": 70,
+            "Release Velocity": 78
+          }
+        }
+      }
+    },
+    {
+      "id": "openai-agents-sdk",
+      "name": "OpenAI Agents SDK",
+      "indices": {
+        "AMI": {
+          "score": 64,
+          "confidence": "inferred",
+          "dimensions": {
+            "Reliability": 70,
+            "Observability": 62,
+            "Tooling Ecosystem": 65,
+            "Security Posture": 58,
+            "Execution Control": 60,
+            "Deployment Maturity": 68
+          }
+        },
+        "ARI": {
+          "score": 40,
+          "confidence": "inferred",
+          "dimensions": {
+            "Permission Model Strength": 38,
+            "Sandboxing / Isolation": 35,
+            "Default Network Exposure": 42,
+            "Secret Handling": 38,
+            "Human-in-the-Loop Controls": 42,
+            "Audit Logging": 40
+          }
+        },
+        "EPI": {
+          "score": 70,
+          "confidence": "inferred",
+          "dimensions": {
+            "Adoption Signals": 68,
+            "Vendor Integration Breadth": 60,
+            "Enterprise Penetration": 75,
+            "Standard Alignment": 65,
+            "Release Velocity": 80
+          }
+        }
+      }
+    },
+    {
+      "id": "semantic-kernel",
+      "name": "Semantic Kernel",
+      "indices": {
+        "AMI": {
+          "score": 69,
+          "confidence": "inferred",
+          "dimensions": {
+            "Reliability": 72,
+            "Observability": 68,
+            "Tooling Ecosystem": 72,
+            "Security Posture": 65,
+            "Execution Control": 68,
+            "Deployment Maturity": 72
+          }
+        },
+        "ARI": {
+          "score": 35,
+          "confidence": "inferred",
+          "dimensions": {
+            "Permission Model Strength": 32,
+            "Sandboxing / Isolation": 35,
+            "Default Network Exposure": 35,
+            "Secret Handling": 28,
+            "Human-in-the-Loop Controls": 38,
+            "Audit Logging": 35
+          }
+        },
+        "EPI": {
+          "score": 68,
+          "confidence": "inferred",
+          "dimensions": {
+            "Adoption Signals": 65,
+            "Vendor Integration Breadth": 78,
+            "Enterprise Penetration": 80,
+            "Standard Alignment": 60,
+            "Release Velocity": 65
+          }
+        }
+      }
+    }
+  ]
+}

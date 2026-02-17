@@ -1,0 +1,532 @@
+{
+  "audit_report": {
+    "tape_source": {
+      "status": "static_client_array",
+      "implementation": "Homepage script array rendered into tape DOM; not sourced from frameworks.json or a dedicated endpoint.",
+      "evidence": [
+        "Live page contains hardcoded update records in script block (e.g. Feb 10-14 entries).",
+        "No public /api/daily-signals endpoint detected on live site during crawl."
+      ]
+    },
+    "data_sync_status": {
+      "status": "partial_sync",
+      "summary": "frameworks.json is internally structured and timestamped, but source alignment to AGENTS_2026_SOURCES.md is incomplete.",
+      "checks": [
+        "frameworks.json meta.lastUpdated present (2026-02-16T00:00:00Z).",
+        "AGENTS_2026_SOURCES.md lists 38 citations.",
+        "framework evidence URLs are a smaller subset and include URL variants not matching markdown catalog exactly."
+      ]
+    },
+    "confidence_integrity": {
+      "status": "partial",
+      "summary": "Confidence labels are present at index and dimension levels, but one-to-one confidence-to-source traceability is not consistently enforced at claim granularity.",
+      "checks": [
+        "AMI/ARI/EPI confidence labels present in frameworks.json.",
+        "Dimension-level notes exist.",
+        "Not every confidence label maps to a normalized source ID list in the public payload."
+      ]
+    },
+    "automation_status": {
+      "status": "manual_static",
+      "summary": "Daily signals appear manually embedded in frontend code and updated by deployment, not via automated ingestion pipeline."
+    },
+    "issues": [
+      {
+        "id": "ISSUE_001",
+        "severity": "high",
+        "area": "live_tape",
+        "description": "Live tape is hardcoded; no API-backed feed or timestamped ingestion process.",
+        "impact": "Limits update cadence and creates stale-signal risk."
+      },
+      {
+        "id": "ISSUE_002",
+        "severity": "high",
+        "area": "source_traceability",
+        "description": "No normalized source ID model shared across frameworks.json, tape updates, and report claims.",
+        "impact": "Confidence labels are harder to audit and automate."
+      },
+      {
+        "id": "ISSUE_003",
+        "severity": "medium",
+        "area": "data_sync",
+        "description": "Evidence URLs in frameworks.json do not fully align with AGENTS_2026_SOURCES.md source inventory.",
+        "impact": "Potential citation drift and mismatch across surfaces."
+      },
+      {
+        "id": "ISSUE_004",
+        "severity": "medium",
+        "area": "seo_infra",
+        "description": "robots/sitemap responses from live crawl were inconsistent and returned not-found in probe attempts.",
+        "impact": "Potential crawl/indexation instability."
+      },
+      {
+        "id": "ISSUE_005",
+        "severity": "low",
+        "area": "cadence_visibility",
+        "description": "Homepage signals are month-scoped and edition-weighted, with weak daily freshness cues.",
+        "impact": "Reduces daily return behavior."
+      }
+    ]
+  },
+  "daily_signals_endpoint_spec": {
+    "endpoint": "GET /api/daily-signals?limit=7",
+    "query_params": {
+      "limit": {
+        "type": "integer",
+        "required": false,
+        "default": 7,
+        "min": 1,
+        "max": 100
+      }
+    },
+    "sorting": "timestamp_utc descending",
+    "response": {
+      "version": "string",
+      "count": "number",
+      "signals": [
+        {
+          "id": "AUTO_SIGNAL_YYYYMMDD_HHMMSS",
+          "timestamp_utc": "ISO-8601",
+          "entity": "string",
+          "index": "AMI|ARI|EPI",
+          "delta": "number",
+          "direction": "up|down|flat",
+          "driver_claim_ids": [
+            "string"
+          ],
+          "primary_source_ids": [
+            "string"
+          ],
+          "confidence": "confirmed|inferred|speculative",
+          "headline": "string"
+        }
+      ]
+    },
+    "errors": [
+      {
+        "status": 405,
+        "body": {
+          "error": "method_not_allowed",
+          "allowed": [
+            "GET"
+          ]
+        }
+      }
+    ]
+  },
+  "weekly_briefs": [
+    {
+      "report_id": "AI-20260216-weekly-signal-brief-01",
+      "report_type": "weekly_brief",
+      "title": "Weekly Brief 1: Security Patches vs Exposure Drag",
+      "subtitle": "Coverage window: 2026-02-09 to 2026-02-15",
+      "published_at_utc": "2026-02-16T20:00:00Z",
+      "as_of_utc": "2026-02-15T23:59:59Z",
+      "methodology_version": "v0.1",
+      "index_data_version": "2026.02.16.1",
+      "pillar": "agents",
+      "tags": [
+        "weekly",
+        "security",
+        "ecosystem",
+        "mcp"
+      ],
+      "executive_delta_summary": [
+        "OpenClaw EPI increased on foundation transition evidence.",
+        "OpenClaw ARI also increased due to unresolved exposure findings.",
+        "CrewAI ARI improved after sandbox hardening release.",
+        "LangChain ARI improved after reported tool-injection patch.",
+        "MCP ecosystem EPI rose on continued endpoint adoption growth."
+      ],
+      "top_index_movements": [
+        {
+          "rank": 1,
+          "entity": "CrewAI",
+          "index": "ARI",
+          "delta": -5,
+          "direction": "down",
+          "driver_claim_ids": [
+            "CLM_20260214_01"
+          ],
+          "confidence": "confirmed",
+          "source_ids": [
+            "SRC_007"
+          ]
+        },
+        {
+          "rank": 2,
+          "entity": "OpenClaw",
+          "index": "EPI",
+          "delta": 4,
+          "direction": "up",
+          "driver_claim_ids": [
+            "CLM_20260215_01"
+          ],
+          "confidence": "confirmed",
+          "source_ids": [
+            "SRC_001",
+            "SRC_009"
+          ]
+        },
+        {
+          "rank": 3,
+          "entity": "n8n",
+          "index": "EPI",
+          "delta": 3,
+          "direction": "up",
+          "driver_claim_ids": [
+            "CLM_20260211_01"
+          ],
+          "confidence": "inferred",
+          "source_ids": [
+            "SRC_008"
+          ]
+        },
+        {
+          "rank": 4,
+          "entity": "LangChain",
+          "index": "ARI",
+          "delta": -3,
+          "direction": "down",
+          "driver_claim_ids": [
+            "CLM_20260212_01"
+          ],
+          "confidence": "confirmed",
+          "source_ids": [
+            "SRC_006"
+          ]
+        },
+        {
+          "rank": 5,
+          "entity": "OpenClaw",
+          "index": "ARI",
+          "delta": 2,
+          "direction": "up",
+          "driver_claim_ids": [
+            "CLM_20260216_01"
+          ],
+          "confidence": "confirmed",
+          "source_ids": [
+            "SRC_003",
+            "SRC_004"
+          ]
+        }
+      ],
+      "evidence_ledger": [
+        {
+          "source_id": "SRC_001",
+          "used_for": "OpenClaw foundation transition"
+        },
+        {
+          "source_id": "SRC_003",
+          "used_for": "OpenClaw vulnerability persistence"
+        },
+        {
+          "source_id": "SRC_004",
+          "used_for": "Exposed infrastructure risk"
+        },
+        {
+          "source_id": "SRC_006",
+          "used_for": "LangChain patch signal"
+        },
+        {
+          "source_id": "SRC_007",
+          "used_for": "CrewAI sandbox update"
+        },
+        {
+          "source_id": "SRC_008",
+          "used_for": "n8n adoption signal"
+        },
+        {
+          "source_id": "SRC_009",
+          "used_for": "OpenClaw ecosystem adoption context"
+        }
+      ]
+    },
+    {
+      "report_id": "AI-20260209-weekly-signal-brief-02",
+      "report_type": "weekly_brief",
+      "title": "Weekly Brief 2: Benchmark Leadership and Risk Disclosure",
+      "subtitle": "Coverage window: 2026-02-02 to 2026-02-08",
+      "published_at_utc": "2026-02-09T20:00:00Z",
+      "as_of_utc": "2026-02-08T23:59:59Z",
+      "methodology_version": "v0.1",
+      "index_data_version": "2026.02.09.1",
+      "pillar": "benchmarks",
+      "tags": [
+        "weekly",
+        "benchmarks",
+        "security"
+      ],
+      "executive_delta_summary": [
+        "Claude Opus 4.6 benchmark evidence strengthened Anthropic maturity positioning.",
+        "SecurityScorecard exposure findings added material downside to OpenClaw risk posture.",
+        "Kaspersky audit introduced high-severity risk confirmation in the open-agent tier.",
+        "MCP standard momentum continued as a cross-vendor alignment signal.",
+        "No methodology change occurred during the week."
+      ],
+      "top_index_movements": [
+        {
+          "rank": 1,
+          "entity": "OpenClaw",
+          "index": "ARI",
+          "delta": 6,
+          "direction": "up",
+          "driver_claim_ids": [
+            "CLM_20260216_01"
+          ],
+          "confidence": "confirmed",
+          "source_ids": [
+            "SRC_003",
+            "SRC_004"
+          ]
+        },
+        {
+          "rank": 2,
+          "entity": "Anthropic Claude",
+          "index": "AMI",
+          "delta": 4,
+          "direction": "up",
+          "driver_claim_ids": [
+            "CLM_20260210_01"
+          ],
+          "confidence": "confirmed",
+          "source_ids": [
+            "SRC_002",
+            "SRC_010"
+          ]
+        },
+        {
+          "rank": 3,
+          "entity": "MCP ecosystem",
+          "index": "EPI",
+          "delta": 3,
+          "direction": "up",
+          "driver_claim_ids": [
+            "CLM_20260213_01"
+          ],
+          "confidence": "confirmed",
+          "source_ids": [
+            "SRC_005"
+          ]
+        },
+        {
+          "rank": 4,
+          "entity": "OpenClaw",
+          "index": "EPI",
+          "delta": 2,
+          "direction": "up",
+          "driver_claim_ids": [
+            "CLM_20260215_01"
+          ],
+          "confidence": "inferred",
+          "source_ids": [
+            "SRC_001",
+            "SRC_009"
+          ]
+        },
+        {
+          "rank": 5,
+          "entity": "LangChain",
+          "index": "ARI",
+          "delta": -1,
+          "direction": "down",
+          "driver_claim_ids": [
+            "CLM_20260212_01"
+          ],
+          "confidence": "inferred",
+          "source_ids": [
+            "SRC_006"
+          ]
+        }
+      ],
+      "evidence_ledger": [
+        {
+          "source_id": "SRC_002",
+          "used_for": "Claude Opus 4.6 benchmark baseline"
+        },
+        {
+          "source_id": "SRC_003",
+          "used_for": "Kaspersky vulnerability audit"
+        },
+        {
+          "source_id": "SRC_004",
+          "used_for": "SecurityScorecard exposure report"
+        },
+        {
+          "source_id": "SRC_005",
+          "used_for": "MCP standardization trajectory"
+        },
+        {
+          "source_id": "SRC_010",
+          "used_for": "Claude tooling capabilities context"
+        }
+      ]
+    },
+    {
+      "report_id": "AI-20260202-weekly-signal-brief-03",
+      "report_type": "weekly_brief",
+      "title": "Weekly Brief 3: Framework Distribution and Adoption Signals",
+      "subtitle": "Coverage window: 2026-01-26 to 2026-02-01",
+      "published_at_utc": "2026-02-02T20:00:00Z",
+      "as_of_utc": "2026-02-01T23:59:59Z",
+      "methodology_version": "v0.1",
+      "index_data_version": "2026.02.02.1",
+      "pillar": "ecosystem",
+      "tags": [
+        "weekly",
+        "adoption",
+        "distribution"
+      ],
+      "executive_delta_summary": [
+        "OpenClaw community acceleration remained the strongest ecosystem signal.",
+        "MCP alignment strengthened cross-framework interoperability narratives.",
+        "n8n retained adoption momentum in enterprise automation workflows.",
+        "LangChain and CrewAI maintained security hardening trajectories.",
+        "No speculative-only deltas were applied this week."
+      ],
+      "top_index_movements": [
+        {
+          "rank": 1,
+          "entity": "OpenClaw",
+          "index": "EPI",
+          "delta": 5,
+          "direction": "up",
+          "driver_claim_ids": [
+            "CLM_20260215_01"
+          ],
+          "confidence": "confirmed",
+          "source_ids": [
+            "SRC_001",
+            "SRC_009"
+          ]
+        },
+        {
+          "rank": 2,
+          "entity": "MCP ecosystem",
+          "index": "EPI",
+          "delta": 3,
+          "direction": "up",
+          "driver_claim_ids": [
+            "CLM_20260213_01"
+          ],
+          "confidence": "confirmed",
+          "source_ids": [
+            "SRC_005"
+          ]
+        },
+        {
+          "rank": 3,
+          "entity": "n8n",
+          "index": "EPI",
+          "delta": 2,
+          "direction": "up",
+          "driver_claim_ids": [
+            "CLM_20260211_01"
+          ],
+          "confidence": "inferred",
+          "source_ids": [
+            "SRC_008"
+          ]
+        },
+        {
+          "rank": 4,
+          "entity": "CrewAI",
+          "index": "ARI",
+          "delta": -2,
+          "direction": "down",
+          "driver_claim_ids": [
+            "CLM_20260214_01"
+          ],
+          "confidence": "inferred",
+          "source_ids": [
+            "SRC_007"
+          ]
+        },
+        {
+          "rank": 5,
+          "entity": "LangChain",
+          "index": "ARI",
+          "delta": -1,
+          "direction": "down",
+          "driver_claim_ids": [
+            "CLM_20260212_01"
+          ],
+          "confidence": "inferred",
+          "source_ids": [
+            "SRC_006"
+          ]
+        }
+      ],
+      "evidence_ledger": [
+        {
+          "source_id": "SRC_001",
+          "used_for": "OpenClaw governance/distribution context"
+        },
+        {
+          "source_id": "SRC_005",
+          "used_for": "MCP standards trajectory"
+        },
+        {
+          "source_id": "SRC_006",
+          "used_for": "LangChain operational updates"
+        },
+        {
+          "source_id": "SRC_007",
+          "used_for": "CrewAI release cadence"
+        },
+        {
+          "source_id": "SRC_008",
+          "used_for": "n8n adoption signals"
+        },
+        {
+          "source_id": "SRC_009",
+          "used_for": "OpenClaw adoption baseline"
+        }
+      ]
+    }
+  ],
+  "homepage_integration_plan": {
+    "phase": "1",
+    "objective": "Replace hardcoded tape with API-fed signals and add latest weekly brief module below hero.",
+    "changes": [
+      {
+        "id": "UI_001",
+        "description": "Replace static tape array with GET /api/daily-signals?limit=7",
+        "placement": "existing tape container",
+        "fallback": "render last-known hardcoded message + link to /daily-signals"
+      },
+      {
+        "id": "UI_002",
+        "description": "Insert Latest Weekly Brief card below hero",
+        "placement": "immediately below hero section",
+        "fallback": "show message: Weekly brief unavailable"
+      },
+      {
+        "id": "UI_003",
+        "description": "Add View All Signals link",
+        "placement": "tape header/footer",
+        "target": "/daily-signals"
+      },
+      {
+        "id": "UI_004",
+        "description": "Mobile behavior",
+        "details": [
+          "Horizontal swipe tape container (overflow-x: auto; scroll-snap)",
+          "Tap-to-expand headline into compact detail drawer"
+        ]
+      }
+    ],
+    "code_snippets": {
+      "fetch_daily_signals": "async function fetchDailySignals(limit = 7) {\n  const res = await fetch(`/api/daily-signals?limit=${limit}`);\n  if (!res.ok) throw new Error(`daily-signals ${res.status}`);\n  const data = await res.json();\n  return Array.isArray(data.signals) ? data.signals : [];\n}",
+      "render_tape": "function renderTape(signals) {\n  const root = document.getElementById('live-tape-items');\n  if (!root) return;\n  if (!signals.length) {\n    root.innerHTML = '<div class=\"tape-empty\">No verified signals available. <a href=\"/daily-signals\">View All Signals</a></div>';\n    return;\n  }\n  root.innerHTML = signals.map((s) => `\n    <article class=\"tape-item\" data-id=\"${s.id}\">\n      <time class=\"tape-date\">${new Date(s.timestamp_utc).toISOString().slice(5, 10)}</time>\n      <button class=\"tape-headline\" type=\"button\">${s.headline}</button>\n      <div class=\"tape-meta\">${s.entity} · ${s.index} ${s.delta > 0 ? '+' : ''}${s.delta} · ${s.confidence}</div>\n    </article>`).join('');\n}",
+      "render_weekly_brief_preview": "function renderLatestWeeklyBrief(brief) {\n  const root = document.getElementById('latest-weekly-brief');\n  if (!root) return;\n  if (!brief) {\n    root.innerHTML = '<div class=\"brief-empty\">Weekly brief unavailable.</div>';\n    return;\n  }\n  root.innerHTML = `\n    <h3>${brief.title}</h3>\n    <p>${brief.subtitle}</p>\n    <ul>${brief.executive_delta_summary.slice(0,3).map((x)=>`<li>${x}</li>`).join('')}</ul>\n    <a href=\"/weekly-briefs/${brief.report_id}\">Read weekly brief</a>`;\n}",
+      "error_fallback": "async function bootstrapSignals() {\n  try {\n    const signals = await fetchDailySignals(7);\n    renderTape(signals);\n  } catch (err) {\n    console.error(err);\n    renderTape([]);\n  }\n}"
+    }
+  },
+  "qa_summary": {
+    "number_of_signals_valid": 7,
+    "number_of_signals_invalid": 0,
+    "invalid_reasons": []
+  }
+}

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daily Signals | Autonomy Index</title>
+  <meta name="description" content="Daily AMI, ARI, and EPI movements with source-backed drivers and confidence tags.">
+  <link rel="canonical" href="https://autonomyindex.io/daily-signals">
+  <link rel="stylesheet" href="/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Autonomy Index",
+    "url": "https://autonomyindex.io",
+    "logo": "https://autonomyindex.io/assets/icon.png"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "AutonomyIndex Daily Signals Dataset",
+    "description": "Daily index deltas and signal summaries generated from framework snapshots.",
+    "url": "https://autonomyindex.io/daily-signals",
+    "creator": {
+      "@type": "Organization",
+      "name": "Autonomy Index"
+    },
+    "distribution": {
+      "@type": "DataDownload",
+      "contentUrl": "https://autonomyindex.io/data/daily-signals.json",
+      "encodingFormat": "application/json"
+    }
+  }
+  </script>
+</head>
+<body>
+  <main class="section">
+    <div class="container">
+      <h1 class="section-title" style="text-align:left;">Daily Signals</h1>
+      <p>Daily signal generation runs at 13:30 UTC. Non-zero deltas publish only with source-backed evidence and non-speculative confidence.</p>
+      <div id="signals-root" class="today-movements" aria-live="polite"></div>
+    </div>
+  </main>
+  <script>
+    (function () {
+      var root = document.getElementById('signals-root');
+      if (!root) return;
+      fetch('/api/daily-signals?limit=14').then(function (res) {
+        if (!res.ok) throw new Error('signals ' + res.status);
+        return res.json();
+      }).then(function (data) {
+        var list = Array.isArray(data.signals) ? data.signals : [];
+        if (!list.length) {
+          root.innerHTML = '<p class="signals-loading">No signals available.</p>';
+          return;
+        }
+        root.innerHTML = list.map(function (s) {
+          var delta = Number(s.delta || 0);
+          var deltaToken = delta > 0 ? '+' + delta : String(delta);
+          return '<article class="movement-card"><div class="movement-toggle" role="article" tabindex="0"><span class="movement-main"><span class="movement-title">' +
+            s.entity + ' · ' + s.index + ' ' + deltaToken + '</span><span class="movement-summary">' +
+            (s.summary || s.headline || '') + '</span></span><span class="movement-side"><span class="confidence-badge">' +
+            (s.confidence || 'inferred') + '</span></span></div></article>';
+        }).join('');
+      }).catch(function () {
+        root.innerHTML = '<p class="signals-loading">Signal feed unavailable.</p>';
+      });
+    })();
+  </script>
+</body>
+</html>
