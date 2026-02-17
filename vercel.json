@@ -4,6 +4,19 @@
   "cleanUrls": true,
   "headers": [
     {
+      "source": "/AGENTS_2026_PREMIUM_REPORT",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/html; charset=utf-8"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"AI_Tools_2026_Premium_Report.html\""
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
